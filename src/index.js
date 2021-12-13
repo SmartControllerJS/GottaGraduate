@@ -9,6 +9,11 @@ const config = {
   physics: {
     // Arcade physics plugin, manages physics simulation
     default: 'arcade',
+    arcade: {
+      gravity: {
+        y: 200
+      }
+    }
   },
   scene: {
     preload,
@@ -35,7 +40,7 @@ function create() {
   this.add.image(0, 0, 'sky').setOrigin(0, 0);
   // when no image is loaded a default sqaure is put into the scene
   bird = this.physics.add.sprite(config.width / 10, config.height / 2, 'bird').setOrigin(0);
-  bird.body.gravity.y = 200;
+  // bird.body.gravity.y = 200;
 }
 
 // 60fps
