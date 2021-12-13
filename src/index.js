@@ -28,6 +28,7 @@ function create() {
   // x - coordinate
   // y - coordinate
   // key of the image
-  this.add.image(config.width / 2, config.height / 2, 'sky');
+  // default origin point is 0.5 0.5 which is the middle
+  this.add.image(0, 0, 'sky').setOrigin(0, 0);
 }
 new Phaser.Game(config);
