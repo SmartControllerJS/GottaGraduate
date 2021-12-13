@@ -13,6 +13,7 @@ const config = {
   scene: {
     preload,
     create,
+    update,
   }
 }
 
@@ -33,6 +34,13 @@ function create() {
   // default origin point is 0.5 0.5 which is the middle
   this.add.image(0, 0, 'sky').setOrigin(0, 0);
   // when no image is loaded a default sqaure is put into the scene
-  bird = this.add.sprite(config.width / 10, config.height / 2, 'bird').setOrigin(0);
+  bird = this.physics.add.sprite(config.width / 10, config.height / 2, 'bird').setOrigin(0);
+  bird.body.gravity.y = 200;
+}
+
+// 60fps
+// 60 times per second update will be executed
+function update() {
+
 }
 new Phaser.Game(config);
