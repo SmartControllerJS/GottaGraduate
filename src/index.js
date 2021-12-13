@@ -20,10 +20,14 @@ const config = {
 function preload() {
   // 'this' context -scene
   // contains functions and properties we can use
-  debugger
+  this.load.image('sky', 'assets/sky.png');
 }
 
 function create() {
-  debugger
+  // 0,0 is the topleft of the screen
+  // x - coordinate
+  // y - coordinate
+  // key of the image
+  this.add.image(config.width / 2, config.height / 2, 'sky');
 }
 new Phaser.Game(config);
