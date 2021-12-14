@@ -10,9 +10,9 @@ const config = {
     // Arcade physics plugin, manages physics simulation
     default: 'arcade',
     arcade: {
-      gravity: {
-        y: 400
-      },
+      // gravity: {
+      //   y: 400
+      // },
       debug: true
     }
   },
@@ -29,11 +29,16 @@ function preload() {
   // contains functions and properties we can use
   this.load.image('sky', 'assets/sky.png');
   this.load.image('bird', 'assets/bird.png');
+  this.load.image('pipe', 'assets/pipe.png');
 }
 
 const VELOCITY = 200;
-const initialBirdPOsition = {x: config.width / 10, y: config.height / 2}
+
 let bird = null;
+let upperPipe = null;
+let lowerPipe = null;
+
+const initialBirdPOsition = {x: config.width / 10, y: config.height / 2}
 const flapVelocity = 250;
 
 function create() {
@@ -41,7 +46,11 @@ function create() {
   // default origin point is 0.5 0.5 which is the middle
   this.add.image(0, 0, 'sky').setOrigin(0, 0);
   bird = this.physics.add.sprite(initialBirdPOsition.x, initialBirdPOsition.y, 'bird').setOrigin(0);
+  bird.body.gravity.y = 400;
   
+  upperPipe = this.physics.add.sprite(400, 100, 'pipe').setOrigin(0, 1);
+  lowerPipe = this.physics.add.sprite(400, upperPipe.y + 100, 'pipe').setOrigin(0, 0);
+
   this.input.on('pointerdown', flap);
   this.input.keyboard.on('keydown_SPACE', flap);
 }
