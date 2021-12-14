@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import PlayScene from "./scenes/PlayScene";
 
 
 const config = {
@@ -16,11 +17,7 @@ const config = {
       debug: true
     }
   },
-  scene: {
-    preload,
-    create,
-    update,
-  }
+  scene: [PlayScene]
 }
 
 // loadinng assets, such as images, music, animations...
