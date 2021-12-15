@@ -23,6 +23,8 @@ class PlayScene extends Phaser.Scene {
     this.controller = null;
     this.simplePeer = null;
     this.scanned = false;
+
+    this.playerList = [];
   }
 
   preload() {
@@ -34,36 +36,33 @@ class PlayScene extends Phaser.Scene {
   create() {
     this.createBG();
     this.createBird();
+    this.createSecondBird();
     this.createPipes();
     this.createColliders();
     if (this.globalFlag == false) {
       this.createCode();
       this.globalFlag = true;
     }
-
   }
-
 
   update() {
     this.checkGameStatus();
     this.recyclePipes();
     this.handleCode();
 
-
     if (this.scanned == true) {
-      console.log("hello");
       var controllerList = this.simplePeer.controllerList;
       var size = Object.keys(this.simplePeer.controllerList).length;
-      console.log(size);
-      // this.movement(controllerList[Object.keys(controllerList)[0]]);
-      if (controllerList[Object.keys(controllerList)[0]].buttons['up'] == true) {
-        this.bird.body.velocity.y = -this.flapVelocity;
+      for (let i = 0; i < size; i++) {
+        console.log(this.playerList[i].text);
+        if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 0) {
+          this.bird.body.velocity.y = -this.flapVelocity;
+        } else if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 1) {
+          this.secondBird.body.velocity.y = -this.flapVelocity;
+        }
       }
     }
-
-
   }
-
 
   createBG() {
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
@@ -71,8 +70,17 @@ class PlayScene extends Phaser.Scene {
 
   createBird() {
     this.bird = this.physics.add.sprite(this.config.startPosition.x, this.config.startPosition.y, 'bird').setOrigin(0);
+    this.playerList.push(this.bird);
     this.bird.body.gravity.y = 400;
     this.bird.setCollideWorldBounds(true);
+  }
+
+  createSecondBird() {
+    this.secondBird = this.physics.add.sprite(this.config.startPosition.x, this.config.startPosition.y + 50, 'bird').setOrigin(0);
+    this.playerList.push(this.secondBird);
+    this.secondBird.body.gravity.y = 400;
+    this.secondBird.setTint(0x0000FF);
+    this.secondBird.setCollideWorldBounds(true);
   }
 
   createPipes() {
@@ -91,6 +99,7 @@ class PlayScene extends Phaser.Scene {
 
   createColliders() {
     this.physics.add.collider(this.bird, this.pipes, this.gameOver, null, this);
+    this.physics.add.collider(this.secondBird, this.pipes, this.gameOver, null, this);
   }
 
   createCode() {
@@ -101,32 +110,19 @@ class PlayScene extends Phaser.Scene {
       this.controller = nes; 
       selfP.scanned = true;
     })
-    // this.movement(controllerList[Object.keys(controllerList)[0]]);
-    // if (controllerList[Object.keys(controllerList)[0]].buttons['up'] == true) {
-    //   this.bird.body.velocity.y = -this.flapVelocity;
-    // }
   }
 
-  handleCode() {
-
-    // its not doing it because there is no contoller in the list
-
-    // for (let i = 0; i < size; i++) {
-    //   movement(controllerList[Object.keys(controllerList)[i]]);
-    // }
-
-    // this.input.on('pointerdown', this.flap, this);
-    // this.input.keyboard.on('keydown_SPACE', this.flap, this);
+  movement (playerController, player) {
+    if (playerController.buttons['up'] == true) {
+      player = -this.flapVelocity;
+    }
   }
-
-  // movement (playerController) {
-  //   if (playerController.buttons['up'] == true) {
-  //     this.bird.body.velocity.y = -this.flapVelocity;
-  //   }
-  // }
 
   checkGameStatus() {
     if (this.bird.getBounds().bottom >= this.config.height || this.bird.y <= 0) {
+      this.gameOver();
+    }
+    if (this.secondBird.getBounds().bottom >= this.config.height || this.secondBird.y <= 0) {
       this.gameOver();
     }
   }
@@ -169,6 +165,7 @@ class PlayScene extends Phaser.Scene {
   gameOver() {
     this.physics.pause();
     this.bird.setTint(0xEE4824);
+    this.secondBird.setTint(0xEE4824);
 
     this.time.addEvent({
       delay: 1000,
