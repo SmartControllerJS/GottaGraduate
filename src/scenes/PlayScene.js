@@ -11,6 +11,7 @@ class PlayScene extends Phaser.Scene {
     this.config = config;
 
     this.bird = null;
+    this.secondBird =
     this.pipes = null;
 
     this.pipeHorizontalDistance = 0;
@@ -48,10 +49,12 @@ class PlayScene extends Phaser.Scene {
     this.recyclePipes();
     this.handleCode();
 
+
     if (this.scanned == true) {
+      console.log("hello");
       var controllerList = this.simplePeer.controllerList;
       var size = Object.keys(this.simplePeer.controllerList).length;
-      // console.log(size);
+      console.log(size);
       // this.movement(controllerList[Object.keys(controllerList)[0]]);
       if (controllerList[Object.keys(controllerList)[0]].buttons['up'] == true) {
         this.bird.body.velocity.y = -this.flapVelocity;
@@ -93,9 +96,10 @@ class PlayScene extends Phaser.Scene {
   createCode() {
     this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
-    this.simplePeer.on("controller", function(nes){ // this can also be outside the update loop that is a listener on it's own
+    var selfP = this;
+    this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
       this.controller = nes; 
-      this.scanned = true;
+      selfP.scanned = true;
     })
     // this.movement(controllerList[Object.keys(controllerList)[0]]);
     // if (controllerList[Object.keys(controllerList)[0]].buttons['up'] == true) {
