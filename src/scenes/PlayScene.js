@@ -48,7 +48,6 @@ class PlayScene extends Phaser.Scene {
   update() {
     this.checkGameStatus();
     this.recyclePipes();
-    this.handleCode();
 
     if (this.scanned == true) {
       var controllerList = this.simplePeer.controllerList;
