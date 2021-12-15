@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import 'smartcontroller';
 
 const PIPES_TO_RENDER = 4;
 
@@ -17,6 +18,10 @@ class PlayScene extends Phaser.Scene {
     this.pipeHorizontalDistanceRange = [500, 550];
 
     this.flapVelocity = 250;
+    this.globalFlag = false;
+    this.controller = null;
+    this.simplePeer = null;
+    this.scanned = false;
   }
 
   preload() {
@@ -30,13 +35,32 @@ class PlayScene extends Phaser.Scene {
     this.createBird();
     this.createPipes();
     this.createColliders();
-    this.handleInputs();
+    if (this.globalFlag == false) {
+      this.createCode();
+      this.globalFlag = true;
+    }
+
   }
+
 
   update() {
     this.checkGameStatus();
     this.recyclePipes();
+    this.handleCode();
+
+    if (this.scanned == true) {
+      var controllerList = this.simplePeer.controllerList;
+      var size = Object.keys(this.simplePeer.controllerList).length;
+      // console.log(size);
+      // this.movement(controllerList[Object.keys(controllerList)[0]]);
+      if (controllerList[Object.keys(controllerList)[0]].buttons['up'] == true) {
+        this.bird.body.velocity.y = -this.flapVelocity;
+      }
+    }
+
+
   }
+
 
   createBG() {
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
@@ -66,10 +90,36 @@ class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.bird, this.pipes, this.gameOver, null, this);
   }
 
-  handleInputs() {
-    this.input.on('pointerdown', this.flap, this);
-    this.input.keyboard.on('keydown_SPACE', this.flap, this);
+  createCode() {
+    this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
+    this.simplePeer.on("controller", function(nes){ // this can also be outside the update loop that is a listener on it's own
+      this.controller = nes; 
+      this.scanned = true;
+    })
+    // this.movement(controllerList[Object.keys(controllerList)[0]]);
+    // if (controllerList[Object.keys(controllerList)[0]].buttons['up'] == true) {
+    //   this.bird.body.velocity.y = -this.flapVelocity;
+    // }
   }
+
+  handleCode() {
+
+    // its not doing it because there is no contoller in the list
+
+    // for (let i = 0; i < size; i++) {
+    //   movement(controllerList[Object.keys(controllerList)[i]]);
+    // }
+
+    // this.input.on('pointerdown', this.flap, this);
+    // this.input.keyboard.on('keydown_SPACE', this.flap, this);
+  }
+
+  // movement (playerController) {
+  //   if (playerController.buttons['up'] == true) {
+  //     this.bird.body.velocity.y = -this.flapVelocity;
+  //   }
+  // }
 
   checkGameStatus() {
     if (this.bird.getBounds().bottom >= this.config.height || this.bird.y <= 0) {
