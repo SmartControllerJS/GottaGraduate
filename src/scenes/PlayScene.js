@@ -49,6 +49,7 @@ class PlayScene extends Phaser.Scene {
     this.checkGameStatus();
     this.recyclePipes();
 
+
     if (this.scanned == true) {
       var controllerList = this.simplePeer.controllerList;
       var size = Object.keys(this.simplePeer.controllerList).length;
@@ -97,8 +98,8 @@ class PlayScene extends Phaser.Scene {
   }
 
   createColliders() {
-    this.physics.add.collider(this.bird, this.pipes, this.gameOver, null, this);
-    this.physics.add.collider(this.secondBird, this.pipes, this.gameOver, null, this);
+    this.physics.add.collider(this.bird, this.pipes, this.invisibleBird, null, this);
+    this.physics.add.collider(this.secondBird, this.pipes, this.invisibleSecondBird, null, this);
   }
 
   createCode() {
@@ -118,10 +119,16 @@ class PlayScene extends Phaser.Scene {
   }
 
   checkGameStatus() {
+    let counter = 0;
     if (this.bird.getBounds().bottom >= this.config.height || this.bird.y <= 0) {
-      this.gameOver();
+      this.bird.setVisible(false);
+      // this.bird.body.moves = false;
     }
-    if (this.secondBird.getBounds().bottom >= this.config.height || this.secondBird.y <= 0) {
+    else if (this.secondBird.getBounds().bottom >= this.config.height || this.secondBird.y <= 0) {
+      this.secondBird.setVisible(false);
+      // this.secondBird.body.moves = false;
+    }
+    if (this.secondBird.visible == false && this.bird.visible == false){
       this.gameOver();
     }
   }
@@ -159,6 +166,14 @@ class PlayScene extends Phaser.Scene {
     })
   
     return rightMostX;
+  }
+
+  invisibleBird() {
+    this.bird.setVisible(false);
+  }
+
+  invisibleSecondBird() {
+    this.secondBird.setVisible(false);
   }
   
   gameOver() {
