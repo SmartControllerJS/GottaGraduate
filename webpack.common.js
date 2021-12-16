@@ -11,7 +11,7 @@ module.exports = {
   devtool: "eval-source-map",
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'docs'),
   },
   optimization: {
     splitChunks: {
