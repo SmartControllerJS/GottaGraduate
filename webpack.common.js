@@ -36,7 +36,7 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.resolve(__dirname, 'build'),
+    contentBase: path.resolve(__dirname, 'docs'),
     compress: true,
     port: 8080,
   },
@@ -52,7 +52,7 @@ module.exports = {
       patterns: [
         {
           from: path.resolve(__dirname, 'assets'),
-          to: path.resolve(__dirname, 'build/assets')
+          to: path.resolve(__dirname, 'docs/assets')
         }
       ],
     })
