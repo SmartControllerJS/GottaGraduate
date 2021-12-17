@@ -57,11 +57,11 @@ class PlayScene extends Phaser.Scene {
       var size = Object.keys(this.simplePeer.controllerList).length;
       for (let i = 0; i < size; i++) {
         console.log(this.playerList[i].text);
-        if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 0) {
+        if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 0) {
           this.bird.body.velocity.y = -this.flapVelocity;
-        } else if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 1) {
+        } else if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 1) {
           this.secondBird.body.velocity.y = -this.flapVelocity;
-        } else if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 2) {
+        } else if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 2) {
           this.thirdBird.body.velocity.y = -this.flapVelocity;
         }
       }
