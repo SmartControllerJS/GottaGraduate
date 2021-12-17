@@ -11,7 +11,8 @@ class PlayScene extends Phaser.Scene {
     this.config = config;
 
     this.bird = null;
-    this.secondBird =
+    this.secondBird = null;
+    this.thirdBird = null;
     this.pipes = null;
 
     this.pipeHorizontalDistance = 0;
@@ -37,6 +38,7 @@ class PlayScene extends Phaser.Scene {
     this.createBG();
     this.createBird();
     this.createSecondBird();
+    this.createThirdBird();
     this.createPipes();
     this.createColliders();
     if (this.globalFlag == false) {
@@ -59,6 +61,8 @@ class PlayScene extends Phaser.Scene {
           this.bird.body.velocity.y = -this.flapVelocity;
         } else if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 1) {
           this.secondBird.body.velocity.y = -this.flapVelocity;
+        } else if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 2) {
+          this.thirdBird.body.velocity.y = -this.flapVelocity;
         }
       }
     }
@@ -83,6 +87,14 @@ class PlayScene extends Phaser.Scene {
     this.secondBird.setCollideWorldBounds(true);
   }
 
+  createThirdBird() {
+    this.thirdBird = this.physics.add.sprite(this.config.startPosition.x, this.config.startPosition.y - 50, 'bird').setOrigin(0);
+    this.playerList.push(this.thirdBird);
+    this.thirdBird.body.gravity.y = 400;
+    this.thirdBird.setTint(0xFF0000);
+    this.thirdBird.setCollideWorldBounds(true);
+  }
+
   createPipes() {
     this.pipes = this.physics.add.group();
     for (let i = 0; i < PIPES_TO_RENDER; i++) {
@@ -100,6 +112,7 @@ class PlayScene extends Phaser.Scene {
   createColliders() {
     this.physics.add.collider(this.bird, this.pipes, this.invisibleBird, null, this);
     this.physics.add.collider(this.secondBird, this.pipes, this.invisibleSecondBird, null, this);
+    this.physics.add.collider(this.thirdBird, this.pipes, this.invisibleThirdBird, null, this);
   }
 
   createCode() {
@@ -119,16 +132,16 @@ class PlayScene extends Phaser.Scene {
   }
 
   checkGameStatus() {
-    let counter = 0;
     if (this.bird.getBounds().bottom >= this.config.height || this.bird.y <= 0) {
       this.bird.setVisible(false);
-      // this.bird.body.moves = false;
     }
     else if (this.secondBird.getBounds().bottom >= this.config.height || this.secondBird.y <= 0) {
       this.secondBird.setVisible(false);
-      // this.secondBird.body.moves = false;
     }
-    if (this.secondBird.visible == false && this.bird.visible == false){
+    if (this.thirdBird.getBounds().bottom >= this.config.height - 2 || this.thirdBird.y <= 0) {
+      this.thirdBird.setVisible(false);
+    }
+    if (this.secondBird.visible == false && this.bird.visible == false && this.thirdBird.visible == false){
       this.gameOver();
     }
   }
@@ -175,11 +188,16 @@ class PlayScene extends Phaser.Scene {
   invisibleSecondBird() {
     this.secondBird.setVisible(false);
   }
+
+  invisibleThirdBird() {
+    this.thirdBird.setVisible(false);
+  }
   
   gameOver() {
     this.physics.pause();
     this.bird.setTint(0xEE4824);
     this.secondBird.setTint(0xEE4824);
+    this.thirdBird.setTint(0xEE4824);
 
     this.time.addEvent({
       delay: 1000,
