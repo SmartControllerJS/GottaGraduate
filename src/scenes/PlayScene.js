@@ -26,6 +26,9 @@ class PlayScene extends Phaser.Scene {
     this.scanned = false;
 
     this.playerList = [];
+
+    this.score = 0;
+    this.scoreText = '';
   }
 
   preload() {
@@ -39,6 +42,7 @@ class PlayScene extends Phaser.Scene {
     this.createBird();
     this.createSecondBird();
     this.createThirdBird();
+    this.createScore();
     this.createPipes();
     this.createColliders();
     if (this.globalFlag == false) {
@@ -115,6 +119,11 @@ class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.thirdBird, this.pipes, this.invisibleThirdBird, null, this);
   }
 
+  createScore() {
+    this.score = 0;
+    this.scoreText = this.add.text(16, 16, `Score: ${0}`, { fontSize: '32px', fill: '#000' });
+  }
+
   createCode() {
     this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
@@ -166,6 +175,7 @@ class PlayScene extends Phaser.Scene {
         tempPipes.push(pipe);
         if (tempPipes.length === 2) {
           this.placePipe(...tempPipes);
+          this.increaseScore();
         }
       }
     })
@@ -212,6 +222,11 @@ class PlayScene extends Phaser.Scene {
   
   flap() {
     this.bird.body.velocity.y = -this.flapVelocity;;
+  }
+
+  increaseScore() {
+    this.score++;
+    this.scoreText.setText(`Score: ${this.score}`);
   }
 }
 
