@@ -1,15 +1,15 @@
-import Phaser from "phaser";
+import BaseScene from './BaseScene';
 import 'smartcontroller';
 
-class MenuScene extends Phaser.Scene {
+class MenuScene extends BaseScene {
 
   constructor(config) {
-    super('MenuScene');
-    this.config = config;
+    super('MenuScene', config);
   }
 
+  // can use any function from basescene using super.class()
   create() {
-    this.add.image(0, 0, 'sky').setOrigin(0, 0);
+    super.create();
     this.scene.start('PlayScene');
   }
 }
