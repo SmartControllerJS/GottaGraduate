@@ -35,6 +35,7 @@ class PlayScene extends Phaser.Scene {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('bird', 'assets/bird.png');
     this.load.image('pipe', 'assets/pipe.png');
+    this.load.image('pause', 'assets/pause.png')
   }
 
   create() {
@@ -45,6 +46,7 @@ class PlayScene extends Phaser.Scene {
     this.createScore();
     this.createPipes();
     this.createColliders();
+    this.createPause();
     if (this.globalFlag == false) {
       this.createCode();
       this.globalFlag = true;
@@ -124,6 +126,16 @@ class PlayScene extends Phaser.Scene {
     const bestScore = localStorage.getItem('bestScore');
     this.scoreText = this.add.text(16, 16, `Score: ${0}`, { fontSize: '32px', fill: '#000' });
     this.add.text(16, 52, `Best score: ${bestScore || 0}`, { fontSize: '18px', fill: '#000' });
+  }
+
+  createPause() {
+    const pauseButton = this.add.image(this.config.width - 10, this.config.height - 10, 'pause').setOrigin(1).setScale(3).setInteractive();
+
+    pauseButton.on('pointerdown', () => {
+      this.physics.pause();
+      this.scene.pause();
+    })
+    
   }
 
   createCode() {
