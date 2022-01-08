@@ -10,6 +10,7 @@ class MenuScene extends Phaser.Scene {
 
   create() {
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
+    this.scene.start('PlayScene');
   }
 }
 
