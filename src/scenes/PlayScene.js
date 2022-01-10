@@ -126,6 +126,7 @@ class PlayScene extends BaseScene {
 
   createBird() {
     this.bird = this.physics.add.sprite(this.config.startPosition.x, this.config.startPosition.y, 'bird').setOrigin(0).setScale(3).setFlipX(true);
+    this.bird.setBodySize(this.bird.width, this.bird.height - 8);
     this.playerList.push(this.bird);
     this.bird.body.gravity.y = 400;
     this.bird.setCollideWorldBounds(true);
@@ -133,6 +134,7 @@ class PlayScene extends BaseScene {
 
   createSecondBird() {
     this.secondBird = this.physics.add.sprite(this.config.startPosition.x, this.config.startPosition.y + 50, 'bird').setOrigin(0).setScale(3).setFlipX(true);
+    this.bird.setBodySize(this.secondBird.width, this.secondBird.height - 8);
     this.playerList.push(this.secondBird);
     this.secondBird.body.gravity.y = 400;
     this.secondBird.setTint(0x0000FF);
@@ -141,6 +143,7 @@ class PlayScene extends BaseScene {
 
   createThirdBird() {
     this.thirdBird = this.physics.add.sprite(this.config.startPosition.x, this.config.startPosition.y - 50, 'bird').setOrigin(0).setScale(3).setFlipX(true);
+    this.bird.setBodySize(this.thirdBird.width, this.thirdBird.height - 8);
     this.playerList.push(this.thirdBird);
     this.thirdBird.body.gravity.y = 400;
     this.thirdBird.setTint(0xFF0000);
