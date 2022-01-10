@@ -61,6 +61,17 @@ class PlayScene extends BaseScene {
       this.createCode();
       this.globalFlag = true;
     }
+
+    this.anims.create({
+      key: 'fly',
+      frames: this.anims.generateFrameNumbers('bird', { start: 8, end: 15}),
+      frameRate: 8, // 8 frames per second - 8 images
+      repeat: -1 // repeat infinitely
+    });
+
+    this.bird.play('fly');
+    this.secondBird.play('fly');
+    this.thirdBird.play('fly');
   }
 
   update() {
