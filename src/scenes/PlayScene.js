@@ -9,7 +9,6 @@ class PlayScene extends BaseScene {
   constructor(config) {
     super('PlayScene', config);
 
-    this.firstPipe = true;
     this.bird = null;
     this.secondBird = null;
     this.thirdBird = null;
