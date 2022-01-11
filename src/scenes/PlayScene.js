@@ -62,6 +62,7 @@ class PlayScene extends BaseScene {
       this.globalFlag = true;
     }
 
+
     this.anims.create({
       key: 'fly',
       frames: this.anims.generateFrameNumbers('bird', { start: 8, end: 15}),
@@ -75,6 +76,8 @@ class PlayScene extends BaseScene {
   }
 
   update() {
+
+
     this.checkGameStatus();
     this.recyclePipes();
 
@@ -193,12 +196,16 @@ class PlayScene extends BaseScene {
   }
 
   createCode() {
+    this.scene.pause();
+    this.physics.pause();
+    this.isPaused = true;
     this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
     var selfP = this;
     this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
       this.controller = nes; 
       selfP.scanned = true;
+      selfP.scene.resume();
     })
   }
 

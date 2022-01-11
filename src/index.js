@@ -30,7 +30,8 @@ const config = {
       // debug: true
     }
   },
-  scene: initScenes()
+  scene: initScenes(),
+  parent: 'game'
 }
 
 new Phaser.Game(config);
