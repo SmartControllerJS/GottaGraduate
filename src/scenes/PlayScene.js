@@ -9,6 +9,7 @@ class PlayScene extends BaseScene {
   constructor(config) {
     super('PlayScene', config);
 
+    this.firstPipe = true;
     this.bird = null;
     this.secondBird = null;
     this.thirdBird = null;
@@ -36,12 +37,12 @@ class PlayScene extends BaseScene {
         pipeVerticalDistanceRange: [150, 200],
       },
       'normal': {
-        pipeHorizontalDistanceRange: [280, 330],
+        pipeHorizontalDistanceRange: [290, 340],
         pipeVerticalDistanceRange: [140, 190],
       },
       'hard': {
-        pipeHorizontalDistanceRange: [250, 310],
-        pipeVerticalDistanceRange: [120, 170],
+        pipeHorizontalDistanceRange: [280, 330],
+        pipeVerticalDistanceRange: [130, 180],
       }
     }
   }
@@ -158,10 +159,10 @@ class PlayScene extends BaseScene {
     for (let i = 0; i < PIPES_TO_RENDER; i++) {
       const upperPipe = this.pipes.create(0, 0, 'pipe')
         .setImmovable(true)
-        .setOrigin(0, 1);
+        .setOrigin(-3, 1);
       const lowerPipe = this.pipes.create(0, 0, 'pipe')
         .setImmovable(true)
-        .setOrigin(0, 0);
+        .setOrigin(-3, 0);
       this.placePipe(upperPipe, lowerPipe);
     }
     this.pipes.setVelocityX(-200);
