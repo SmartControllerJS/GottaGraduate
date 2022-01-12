@@ -21,6 +21,8 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
+    this.scale.displaySize.setAspectRatio( this.config.width/this.config.height );
+    this.scale.refresh();
     this.createBG();
     // if (this.globalFlag == false) {
     //   this.createCode();
