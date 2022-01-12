@@ -21,7 +21,20 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    this.scale.displaySize.setAspectRatio( this.config.width/this.config.height );
+    
+    // this.scale.startFullscreen();
+    // var FKey = this.input.keyboard.addKey('F');
+
+    // FKey.on('down', function () {
+    //   if (this.scale.isFullscreen) {
+    //     this.scale.stopFullscreen();
+    //   }
+    //   else {
+    //     this.scale.startFullscreen();
+    //   }
+    // }, this);
+
+    this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
     this.createBG();
     // if (this.globalFlag == false) {
