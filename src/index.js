@@ -1,4 +1,4 @@
-import Phaser, { Scene } from "phaser";
+import Phaser from "phaser";
 import PlayScene from "./scenes/PlayScene";
 
 // const WIDTH = 800;
@@ -14,11 +14,6 @@ const SHARED_CONFIG = {
   width: SIZE_WIDTH_SCREEN,
   height: SIZE_HEIGHT_SCREEN,
 }
-
-// order matter here
-const Scenes = [PlayScene]
-const createScene = Scene => new Scene(SHARED_CONFIG);
-const initScenes = () => Scenes.map(createScene);
 
 const config = {
   type: Phaser.AUTO,
