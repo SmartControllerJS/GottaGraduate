@@ -1,37 +1,41 @@
 import Phaser, { Scene } from "phaser";
 import PlayScene from "./scenes/PlayScene";
-import MenuScene from "./scenes/MenuScene";
-import PreloadScene from "./scenes/PreloadScene";
-import ScoreScene from "./scenes/ScoreScene";
-import PauseScene from "./scenes/PauseScene";
 
-const WIDTH = 800;
-const HEIGHT = 600;
-const BIRD_POSITION = {x: WIDTH / 10, y: HEIGHT / 2 };
+// const WIDTH = 800;
+// const HEIGHT = 600;
+
+// window.innerWidth * window.devicePixelRatio,
+//   window.innerHeight * window.devicePixelRatio,
+
+const SIZE_WIDTH_SCREEN = 800
+const SIZE_HEIGHT_SCREEN = 600
 
 const SHARED_CONFIG = {
-  width: WIDTH,
-  height: HEIGHT,
-  startPosition: BIRD_POSITION,
+  width: SIZE_WIDTH_SCREEN,
+  height: SIZE_HEIGHT_SCREEN,
 }
 
 // order matter here
-const Scenes = [PreloadScene, MenuScene, ScoreScene, PlayScene, PauseScene]
+const Scenes = [PlayScene]
 const createScene = Scene => new Scene(SHARED_CONFIG);
 const initScenes = () => Scenes.map(createScene);
 
 const config = {
   type: Phaser.AUTO,
-  ...SHARED_CONFIG,
-  pixelArt: true,
   physics: {
     default: 'arcade',
     arcade: {
       // debug: true
     }
   },
-  scene: initScenes(),
-  parent: 'game'
+  scale: {
+    parent: 'qrcode',
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    ...SHARED_CONFIG
+  },
+  scene: [new PlayScene(SHARED_CONFIG)]
 }
 
 new Phaser.Game(config);
+
