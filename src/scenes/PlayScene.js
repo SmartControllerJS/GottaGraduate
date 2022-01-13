@@ -1,4 +1,4 @@
-
+import Phaser from "phaser";
 import 'smartcontroller';
 
 // all commented code is smartcontroller specific - not game specific
@@ -6,7 +6,8 @@ import 'smartcontroller';
 class PlayScene extends Phaser.Scene {
 
   constructor(config) {
-    super('PlayScene', config);
+    super('PlayScene');
+    this.config = config;
 
     this.globalFlag = false;
     this.controller = null;
