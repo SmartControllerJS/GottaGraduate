@@ -1,3 +1,5 @@
+![production workflow](https://github.com/fraser-dempster/l4-project-interactive-game/actions/workflow/production.yml/badge.svg)
+
 # Interactive-Game-For-Public-Spaces
 
 <!-- TABLE OF CONTENTS -->
