@@ -48,6 +48,7 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
+          repository-name: fraser-dempster/fraser-dempster.github.io
           branch: main
           folder: build
           target-folder: l4-project-interactive-game
