@@ -1,0 +1,3 @@
+# multiplayer-phaser-node-boilerplate
+
+All the code before this commit (commit 60816a4450c23bd06753c511b2d9ad3d4ee7e21a) was made by Jerga99. That code provided boilerplate code for getting a Phaser project set up quickly using Node which allows for much faster development. Since then I've edited the webpack to target a folder called docs instead of build so it can be used with Github Pages. I've also added code that makes the screen dynamic in Phaser - allowing it to be fullscreen on any screen size (width and height). The last thing I added was the code from the smartcontroller (https://github.com/SmartControllerJS/SmartController) but this has been commented out as unless there is a game to use it with it has no real purpose.
