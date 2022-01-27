@@ -1,4 +1,4 @@
-# Phaser-Node Boilerplate Code
+# Interactive-Game-For-Public-Spaces
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -14,7 +14,11 @@
 </details>
 
 ## About the project
-This project is a strict template for jump starting a Phaser project which uses Node.js for quicker development. I've used it as using npm with Phaser is a requirement for my L4 university project. All the code before this commit - https://github.com/fraser-dempster/multiplayer-phaser-node-boilerplate/commit/60816a4450c23bd06753c511b2d9ad3d4ee7e21a - was made by Jerga99. Since then I've edited the webpack to target a folder called docs instead of build so it can be used with Github Pages. I've also added code that makes the game screen in Phaser dynamic - meaning it will resize to fit any screen. Along with that I have changed the structure of the code to use an object-oriented approach where each scene in Phaser is its own object. The last thing I added was the code from the smartcontroller repository  (https://github.com/SmartControllerJS/SmartController) but this has been commented out as unless there is a game to use it with it has no real purpose.
+
+Level 4 individual project: Interactive experiences for public spaces using smartphone remote controllers for user interaction [HTML, JavaScript, Smartphone, HCI].
+
+I am creating an interactive game for a new university building being opened in 2022 called the Advanced Research Centre (ARC). The game will be available to play in public, outside the ARC, on a screen facing the street. A user will scan a QR code which will connect to their mobile phone and open a controller which they can use to play the game.
+
 
 ### Built With
 
