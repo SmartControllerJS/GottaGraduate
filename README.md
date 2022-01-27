@@ -1,5 +1,6 @@
 [![production build and deploy](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml/badge.svg?branch=main)](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml)
-[![Inline docs](http://inch-ci.org/github/dwyl/hapi-auth-jwt2.svg?branch=master)](http://inch-ci.org/github/dwyl/hapi-auth-jwt2)
+[![Inline docs](http://inch-ci.org/github/dwyl/hapi-auth-jwt2.svg?branch=main)](http://inch-ci.org/github/dwyl/hapi-auth-jwt2)
+[![codecov.io Code Coverage](https://img.shields.io/codecov/c/github/dwyl/hapi-auth-jwt2.svg?maxAge=2592000)](https://codecov.io/github/dwyl/hapi-auth-jwt2?branch=master)
 
 # Interactive-Game-For-Public-Spaces
 
