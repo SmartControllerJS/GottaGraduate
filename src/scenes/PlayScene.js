@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import 'smartcontroller';
+// import 'smartcontroller';
 
 // all commented code is smartcontroller specific - not game specific
 
