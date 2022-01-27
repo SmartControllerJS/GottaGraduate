@@ -50,6 +50,6 @@ jobs:
         with:
           branch: main
           folder: build
-          target-folder: interactive_game
+          target-folder: l4-project-interactive-game
           clean: true
           token: ${{ secrets.github_pages }}
