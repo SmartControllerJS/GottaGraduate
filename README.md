@@ -1,4 +1,4 @@
-![production workflow](https://github.com/fraserdempster/SmartControllerJS/l4-project-interactive-game/actions/workflow/production.yml/badge.svg)
+[![production build and deploy](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml/badge.svg?branch=main)](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml)
 
 # Interactive-Game-For-Public-Spaces
 
