@@ -1,6 +1,22 @@
 [![production build and deploy](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml/badge.svg?branch=main)](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml)
 
-# Gotta Graduate!
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+
+  <h1 align="center">Gotta Graduate!</h3>
+  
+<!--     <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a> -->
+
+  <p align="center">
+    Gotta Graduate! is a local multiplayer co-op game where you and your friends go through the lifecycle of university avoiding the casual, nonsensical hiccups that university life brings while also trying to pass each year, with the hopes of graduating. Avoid dropping out of university and ace your exams by working with and against your fellow classmates!
+    <br />
+    <a href="https://fraser-dempster.github.io/l4-project-interactive-game/">View The Game »</strong></a>
+  </p>
+</div>
 
 <!-- TABLE OF CONTENTS -->
 <details>
