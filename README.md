@@ -5,7 +5,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a> -->
   [![production build and deploy](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml/badge.svg?branch=main)](https://github.com/SmartControllerJS/l4-project-interactive-game/actions/workflows/production.yml)
-  
+  [![LinkedIN](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)]
 
   <p align="center">
     Gotta Graduate! is a local multiplayer co-op game where you and your friends go through the lifecycle of university avoiding the casual, nonsensical hiccups that university life brings while also trying to pass each year, with the hopes of graduating. Avoid dropping out of university and ace your exams by working with and against your fellow classmates!
@@ -59,5 +59,9 @@ The project revolves around the creation of a multiplayer game which will allow 
 ## Background
 
 ## Contact
+
+[![LinkedIN](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/fraser-dempster-0470641ba/)
+[![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/fraser-dempster)
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](fraserdempster23@gmail.com)
 
 ## Acknowledgements
