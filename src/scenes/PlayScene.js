@@ -17,11 +17,22 @@ class PlayScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('sky', 'assets/sky.png');
+    // this.load.image('sky', 'assets/sky.png');
+    this.load.image('base_tiles', 'assets/base_tiles.png')
+    this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
   }
 
   create() {
-    
+    // this.add.image(0,0,'base_tiles')
+
+    // create the Tilemap
+    const map = this.make.tilemap({ key: 'tilemap' })
+
+    // add the tileset image we are using
+    const tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'base_tiles')
+
+    map.createStaticLayer('Tile Layer 1', tileset)
+
     // this.scale.startFullscreen();
     // var FKey = this.input.keyboard.addKey('F');
 
@@ -36,7 +47,7 @@ class PlayScene extends Phaser.Scene {
 
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
-    this.createBG();
+    // this.createBG();
     // if (this.globalFlag == false) {
     //   this.createCode();
     //   this.globalFlag = true;
