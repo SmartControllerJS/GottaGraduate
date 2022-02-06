@@ -19,6 +19,8 @@ class PlayScene extends Phaser.Scene {
   preload() {
     // this.load.image('sky', 'assets/sky.png');
     this.load.image('base_tiles', 'assets/base_tiles.png')
+    this.load.image('church_tiles', 'assets/church_tiles.png')
+    this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
     this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
   }
 
@@ -29,9 +31,19 @@ class PlayScene extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'tilemap' })
 
     // add the tileset image we are using
-    const tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'base_tiles')
+    const tileset = map.addTilesetImage('background', 'base_tiles')
+    const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
+    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
 
-    map.createStaticLayer('Tile Layer 1', tileset)
+    map.createStaticLayer('Bottom of floor', tileset)
+    map.createStaticLayer('Top of floor', tileset)
+    map.createStaticLayer('Wall Decoration', tileset)
+    map.createStaticLayer('Outside', tileset)
+    map.createStaticLayer('Furniture and trees', tileset)
+    map.createStaticLayer('Church', tileset)
+    map.createStaticLayer('Church roof', church_roof_tileset)
+    map.createStaticLayer('Church window', church_window_tileset)
+    map.createStaticLayer('Fauna and flora', tileset)
 
     // this.scale.startFullscreen();
     // var FKey = this.input.keyboard.addKey('F');
