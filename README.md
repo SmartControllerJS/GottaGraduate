@@ -41,7 +41,9 @@ The motivation for this project is to explore how the use of a smartphone contro
 The project revolves around the creation of a multiplayer game which will allow the users to interact and play with each other. It will allow for an engaging experience with no barrier of entry and hopefully let a wide audience take advantage of the experience. 
 
 ### Aim of project
+The main aim of the project is to build an interactive game that takes advantage of the smartcontroller in a public environment. The game will allow users to scan a QR code and play the game with friends, acting as a catalyst for communication and engagement. 
 
+Initially, the project was focused on building a generic game, but as development continued, a specific focus has been placed on making the game student friednly.
 ### Built With
 
 * [Phaser](https://phaser.io/)
@@ -50,6 +52,31 @@ The project revolves around the creation of a multiplayer game which will allow 
 * [Webpack.js](https://webpack.js.org/)
 
 ### Roadmap
+- [x] Game map
+  - [x] Find tileset
+  - [x] Decide on map layout
+  - [x] Make graphics
+  - [x] Integrate into Phaser
+- [ ] Add sprites
+  - [ ] Get spritesheet
+  - [ ] Integrate spritesheet into Phaser
+  - [ ] Add Phaser properties to Sprite
+  - [ ] Add map collision for sprites
+  - [ ] Add temporary movement with keys
+  - [ ] Add health bar
+  - [ ] Add player name
+- [ ] Round 1
+  - [ ] Create items
+    - [ ] Facebook
+    - [ ] TikTok
+    - [ ] Beer
+    - [ ] Yoga
+    - [ ] Add item collision on players and map boundary
+    - [ ] Add random spawn points to items
+  - [ ] Add countdown timer
+  - [ ] Add QRCode
+  - [ ] Add smartcontroller Movement
+  - [ ] Add instructions scene before playing
 
 ### Development
 
