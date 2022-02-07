@@ -14,8 +14,8 @@
 </div>
 
 The project is hosted on Github Pages:
-- Production version here: https://fraser-dempster.github.io/l4-project-interactive-game/
-- Development version here: https://fraser-dempster.github.io/l4-project-interactive-game-develop/
+- Production version here: `https://fraser-dempster.github.io/l4-project-interactive-game/`
+- Development version here: `https://fraser-dempster.github.io/l4-project-interactive-game-develop/`
 
 <!-- TABLE OF CONTENTS -->
 <details>
