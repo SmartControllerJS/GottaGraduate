@@ -49,8 +49,8 @@ class PlayScene extends Phaser.Scene {
     var collision_layer = map.createStaticLayer('Outside', tileset)
 
     var object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
-    map.createStaticLayer('Church', tileset)
-    map.createStaticLayer('Church roof', church_roof_tileset)
+    var church_collision_layer = map.createStaticLayer('Church', tileset)
+    var church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
     map.createStaticLayer('Church window', church_window_tileset)
 
     this.player.setCollideWorldBounds(true); // collider
@@ -87,6 +87,10 @@ class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.player, collision_layer);
     object_collision_layer.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, object_collision_layer);
+    church_collision_layer.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, church_collision_layer);
+    church_roof_collision_layer.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, church_roof_collision_layer);
   }
 
   update() {
