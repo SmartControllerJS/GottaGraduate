@@ -20,7 +20,7 @@ class PlayScene extends Phaser.Scene {
 
   preload() {
     // this.load.image('sky', 'assets/sky.png');
-    
+
     this.load.image('base_tiles', 'assets/base_tiles.png')
     this.load.image('church_tiles', 'assets/church_tiles.png')
     this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
@@ -32,34 +32,28 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    // this.add.image(0,0,'base_tiles')
-
     // create the Tilemap
     const map = this.make.tilemap({ key: 'tilemap' })
 
-    // add the tileset image we are using
+    // add the tileset images we are using
     const tileset = map.addTilesetImage('background', 'base_tiles')
     const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
     const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
 
     map.createStaticLayer('Bottom of floor', tileset)
     map.createStaticLayer('Top of floor', tileset)
+    map.createStaticLayer('Fauna and flora', tileset)
+    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+
     map.createStaticLayer('Wall Decoration', tileset)
-    var collision_layer = map.createStaticLayer('Outside', tileset, 0, 0)
-    map.createStaticLayer('Furniture and trees', tileset)
+    var collision_layer = map.createStaticLayer('Outside', tileset)
+
+    var object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
     map.createStaticLayer('Church', tileset)
     map.createStaticLayer('Church roof', church_roof_tileset)
     map.createStaticLayer('Church window', church_window_tileset)
-    map.createStaticLayer('Fauna and flora', tileset)
 
-
-
-
-    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
-    // this.scale.startFullscreen();
-    // var FKey = this.input.keyboard.addKey('F');
     this.player.setCollideWorldBounds(true); // collider
-
         this.anims.create({
           key: 'left',
           frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -79,7 +73,8 @@ class PlayScene extends Phaser.Scene {
           frameRate: 10,
           repeat: -1
       });
-      this.cursors = this.input.keyboard.createCursorKeys();
+
+    this.cursors = this.input.keyboard.createCursorKeys();
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
     // this.createBG();
@@ -90,6 +85,8 @@ class PlayScene extends Phaser.Scene {
 
     collision_layer.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, collision_layer);
+    object_collision_layer.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, object_collision_layer);
   }
 
   update() {
@@ -107,6 +104,11 @@ class PlayScene extends Phaser.Scene {
     }
     else if (this.cursors.down.isDown) {
       this.player.body.velocity.y = 150;
+    }
+    else {
+      this.player.body.velocity.y = 0;
+      this.player.body.velocity.x = 0;
+      this.player.anims.play('turn', true);
     }
     // this.game.physics.arcade.collide(player, "Outside");
     // if (this.scanned == true) {
