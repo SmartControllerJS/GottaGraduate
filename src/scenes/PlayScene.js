@@ -45,12 +45,14 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Bottom of floor', tileset)
     map.createStaticLayer('Top of floor', tileset)
     map.createStaticLayer('Wall Decoration', tileset)
-    map.createStaticLayer('Outside', tileset)
+    var collision_layer = map.createStaticLayer('Outside', tileset, 0, 0)
     map.createStaticLayer('Furniture and trees', tileset)
     map.createStaticLayer('Church', tileset)
     map.createStaticLayer('Church roof', church_roof_tileset)
     map.createStaticLayer('Church window', church_window_tileset)
     map.createStaticLayer('Fauna and flora', tileset)
+
+
 
 
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
@@ -85,6 +87,9 @@ class PlayScene extends Phaser.Scene {
     //   this.createCode();
     //   this.globalFlag = true;
     // }
+
+    collision_layer.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, collision_layer);
   }
 
   update() {
@@ -97,7 +102,13 @@ class PlayScene extends Phaser.Scene {
       this.player.body.velocity.x = -150;
       this.player.anims.play('left', true);
     }
-
+    else if (this.cursors.up.isDown) {
+      this.player.body.velocity.y = -150;
+    }
+    else if (this.cursors.down.isDown) {
+      this.player.body.velocity.y = 150;
+    }
+    // this.game.physics.arcade.collide(player, "Outside");
     // if (this.scanned == true) {
     //   var controllerList = this.simplePeer.controllerList;
     //   var size = Object.keys(this.simplePeer.controllerList).length;
