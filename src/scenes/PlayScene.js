@@ -14,14 +14,21 @@ class PlayScene extends Phaser.Scene {
     this.simplePeer = null;
     this.scanned = false;
 
+    this.player = null;
+    this.cursors = null;
   }
 
   preload() {
     // this.load.image('sky', 'assets/sky.png');
+    
     this.load.image('base_tiles', 'assets/base_tiles.png')
     this.load.image('church_tiles', 'assets/church_tiles.png')
     this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
     this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
+    this.load.spritesheet('dude', 
+    'assets/dude.png',
+    { frameWidth: 32, frameHeight: 48 }
+  );
   }
 
   create() {
@@ -45,18 +52,32 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Church window', church_window_tileset)
     map.createStaticLayer('Fauna and flora', tileset)
 
+
+    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
     // this.scale.startFullscreen();
     // var FKey = this.input.keyboard.addKey('F');
+    this.player.setCollideWorldBounds(true); // collider
 
-    // FKey.on('down', function () {
-    //   if (this.scale.isFullscreen) {
-    //     this.scale.stopFullscreen();
-    //   }
-    //   else {
-    //     this.scale.startFullscreen();
-    //   }
-    // }, this);
+        this.anims.create({
+          key: 'left',
+          frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+          frameRate: 10,
+          repeat: -1
+      });
 
+      this.anims.create({
+          key: 'turn',
+          frames: [ { key: 'dude', frame: 4 } ],
+          frameRate: 20
+      });
+
+      this.anims.create({
+          key: 'right',
+          frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+          frameRate: 10,
+          repeat: -1
+      });
+      this.cursors = this.input.keyboard.createCursorKeys();
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
     // this.createBG();
@@ -68,6 +89,14 @@ class PlayScene extends Phaser.Scene {
 
   update() {
 
+    if (this.cursors.right.isDown) {
+      this.player.body.velocity.x = 150;
+      this.player.anims.play('right', true);
+    }
+    else if (this.cursors.left.isDown) {
+      this.player.body.velocity.x = -150;
+      this.player.anims.play('left', true);
+    }
 
     // if (this.scanned == true) {
     //   var controllerList = this.simplePeer.controllerList;
