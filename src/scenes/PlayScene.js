@@ -157,7 +157,8 @@ class PlayScene extends Phaser.Scene {
   }
 
   createBadItem() {
-    var item = this.badItems.create(1200, this.getRandomArbitrary(), 'bird');
+    var item = this.badItems.create(2000, this.getRandomArbitrary(), 'bird');
+    item.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(item);
   }
 
@@ -171,7 +172,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   moveIndividual(item) {
-    item.body.velocity.x = -1000;
+    item.body.velocity.x = -500;
   }
 
   createBG() {
