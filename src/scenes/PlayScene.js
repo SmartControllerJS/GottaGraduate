@@ -45,6 +45,7 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Top of floor', tileset)
     map.createStaticLayer('Fauna and flora', tileset)
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+    
     this.timedItem();
 
     this.badItems = this.physics.add.group();
@@ -112,22 +113,20 @@ class PlayScene extends Phaser.Scene {
   }
 
   update() {
-    
-
     if (this.cursors.right.isDown) {
-      this.player.body.velocity.x = 150;
+      this.player.body.velocity.x = 200;
       this.player.anims.play('right', true);
     }
     else if (this.cursors.left.isDown) {
-      this.player.body.velocity.x = -150;
+      this.player.body.velocity.x = -200;
       this.player.anims.play('left', true);
     }
     else if (this.cursors.up.isDown) {
-      this.player.body.velocity.y = -150;
+      this.player.body.velocity.y = -200;
       this.player.anims.play('up', true);
     }
     else if (this.cursors.down.isDown) {
-      this.player.body.velocity.y = 150;
+      this.player.body.velocity.y = 200;
       this.player.anims.play('down', true);
     }
     else {
@@ -157,21 +156,15 @@ class PlayScene extends Phaser.Scene {
   }
 
   createBadItem() {
-    var item = this.badItems.create(2000, this.getRandomArbitrary(), 'bird');
+    var xPosition = Math.random() < 0.5 ? 0 : 2000;
+    var item = this.badItems.create(xPosition, this.getRandomArbitrary(), 'bird');
     item.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(item);
-
-    if (Math.random() > 0.5) {
-      item.body.velocity.x *= -1;
-    }
-    if (Math.random() > 0.5) {
-      item.body.velocity.y *= -1;
-    }
   }
 
   timedItem() {
     this.timedEvent = this.time.addEvent({
-      delay: 1000,
+      delay: 4000,
       callback: this.createBadItem,
       callbackScope: this,
       loop: true,
@@ -179,13 +172,12 @@ class PlayScene extends Phaser.Scene {
   }
 
   moveIndividual(item) {
-    item.setVelocity(Phaser.Math.Between(200, 400), Phaser.Math.Between(200, 400));
-    item.body.velocity.x = -500;
+    item.setVelocity(Phaser.Math.Between(10, 300), Phaser.Math.Between(10, 300));
   }
 
-  createBG() {
-    this.add.image(0, 0, 'sky').setOrigin(0, 0);
-  }
+  // createBG() {
+  //   this.add.image(0, 0, 'sky').setOrigin(0, 0);
+  // }
 
   // createCode() {
   //   this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
