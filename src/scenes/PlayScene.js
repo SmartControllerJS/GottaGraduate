@@ -29,6 +29,7 @@ class PlayScene extends Phaser.Scene {
     'assets/dude.png',
     { frameWidth: 48, frameHeight: 48 }
   );
+  this.load.image('bird', 'assets/bird.png')
   }
 
   create() {
@@ -44,6 +45,10 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Top of floor', tileset)
     map.createStaticLayer('Fauna and flora', tileset)
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+    this.timedItem();
+
+    this.badItems = this.physics.add.group();
+
 
     map.createStaticLayer('Wall Decoration', tileset)
     var collision_layer = map.createStaticLayer('Outside', tileset)
@@ -107,6 +112,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   update() {
+    
 
     if (this.cursors.right.isDown) {
       this.player.body.velocity.x = 150;
@@ -144,6 +150,28 @@ class PlayScene extends Phaser.Scene {
     //     }
     //   }
     // }
+  }
+
+  getRandomArbitrary() {
+    return Math.random() * (0 - 700) + 720;
+  }
+
+  createBadItem() {
+    var item = this.badItems.create(1200, this.getRandomArbitrary(), 'bird');
+    this.moveIndividual(item);
+  }
+
+  timedItem() {
+    this.timedEvent = this.time.addEvent({
+      delay: 1000,
+      callback: this.createBadItem,
+      callbackScope: this,
+      loop: true,
+    })
+  }
+
+  moveIndividual(item) {
+    item.body.velocity.x = -1000;
   }
 
   createBG() {
