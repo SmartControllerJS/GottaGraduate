@@ -16,6 +16,8 @@ class PlayScene extends Phaser.Scene {
 
     this.player = null;
     this.cursors = null;
+    this.scoreText = null;
+    this.score = 120;
   }
 
   preload() {
@@ -33,6 +35,8 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
+
+
     // create the Tilemap
     const map = this.make.tilemap({ key: 'tilemap' })
 
@@ -110,9 +114,29 @@ class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.player, church_collision_layer);
     church_roof_collision_layer.setCollisionByExclusion([-1]);
     this.physics.add.collider(this.player, church_roof_collision_layer);
+
+
+    this.scoreText = this.add.text(this.player.x, 600, "SCORE:" + this.score, {fontSize: '12px', color: '#000'});
+
+    this.tweens.add({
+      targets: this.scoreText,
+      x: this.scoreText.x + this.player.x,
+      ease: 'Linear',
+      duration: 1,
+      delay: 1,
+      yoyo: false,
+      repeat: -1
+    })
+
+
+    this.physics.add.collider(this.player, this.badItems, this.decrementScore, null, this);
+
   }
 
   update() {
+    
+    this.scoreText.x = this.player.body.position.x;  
+    this.scoreText.y = this.player.body.position.y -10;  
     if (this.cursors.right.isDown) {
       this.player.body.velocity.x = 200;
       this.player.anims.play('right', true);
@@ -150,6 +174,11 @@ class PlayScene extends Phaser.Scene {
     //   }
     // }
   }
+
+  decrementScore() {
+    this.score -= 10;
+    this.scoreText.setText(`Score: ${this.score}`);
+  } 
 
   getRandomArbitrary() {
     return Math.random() * (0 - 700) + 720;
