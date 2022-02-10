@@ -160,6 +160,13 @@ class PlayScene extends Phaser.Scene {
     var item = this.badItems.create(2000, this.getRandomArbitrary(), 'bird');
     item.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(item);
+
+    if (Math.random() > 0.5) {
+      item.body.velocity.x *= -1;
+    }
+    if (Math.random() > 0.5) {
+      item.body.velocity.y *= -1;
+    }
   }
 
   timedItem() {
@@ -172,6 +179,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   moveIndividual(item) {
+    item.setVelocity(Phaser.Math.Between(200, 400), Phaser.Math.Between(200, 400));
     item.body.velocity.x = -500;
   }
 
