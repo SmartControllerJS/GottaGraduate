@@ -13,11 +13,15 @@ class PlayScene extends Phaser.Scene {
     this.controller = null;
     this.simplePeer = null;
     this.scanned = false;
-
+    this.badItems = null;
     this.player = null;
     this.cursors = null;
     this.scoreText = null;
     this.score = 120;
+ 
+    this.item = null;
+    this.itemBounds = null;
+    this.itemArray = null;
   }
 
   preload() {
@@ -48,11 +52,14 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Bottom of floor', tileset)
     map.createStaticLayer('Top of floor', tileset)
     map.createStaticLayer('Fauna and flora', tileset)
-    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
-    
-    this.timedItem();
-
     this.badItems = this.physics.add.group();
+    this.timedItem();
+    this.createBadItem();
+    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+
+
+
+
 
 
     map.createStaticLayer('Wall Decoration', tileset)
@@ -116,27 +123,33 @@ class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.player, church_roof_collision_layer);
 
 
-    this.scoreText = this.add.text(this.player.x, 600, "SCORE:" + this.score, {fontSize: '12px', color: '#000'});
+    // this.scoreText = this.add.text(this.player.x, 600, "SCORE:" + this.score, {fontSize: '12px', color: '#000'});
 
-    this.tweens.add({
-      targets: this.scoreText,
-      x: this.scoreText.x + this.player.x,
-      ease: 'Linear',
-      duration: 1,
-      delay: 1,
-      yoyo: false,
-      repeat: -1
-    })
+    // this.tweens.add({
+    //   targets: this.scoreText,
+    //   x: this.scoreText.x + this.player.x,
+    //   ease: 'Linear',
+    //   duration: 1,
+    //   delay: 1,
+    //   yoyo: false,
+    //   repeat: -1
+    // })
 
 
-    this.physics.add.collider(this.player, this.badItems, this.decrementScore, null, this);
+    // this.physics.add.collider(this.player, this.badItems, this.removeItem, null, this);
 
   }
 
   update() {
+
+    this.itemArray = this.badItems.children.getArray()
+    this.removeItem();
+    // this.physics.add.collider(this, this, this, this, this,this.badItems, this.player, function(item) {
+    //   item.destroy();
+    // }, null, this.badItems);
     
-    this.scoreText.x = this.player.body.position.x;  
-    this.scoreText.y = this.player.body.position.y -10;  
+    // this.scoreText.x = this.player.body.position.x;  
+    // this.scoreText.y = this.player.body.position.y -10;  
     if (this.cursors.right.isDown) {
       this.player.body.velocity.x = 200;
       this.player.anims.play('right', true);
@@ -175,10 +188,37 @@ class PlayScene extends Phaser.Scene {
     // }
   }
 
+  destroyElement(player, badItem) {
+    this.badItems.kill();
+  }
   decrementScore() {
     this.score -= 10;
     this.scoreText.setText(`Score: ${this.score}`);
+    // this.item.destroy();
   } 
+
+  removeItem() {
+
+    var itemArray = this.badItems.children.getArray();
+    for (let i = 0; i < this.itemArray.length; i++) {
+      // console.log(i);
+      // console.log(this.itemArray.length)
+      var boundsB = this.itemArray[i].getBounds();
+      var boundsA = this.player.getBounds();
+      if (this.physics.overlap(this.player, itemArray[i])) {
+        console.log(itemArray[i])
+        itemArray[i].destroy();
+      }
+      // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
+      //   console.log(i);
+      //   this.itemArray[i].destroy();
+      // }
+      else {
+        continue;
+      }
+    }
+  }
+
 
   getRandomArbitrary() {
     return Math.random() * (0 - 700) + 720;
@@ -186,14 +226,15 @@ class PlayScene extends Phaser.Scene {
 
   createBadItem() {
     var xPosition = Math.random() < 0.5 ? 0 : 2000;
-    var item = this.badItems.create(xPosition, this.getRandomArbitrary(), 'bird');
-    item.setBounce(1).setCollideWorldBounds(true);
-    this.moveIndividual(item);
+    this.item = this.badItems.create(xPosition, this.getRandomArbitrary(), 'bird');
+    this.item.setBounce(1).setCollideWorldBounds(true);
+    this.moveIndividual(this.item);
+
   }
 
   timedItem() {
     this.timedEvent = this.time.addEvent({
-      delay: 4000,
+      delay: 2000,
       callback: this.createBadItem,
       callbackScope: this,
       loop: true,
