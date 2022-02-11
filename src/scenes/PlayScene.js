@@ -54,7 +54,6 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Fauna and flora', tileset)
     this.badItems = this.physics.add.group();
     this.timedItem();
-    this.createBadItem();
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
 
 
