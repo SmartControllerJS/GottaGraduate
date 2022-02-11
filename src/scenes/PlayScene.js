@@ -123,17 +123,17 @@ class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.player, church_roof_collision_layer);
 
 
-    // this.scoreText = this.add.text(this.player.x, 600, "SCORE:" + this.score, {fontSize: '12px', color: '#000'});
+    this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
 
-    // this.tweens.add({
-    //   targets: this.scoreText,
-    //   x: this.scoreText.x + this.player.x,
-    //   ease: 'Linear',
-    //   duration: 1,
-    //   delay: 1,
-    //   yoyo: false,
-    //   repeat: -1
-    // })
+    this.tweens.add({
+      targets: this.scoreText,
+      x: this.scoreText.x + this.player.x,
+      ease: 'Linear',
+      duration: 1,
+      delay: 1,
+      yoyo: false,
+      repeat: -1
+    })
 
 
     // this.physics.add.collider(this.player, this.badItems, this.removeItem, null, this);
@@ -147,9 +147,12 @@ class PlayScene extends Phaser.Scene {
     // this.physics.add.collider(this, this, this, this, this,this.badItems, this.player, function(item) {
     //   item.destroy();
     // }, null, this.badItems);
+    if (this.score == 0) {
+      alert('gameover')
+    }
     
-    // this.scoreText.x = this.player.body.position.x;  
-    // this.scoreText.y = this.player.body.position.y -10;  
+    this.scoreText.x = this.player.body.position.x;  
+    this.scoreText.y = this.player.body.position.y -10;  
     if (this.cursors.right.isDown) {
       this.player.body.velocity.x = 200;
       this.player.anims.play('right', true);
@@ -193,7 +196,7 @@ class PlayScene extends Phaser.Scene {
   }
   decrementScore() {
     this.score -= 10;
-    this.scoreText.setText(`Score: ${this.score}`);
+    this.scoreText.setText(`Credits: ${this.score}`);
     // this.item.destroy();
   } 
 
@@ -208,6 +211,8 @@ class PlayScene extends Phaser.Scene {
       if (this.physics.overlap(this.player, itemArray[i])) {
         console.log(itemArray[i])
         itemArray[i].destroy();
+        this.score -= 10;
+        this.scoreText.setText(`Credits: ${this.score}`);
       }
       // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
       //   console.log(i);
