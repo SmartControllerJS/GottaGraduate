@@ -35,7 +35,11 @@ class PlayScene extends Phaser.Scene {
     'assets/dude.png',
     { frameWidth: 48, frameHeight: 48 }
   );
-  this.load.image('bird', 'assets/bird.png')
+  this.load.image('tiktok', 'assets/tiktok.png')
+  this.load.image('facebook', 'assets/facebook.png')
+  this.load.image('instagram', 'assets/instagram.png')
+  this.load.image('netflix', 'assets/netflix.png')
+  this.load.image('youtube', 'assets/youtube.png')
   }
 
   create() {
@@ -229,8 +233,10 @@ class PlayScene extends Phaser.Scene {
   }
 
   createBadItem() {
-    var xPosition = Math.random() < 0.5 ? 0 : 2000;
-    this.item = this.badItems.create(xPosition, this.getRandomArbitrary(), 'bird');
+    var socialMediaImages = ["netflix", "instagram", "youtube", "facebook", "tiktok"];
+    var randomNumber = Math.floor(Math.random()*socialMediaImages.length);
+    var xPosition = randomNumber < 0.5 ? 0 : 2000;
+    this.item = this.badItems.create(xPosition, this.getRandomArbitrary(), socialMediaImages[randomNumber]);
     this.item.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.item);
 
