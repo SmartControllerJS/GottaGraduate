@@ -259,6 +259,10 @@ class PlayScene extends Phaser.Scene {
     return Math.random() * (0 - 700) + 720;
   }
 
+  getRandomArbitraryX() {
+    return Math.random() * (0 - 1200) + 1200;
+  }
+
   createBadItem() {
     var socialMediaImages = ["netflix", "instagram", "youtube", "facebook", "tiktok"];
     var randomNumber = Math.floor(Math.random()*socialMediaImages.length);
@@ -272,7 +276,7 @@ class PlayScene extends Phaser.Scene {
     var randomNumber = Math.random();
     var yPosition = randomNumber < 0.5 ? 0 : 1500;
     var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.beer = this.physics.add.sprite(xPosition, yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
+    this.beer = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
     this.beer.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.beer);
     this.beer.anims.play('floating', this)
