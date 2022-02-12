@@ -272,10 +272,12 @@ class PlayScene extends Phaser.Scene {
     var randomNumber = Math.random();
     var yPosition = randomNumber < 0.5 ? 0 : 1500;
     var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.beer = this.physics.add.sprite(xPosition, yPosition, 'beer'); // loaded as sprite because it has animation frames
+    this.beer = this.physics.add.sprite(xPosition, yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
     this.beer.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.beer);
     this.beer.anims.play('floating', this)
+    this.beer.setSize(28, 36);
+    this.beer.setOffset(10, 10);
   }
 
 
@@ -290,7 +292,7 @@ class PlayScene extends Phaser.Scene {
 
   timedBeer() {
     this.timedEvent = this.time.addEvent({
-      delay: 10000,
+      delay: 1000,
       callback: this.createBeerItem,
       callbackScope: this,
       loop: true,
