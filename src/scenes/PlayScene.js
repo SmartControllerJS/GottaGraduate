@@ -15,6 +15,7 @@ class PlayScene extends Phaser.Scene {
     this.scanned = false;
     this.badItems = null;
     this.player = null;
+    this.drink = null;
     this.cursors = null;
     this.scoreText = null;
     this.score = 120;
@@ -33,6 +34,10 @@ class PlayScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
     this.load.spritesheet('dude', 
     'assets/dude.png',
+    { frameWidth: 48, frameHeight: 48 }
+  );
+    this.load.spritesheet('beer1', 
+    'assets/beer.png',
     { frameWidth: 48, frameHeight: 48 }
   );
   this.load.image('tiktok', 'assets/tiktok.png')
@@ -61,7 +66,7 @@ class PlayScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
 
 
-
+    this.drink = this.physics.add.sprite(500, 450, 'beer1'); // loaded as sprite because it has animation frames
 
 
 
@@ -106,6 +111,14 @@ class PlayScene extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
   });
+  
+  this.anims.create({
+    key: 'floating',
+    frames: this.anims.generateFrameNumbers('beer1', { start: 0, end: 7 }),
+    frameRate: 10,
+    repeat: -1
+});
+
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.scale.displaySize.setAspectRatio( this.width/this.height );
@@ -145,6 +158,7 @@ class PlayScene extends Phaser.Scene {
 
   update() {
 
+    this.drink.anims.play('floating', true);
     this.itemArray = this.badItems.children.getArray()
     this.removeItem();
     // this.physics.add.collider(this, this, this, this, this,this.badItems, this.player, function(item) {
