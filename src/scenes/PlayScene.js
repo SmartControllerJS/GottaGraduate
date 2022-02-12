@@ -15,7 +15,7 @@ class PlayScene extends Phaser.Scene {
     this.scanned = false;
     this.badItems = null;
     this.player = null;
-    this.drink = null;
+    this.beer = null;
     this.cursors = null;
     this.scoreText = null;
     this.score = 120;
@@ -23,6 +23,7 @@ class PlayScene extends Phaser.Scene {
     this.item = null;
     this.itemBounds = null;
     this.itemArray = null;
+    this.beerGroup = null;
   }
 
   preload() {
@@ -36,7 +37,7 @@ class PlayScene extends Phaser.Scene {
     'assets/dude.png',
     { frameWidth: 48, frameHeight: 48 }
   );
-    this.load.spritesheet('beer1', 
+    this.load.spritesheet('beer', 
     'assets/beer.png',
     { frameWidth: 48, frameHeight: 48 }
   );
@@ -64,9 +65,10 @@ class PlayScene extends Phaser.Scene {
     this.badItems = this.physics.add.group();
     this.timedItem();
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+    this.beerGroup = this.physics.add.group();
+    this.timedBeer();
 
 
-    this.drink = this.physics.add.sprite(500, 450, 'beer1'); // loaded as sprite because it has animation frames
 
 
 
@@ -114,7 +116,7 @@ class PlayScene extends Phaser.Scene {
   
   this.anims.create({
     key: 'floating',
-    frames: this.anims.generateFrameNumbers('beer1', { start: 0, end: 7 }),
+    frames: this.anims.generateFrameNumbers('beer', { start: 0, end: 7 }),
     frameRate: 10,
     repeat: -1
 });
@@ -158,12 +160,23 @@ class PlayScene extends Phaser.Scene {
 
   update() {
 
-    this.drink.anims.play('floating', true);
+    // this.beerGroup.playAnimation('floating');
+
+    // this.beerGroup.iterate(beer => {
+    //   beer.play('floating')
+    // })
+
+    // for (let i = 0; this.beerGroup.length; i++) {
+    //   this.beerGroup.children[i].anims.play('floating', true);
+    // }
+    // this.beerGroup.callAll('animations.add', 'animations', 'floating', [0,1,2,3,4,5,6,7], 10, true);
+    // this.beer.anims.play('floating', true);
+    // this.beerGroup.getChildren().forEach(function(child) {
+    //   child.anims.play('floating', true);
+    // },this);
     this.itemArray = this.badItems.children.getArray()
     this.removeItem();
-    // this.physics.add.collider(this, this, this, this, this,this.badItems, this.player, function(item) {
-    //   item.destroy();
-    // }, null, this.badItems);
+
     if (this.score == 0) {
       alert('gameover')
     }
@@ -253,13 +266,32 @@ class PlayScene extends Phaser.Scene {
     this.item = this.badItems.create(xPosition, this.getRandomArbitrary(), socialMediaImages[randomNumber]);
     this.item.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.item);
-
   }
+
+  createBeerItem() {
+    var randomNumber = Math.random();
+    var yPosition = randomNumber < 0.5 ? 0 : 1500;
+    var xPosition = randomNumber < 0.5 ? 0 : 2000;
+    this.beer = this.physics.add.sprite(xPosition, yPosition, 'beer'); // loaded as sprite because it has animation frames
+    this.beer.setBounce(1).setCollideWorldBounds(true);
+    this.moveIndividual(this.beer);
+    this.beer.anims.play('floating', this)
+  }
+
 
   timedItem() {
     this.timedEvent = this.time.addEvent({
       delay: 2000,
       callback: this.createBadItem,
+      callbackScope: this,
+      loop: true,
+    })
+  }
+
+  timedBeer() {
+    this.timedEvent = this.time.addEvent({
+      delay: 10000,
+      callback: this.createBeerItem,
       callbackScope: this,
       loop: true,
     })
