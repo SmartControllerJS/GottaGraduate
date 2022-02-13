@@ -195,6 +195,7 @@ class PlayScene extends Phaser.Scene {
     this.beerGroupArray = this.beerGroup.children.getArray();
     this.removeItem();
     this.removeBeerSprite();
+    this.removeGoodItem();
 
     if (this.score == 0) {
       alert('gameover')
@@ -273,6 +274,31 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
+  
+  removeGoodItem() {
+
+    var itemArray = this.goodItems.children.getArray();
+    for (let i = 0; i < this.itemArray.length; i++) {
+      // console.log(i);
+      // console.log(this.itemArray.length)
+      var boundsB = this.itemArray[i].getBounds();
+      var boundsA = this.player.getBounds();
+      if (this.physics.overlap(this.player, itemArray[i])) {
+        console.log(itemArray[i])
+        itemArray[i].destroy();
+        this.score += 20;
+        this.scoreText.setText(`Credits: ${this.score}`);
+      }
+      // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
+      //   console.log(i);
+      //   this.itemArray[i].destroy();
+      // }
+      else {
+        continue;
+      }
+    }
+  }
+
   removeBeerSprite() {
     // console.log('hello');
     var beerArray = this.beerGroup.children.getArray();
@@ -316,6 +342,8 @@ class PlayScene extends Phaser.Scene {
     this.goodItem = this.goodItems.create(xPosition, this.getRandomArbitrary(), 'ipad').setScale(2);
     this.goodItem.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.goodItem);
+    this.goodItem.setSize(20, 20);
+    // this.goodItem.setOffset(10, 10);
 
   }
 
