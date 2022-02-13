@@ -197,7 +197,7 @@ class PlayScene extends Phaser.Scene {
     this.removeBeerSprite();
     this.removeGoodItem();
 
-    if (this.score = 0) {
+    if (this.score <= 0) {
       alert('gameover')
     }
     
