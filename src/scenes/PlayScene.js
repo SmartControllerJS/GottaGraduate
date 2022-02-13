@@ -28,6 +28,8 @@ class PlayScene extends Phaser.Scene {
     this.index = 0;
  
     this.item = null;
+
+    this.goodItem = null;
     this.itemBounds = null;
     this.itemArray = null;
     this.beerGroup = null;
@@ -54,6 +56,7 @@ class PlayScene extends Phaser.Scene {
   this.load.image('instagram', 'assets/instagram.png')
   this.load.image('netflix', 'assets/netflix.png')
   this.load.image('youtube', 'assets/youtube.png')
+  this.load.image('ipad', 'assets/ipad.png');
   }
 
   create() {
@@ -76,7 +79,8 @@ class PlayScene extends Phaser.Scene {
     this.beerGroup = this.physics.add.group();
     this.createBeerItem();
     this.timedBeer();
-
+    this.goodItems = this.physics.add.group();
+    this.timedGoodItem();
 
     this.player.setSize(28, 40);
     this.player.setOffset(10, 7);
@@ -306,6 +310,15 @@ class PlayScene extends Phaser.Scene {
     this.moveIndividual(this.item);
   }
 
+  createGoodItem() {
+    var randomNumber = Math.random();
+    var xPosition = randomNumber < 0.5 ? 0 : 2000;
+    this.goodItem = this.goodItems.create(xPosition, this.getRandomArbitrary(), 'ipad').setScale(2);
+    this.goodItem.setBounce(1).setCollideWorldBounds(true);
+    this.moveIndividual(this.goodItem);
+
+  }
+
   createBeerItem() {
     var randomNumber = Math.random();
     var yPosition = randomNumber < 0.5 ? 0 : 1500;
@@ -393,6 +406,15 @@ class PlayScene extends Phaser.Scene {
     this.timedEvent = this.time.addEvent({
       delay: 15000,
       callback: this.createIndividualBeer,
+      callbackScope: this,
+      loop: true,
+    })
+  }
+
+  timedGoodItem() {
+    this.timedEvent = this.time.addEvent({
+      delay: 6000,
+      callback: this.createGoodItem,
       callbackScope: this,
       loop: true,
     })
