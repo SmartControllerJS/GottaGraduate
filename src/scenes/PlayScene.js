@@ -286,7 +286,7 @@ class PlayScene extends Phaser.Scene {
       if (this.physics.overlap(this.player, itemArray[i])) {
         console.log(itemArray[i])
         itemArray[i].destroy();
-        this.score += 20;
+        this.score += 5;
         this.scoreText.setText(`Credits: ${this.score}`);
       }
       // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
@@ -441,7 +441,7 @@ class PlayScene extends Phaser.Scene {
 
   timedGoodItem() {
     this.timedEvent = this.time.addEvent({
-      delay: 6000,
+      delay: 10000,
       callback: this.createGoodItem,
       callbackScope: this,
       loop: true,
