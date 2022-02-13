@@ -16,14 +16,22 @@ class PlayScene extends Phaser.Scene {
     this.badItems = null;
     this.player = null;
     this.beer = null;
+    this.beer2 = null;
+    this.beer3 = null;
+    this.beer4 = null;
+    this.beer5 = null;
     this.cursors = null;
     this.scoreText = null;
     this.score = 120;
+    this.playerVelocity = 200;
+
+    this.index = 0;
  
     this.item = null;
     this.itemBounds = null;
     this.itemArray = null;
     this.beerGroup = null;
+    this.beerGroupArray = null;
   }
 
   preload() {
@@ -66,7 +74,12 @@ class PlayScene extends Phaser.Scene {
     this.timedItem();
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
     this.beerGroup = this.physics.add.group();
+    this.createBeerItem();
     this.timedBeer();
+
+
+    this.player.setSize(28, 40);
+    this.player.setOffset(10, 7);
 
 
 
@@ -174,8 +187,10 @@ class PlayScene extends Phaser.Scene {
     // this.beerGroup.getChildren().forEach(function(child) {
     //   child.anims.play('floating', true);
     // },this);
-    this.itemArray = this.badItems.children.getArray()
+    this.itemArray = this.badItems.children.getArray();
+    this.beerGroupArray = this.beerGroup.children.getArray();
     this.removeItem();
+    this.removeBeerSprite();
 
     if (this.score == 0) {
       alert('gameover')
@@ -184,19 +199,19 @@ class PlayScene extends Phaser.Scene {
     this.scoreText.x = this.player.body.position.x;  
     this.scoreText.y = this.player.body.position.y -10;  
     if (this.cursors.right.isDown) {
-      this.player.body.velocity.x = 200;
+      this.player.body.velocity.x = this.playerVelocity;
       this.player.anims.play('right', true);
     }
     else if (this.cursors.left.isDown) {
-      this.player.body.velocity.x = -200;
+      this.player.body.velocity.x = -this.playerVelocity;
       this.player.anims.play('left', true);
     }
     else if (this.cursors.up.isDown) {
-      this.player.body.velocity.y = -200;
+      this.player.body.velocity.y = -this.playerVelocity;
       this.player.anims.play('up', true);
     }
     else if (this.cursors.down.isDown) {
-      this.player.body.velocity.y = 200;
+      this.player.body.velocity.y = this.playerVelocity;
       this.player.anims.play('down', true);
     }
     else {
@@ -254,6 +269,23 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
+  removeBeerSprite() {
+    // console.log('hello');
+    var beerArray = this.beerGroup.children.getArray();
+    console.log(beerArray);
+    for (let j = 0; j < this.beerGroupArray.length; j++) {
+      var boundsB = this.beerGroupArray[j].getBounds();
+      var boundsA = this.player.getBounds();
+      if (this.physics.overlap(this.player, beerArray[j])) {
+        beerArray[j].destroy();
+        this.playerVelocity -= 100;
+      }
+      else {
+        continue;
+      }
+    }
+  }
+
 
   getRandomArbitrary() {
     return Math.random() * (0 - 700) + 720;
@@ -275,15 +307,75 @@ class PlayScene extends Phaser.Scene {
   createBeerItem() {
     var randomNumber = Math.random();
     var yPosition = randomNumber < 0.5 ? 0 : 1500;
-    var xPosition = randomNumber < 0.5 ? 0 : 2000;
     this.beer = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    this.beer.setBounce(1).setCollideWorldBounds(true);
-    this.moveIndividual(this.beer);
-    this.beer.anims.play('floating', this)
-    this.beer.setSize(28, 36);
-    this.beer.setOffset(10, 10);
+    this.beer2 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
+    this.beer3 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
+    this.beer4 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
+    this.beer5 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
+    // this.beer.setBounce(1).setCollideWorldBounds(true);
+    // this.beer2.setBounce(1).setCollideWorldBounds(true);
+    // this.beer3.setBounce(1).setCollideWorldBounds(true);
+    // this.beer4.setBounce(1).setCollideWorldBounds(true);
+    // this.beer5.setBounce(1).setCollideWorldBounds(true);
+    // this.beer.setVisible(false);
+    // this.beer2.setVisible(false);
+    // this.beer3.setVisible(false);
+    // this.beer4.setVisible(false);
+    // this.beer5.setVisible(false);
+    // this.moveIndividualBeer(this.beer);
+    // this.beer.anims.play('floating', this)
+    // this.beer.setSize(28, 36);
+    // this.beer.setOffset(10, 10);
+    this.beerGroup.add(this.beer);
+    this.beerGroup.add(this.beer2);
+    this.beerGroup.add(this.beer3);
+    this.beerGroup.add(this.beer4);
+    this.beerGroup.add(this.beer5);
   }
 
+  createIndividualBeer() {
+    var arr = this.beerGroup.children.getArray();
+    this.playerVelocity= 200;
+
+    for (let k = 0; k < arr.length; k++) {
+      if (k == this.index && this.index == 0) {
+        this.beer.setBounce(1).setCollideWorldBounds(true);
+        this.moveIndividualBeer(this.beer);
+        this.beer.anims.play('floating', this)
+        this.beer.setSize(28, 36);
+        this.beer.setOffset(10, 10);
+      }
+      else if (k == this.index && this.index == 1) {
+        this.beer2.setBounce(1).setCollideWorldBounds(true);
+        this.moveIndividualBeer(this.beer2);
+        this.beer2.anims.play('floating', this)
+        this.beer2.setSize(28, 36);
+        this.beer2.setOffset(10, 10);
+      }
+      else if (k == this.index && this.index == 2) {
+        this.beer3.setBounce(1).setCollideWorldBounds(true);
+        this.moveIndividualBeer(this.beer3);
+        this.beer3.anims.play('floating', this)
+        this.beer3.setSize(28, 36);
+        this.beer3.setOffset(10, 10);
+      }
+      else if (k == this.index && this.index == 3) {
+        this.beer4.setBounce(1).setCollideWorldBounds(true);
+        this.moveIndividualBeer(this.beer4);
+        this.beer4.anims.play('floating', this)
+        this.beer4.setSize(28, 36);
+        this.beer4.setOffset(10, 10);
+      }
+      else if (k == this.index && this.index == 4) {
+        this.beer5.setBounce(1).setCollideWorldBounds(true);
+        this.moveIndividualBeer(this.beer5);
+        this.beer5.anims.play('floating', this)
+        this.beer5.setSize(28, 36);
+        this.beer5.setOffset(10, 10);
+      }
+    }
+    this.index += 1;
+  }
 
   timedItem() {
     this.timedEvent = this.time.addEvent({
@@ -296,8 +388,8 @@ class PlayScene extends Phaser.Scene {
 
   timedBeer() {
     this.timedEvent = this.time.addEvent({
-      delay: 1000,
-      callback: this.createBeerItem,
+      delay: 10000,
+      callback: this.createIndividualBeer,
       callbackScope: this,
       loop: true,
     })
@@ -306,6 +398,11 @@ class PlayScene extends Phaser.Scene {
   moveIndividual(item) {
     item.setVelocity(Phaser.Math.Between(10, 300), Phaser.Math.Between(10, 300));
   }
+  moveIndividualBeer(item) {
+    item.setVelocity(Phaser.Math.Between(10, 150), Phaser.Math.Between(10, 150));
+  }
+
+
 
   // createBG() {
   //   this.add.image(0, 0, 'sky').setOrigin(0, 0);
