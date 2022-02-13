@@ -272,13 +272,15 @@ class PlayScene extends Phaser.Scene {
   removeBeerSprite() {
     // console.log('hello');
     var beerArray = this.beerGroup.children.getArray();
-    console.log(beerArray);
+    // console.log(beerArray);
     for (let j = 0; j < this.beerGroupArray.length; j++) {
       var boundsB = this.beerGroupArray[j].getBounds();
       var boundsA = this.player.getBounds();
       if (this.physics.overlap(this.player, beerArray[j])) {
+
         beerArray[j].destroy();
         this.playerVelocity -= 100;
+        // this.index += 1;
       }
       else {
         continue;
@@ -337,7 +339,8 @@ class PlayScene extends Phaser.Scene {
     var arr = this.beerGroup.children.getArray();
     this.playerVelocity= 200;
 
-    for (let k = 0; k < arr.length; k++) {
+    for (let k = 0; k < 5; k++) {
+      console.log(k);
       if (k == this.index && this.index == 0) {
         this.beer.setBounce(1).setCollideWorldBounds(true);
         this.moveIndividualBeer(this.beer);
@@ -379,7 +382,7 @@ class PlayScene extends Phaser.Scene {
 
   timedItem() {
     this.timedEvent = this.time.addEvent({
-      delay: 2000,
+      delay: 3000,
       callback: this.createBadItem,
       callbackScope: this,
       loop: true,
@@ -388,7 +391,7 @@ class PlayScene extends Phaser.Scene {
 
   timedBeer() {
     this.timedEvent = this.time.addEvent({
-      delay: 10000,
+      delay: 15000,
       callback: this.createIndividualBeer,
       callbackScope: this,
       loop: true,
