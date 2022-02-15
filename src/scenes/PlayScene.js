@@ -45,6 +45,10 @@ class PlayScene extends Phaser.Scene {
     this.itemArray = null;
     this.beerGroup = null;
     this.beerGroupArray = null;
+
+    // timer
+    this.text = null;
+    this.initialTime = 90;
   }
 
   preload() {
@@ -175,6 +179,11 @@ class PlayScene extends Phaser.Scene {
     //   yoyo: false,
     //   repeat: -1
     // })
+
+    this.text = this.add.text(600, 32, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
+    // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
+    this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+    this.time.addEvent({ delay: 90000, callback: this.goodGuysWin, callbackScope: this, loop: false });
   }
 
 
@@ -539,6 +548,27 @@ class PlayScene extends Phaser.Scene {
       // selfP.physics.resume();
     })
   }
+
+  // round timer functions
+  formatTime(seconds){
+    // Minutes
+      var minutes = Math.floor(seconds/60);
+      // Seconds
+      var partInSeconds = seconds%60;
+      // Adds left zeros to seconds
+      partInSeconds = partInSeconds.toString().padStart(2,'0');
+      // Returns formated time
+    return `${minutes}:${partInSeconds}`;
+    }
+
+    onEvent ()
+    {
+      this.initialTime -= 1; // One second
+      this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
+    }
+    goodGuysWin() {
+      alert("The Good Guys Win :)");
+    }
 }
 
 export default PlayScene;
