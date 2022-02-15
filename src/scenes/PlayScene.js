@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-// import 'smartcontroller';
+import 'smartcontroller';
 
 // all commented code is smartcontroller specific - not game specific
 
@@ -37,30 +37,27 @@ class PlayScene extends Phaser.Scene {
   }
 
   preload() {
-    // this.load.image('sky', 'assets/sky.png');
-
     this.load.image('base_tiles', 'assets/base_tiles.png')
     this.load.image('church_tiles', 'assets/church_tiles.png')
     this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
     this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
     this.load.spritesheet('dude', 
-    'assets/dude.png',
-    { frameWidth: 48, frameHeight: 48 }
-  );
+      'assets/dude.png',
+      { frameWidth: 48, frameHeight: 48 }
+    );
     this.load.spritesheet('beer', 
-    'assets/beer.png',
-    { frameWidth: 48, frameHeight: 48 }
-  );
-  this.load.image('tiktok', 'assets/tiktok.png')
-  this.load.image('facebook', 'assets/facebook.png')
-  this.load.image('instagram', 'assets/instagram.png')
-  this.load.image('netflix', 'assets/netflix.png')
-  this.load.image('youtube', 'assets/youtube.png')
-  this.load.image('ipad', 'assets/ipad.png');
+      'assets/beer.png',
+      { frameWidth: 48, frameHeight: 48 }
+    );
+    this.load.image('tiktok', 'assets/tiktok.png')
+    this.load.image('facebook', 'assets/facebook.png')
+    this.load.image('instagram', 'assets/instagram.png')
+    this.load.image('netflix', 'assets/netflix.png')
+    this.load.image('youtube', 'assets/youtube.png')
+    this.load.image('ipad', 'assets/ipad.png');
   }
 
   create() {
-
 
     // create the Tilemap
     const map = this.make.tilemap({ key: 'tilemap' })
@@ -84,9 +81,6 @@ class PlayScene extends Phaser.Scene {
 
     this.player.setSize(28, 40);
     this.player.setOffset(10, 7);
-
-
-
 
 
     map.createStaticLayer('Wall Decoration', tileset)
@@ -169,28 +163,9 @@ class PlayScene extends Phaser.Scene {
       yoyo: false,
       repeat: -1
     })
-
-
-    // this.physics.add.collider(this.player, this.badItems, this.removeItem, null, this);
-
   }
 
   update() {
-
-    // this.beerGroup.playAnimation('floating');
-
-    // this.beerGroup.iterate(beer => {
-    //   beer.play('floating')
-    // })
-
-    // for (let i = 0; this.beerGroup.length; i++) {
-    //   this.beerGroup.children[i].anims.play('floating', true);
-    // }
-    // this.beerGroup.callAll('animations.add', 'animations', 'floating', [0,1,2,3,4,5,6,7], 10, true);
-    // this.beer.anims.play('floating', true);
-    // this.beerGroup.getChildren().forEach(function(child) {
-    //   child.anims.play('floating', true);
-    // },this);
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
     this.removeItem();
@@ -224,7 +199,6 @@ class PlayScene extends Phaser.Scene {
       this.player.body.velocity.x = 0;
       this.player.anims.play('turn', true);
     }
-    // this.game.physics.arcade.collide(player, "Outside");
     // if (this.scanned == true) {
     //   var controllerList = this.simplePeer.controllerList;
     //   var size = Object.keys(this.simplePeer.controllerList).length;
@@ -251,11 +225,8 @@ class PlayScene extends Phaser.Scene {
   } 
 
   removeItem() {
-
     var itemArray = this.badItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
-      // console.log(i);
-      // console.log(this.itemArray.length)
       var boundsB = this.itemArray[i].getBounds();
       var boundsA = this.player.getBounds();
       if (this.physics.overlap(this.player, itemArray[i])) {
@@ -279,8 +250,6 @@ class PlayScene extends Phaser.Scene {
 
     var itemArray = this.goodItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
-      // console.log(i);
-      // console.log(this.itemArray.length)
       var boundsB = this.itemArray[i].getBounds();
       var boundsA = this.player.getBounds();
       if (this.physics.overlap(this.player, itemArray[i])) {
@@ -300,9 +269,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   removeBeerSprite() {
-    // console.log('hello');
     var beerArray = this.beerGroup.children.getArray();
-    // console.log(beerArray);
     for (let j = 0; j < this.beerGroupArray.length; j++) {
       var boundsB = this.beerGroupArray[j].getBounds();
       var boundsA = this.player.getBounds();
@@ -310,7 +277,6 @@ class PlayScene extends Phaser.Scene {
 
         beerArray[j].destroy();
         this.playerVelocity -= 100;
-        // this.index += 1;
       }
       else {
         continue;
@@ -343,8 +309,6 @@ class PlayScene extends Phaser.Scene {
     this.goodItem.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.goodItem);
     this.goodItem.setSize(20, 20);
-    // this.goodItem.setOffset(10, 10);
-
   }
 
   createBeerItem() {
@@ -355,20 +319,6 @@ class PlayScene extends Phaser.Scene {
     this.beer3 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
     this.beer4 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
     this.beer5 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    // this.beer.setBounce(1).setCollideWorldBounds(true);
-    // this.beer2.setBounce(1).setCollideWorldBounds(true);
-    // this.beer3.setBounce(1).setCollideWorldBounds(true);
-    // this.beer4.setBounce(1).setCollideWorldBounds(true);
-    // this.beer5.setBounce(1).setCollideWorldBounds(true);
-    // this.beer.setVisible(false);
-    // this.beer2.setVisible(false);
-    // this.beer3.setVisible(false);
-    // this.beer4.setVisible(false);
-    // this.beer5.setVisible(false);
-    // this.moveIndividualBeer(this.beer);
-    // this.beer.anims.play('floating', this)
-    // this.beer.setSize(28, 36);
-    // this.beer.setOffset(10, 10);
     this.beerGroup.add(this.beer);
     this.beerGroup.add(this.beer2);
     this.beerGroup.add(this.beer3);
