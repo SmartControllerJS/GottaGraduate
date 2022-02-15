@@ -58,21 +58,24 @@ Initially, the project was focused on building a generic game, but as developmen
   - [x] Make graphics
   - [x] Integrate into Phaser
 - [ ] Add sprites
-  - [ ] Get spritesheet
-  - [ ] Integrate spritesheet into Phaser
-  - [ ] Add Phaser properties to Sprite
-  - [ ] Add map collision for sprites
-  - [ ] Add temporary movement with keys
+  - [x] Get spritesheet
+  - [x] Integrate spritesheet into Phaser
+  - [x] Add Phaser properties to Sprite
+  - [x] Add map collision for sprites
+  - [x] Add temporary movement with keys
   - [ ] Add health bar
   - [ ] Add player name
 - [ ] Round 1
   - [ ] Create items
-    - [ ] Facebook
-    - [ ] TikTok
-    - [ ] Beer
-    - [ ] Yoga
-    - [ ] Add item collision on players and map boundary
-    - [ ] Add random spawn points to items
+    - [x] Facebook
+    - [x] TikTok
+    - [x] Beer
+    - [x] Instagram
+    - [x] Youtube
+    - [x] Netflix
+    - [x] Add item collision on players and map boundary
+    - [x] Add random spawn points to items
+    - [x] Good item
   - [ ] Add countdown timer
   - [ ] Add QRCode
   - [ ] Add smartcontroller Movement
