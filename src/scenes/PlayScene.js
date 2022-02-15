@@ -136,7 +136,6 @@ class PlayScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
-    // this.createBG();
     // if (this.globalFlag == false) {
     //   this.createCode();
     //   this.globalFlag = true;
@@ -404,12 +403,6 @@ class PlayScene extends Phaser.Scene {
   moveIndividualBeer(item) {
     item.setVelocity(Phaser.Math.Between(10, 150), Phaser.Math.Between(10, 150));
   }
-
-
-
-  // createBG() {
-  //   this.add.image(0, 0, 'sky').setOrigin(0, 0);
-  // }
 
   // createCode() {
   //   this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
