@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-// import 'smartcontroller';
+import "smartcontroller";
 
 // all commented code is smartcontroller specific - not game specific
 
@@ -13,6 +13,8 @@ class PlayScene extends Phaser.Scene {
     this.controller = null;
     this.simplePeer = null;
     this.scanned = false;
+    this.playerList = [];
+
     this.badItems = null;
     this.player = null;
     this.beer = null;
@@ -58,6 +60,10 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
+    if (this.globalFlag == false) {
+      this.createCode();
+      this.globalFlag = true;
+    }
 
     // create the Tilemap
     const map = this.make.tilemap({ key: 'tilemap' })
@@ -73,6 +79,7 @@ class PlayScene extends Phaser.Scene {
     this.badItems = this.physics.add.group();
     this.timedItem();
     this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+    this.playerList.push(this.player);
     this.beerGroup = this.physics.add.group();
     this.createBeerItem();
     this.timedBeer();
@@ -133,9 +140,9 @@ class PlayScene extends Phaser.Scene {
 });
 
 
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.scale.displaySize.setAspectRatio( this.width/this.height );
-    this.scale.refresh();
+    // this.cursors = this.input.keyboard.createCursorKeys();
+    // this.scale.displaySize.setAspectRatio( this.width/this.height );
+    // this.scale.refresh();
     // if (this.globalFlag == false) {
     //   this.createCode();
     //   this.globalFlag = true;
@@ -177,41 +184,57 @@ class PlayScene extends Phaser.Scene {
     
     this.scoreText.x = this.player.body.position.x;  
     this.scoreText.y = this.player.body.position.y -10;  
-    if (this.cursors.right.isDown) {
-      this.player.body.velocity.x = this.playerVelocity;
-      this.player.anims.play('right', true);
-    }
-    else if (this.cursors.left.isDown) {
-      this.player.body.velocity.x = -this.playerVelocity;
-      this.player.anims.play('left', true);
-    }
-    else if (this.cursors.up.isDown) {
-      this.player.body.velocity.y = -this.playerVelocity;
-      this.player.anims.play('up', true);
-    }
-    else if (this.cursors.down.isDown) {
-      this.player.body.velocity.y = this.playerVelocity;
-      this.player.anims.play('down', true);
-    }
-    else {
-      this.player.body.velocity.y = 0;
-      this.player.body.velocity.x = 0;
-      this.player.anims.play('turn', true);
-    }
-    // if (this.scanned == true) {
-    //   var controllerList = this.simplePeer.controllerList;
-    //   var size = Object.keys(this.simplePeer.controllerList).length;
-    //   for (let i = 0; i < size; i++) {
-    //     console.log(this.playerList[i].text);
-    //     if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 0) {
-    //       this.bird.body.velocity.y = -this.flapVelocity;
-    //     } else if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 1) {
-    //       this.secondBird.body.velocity.y = -this.flapVelocity;
-    //     } else if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 2) {
-    //       this.thirdBird.body.velocity.y = -this.flapVelocity;
-    //     }
-    //   }
+    // if (this.cursors.right.isDown) {
+    //   this.player.body.velocity.x = this.playerVelocity;
+    //   this.player.anims.play('right', true);
     // }
+    // else if (this.cursors.left.isDown) {
+    //   this.player.body.velocity.x = -this.playerVelocity;
+    //   this.player.anims.play('left', true);
+    // }
+    // else if (this.cursors.up.isDown) {
+    //   this.player.body.velocity.y = -this.playerVelocity;
+    //   this.player.anims.play('up', true);
+    // }
+    // else if (this.cursors.down.isDown) {
+    //   this.player.body.velocity.y = this.playerVelocity;
+    //   this.player.anims.play('down', true);
+    // }
+    // else {
+    //   this.player.body.velocity.y = 0;
+    //   this.player.body.velocity.x = 0;
+    //   this.player.anims.play('turn', true);
+    // }
+
+    if (this.scanned == true) {
+      var controllerList = this.simplePeer.controllerList;
+      var size = Object.keys(this.simplePeer.controllerList).length;
+      for (let i = 0; i < size; i++) {
+        // console.log(this.playerList[i].text);
+        if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 0) {
+          console.log("up pressed")
+          this.player.body.velocity.y = -this.playerVelocity;
+          this.player.anims.play('up', true);
+        } 
+        else if (controllerList[Object.keys(controllerList)[i]].buttons['left'] == true && i == 0) {
+          this.player.body.velocity.x = -this.playerVelocity;
+          this.player.anims.play('left', true);
+        } 
+        else if (controllerList[Object.keys(controllerList)[i]].buttons['right'] == true && i == 0) {
+          this.player.body.velocity.x = this.playerVelocity;
+          this.player.anims.play('right', true);
+        } 
+        else if (controllerList[Object.keys(controllerList)[i]].buttons['down'] == true && i == 0) {
+          this.player.body.velocity.y = this.playerVelocity;
+          this.player.anims.play('down', true);
+        } 
+        else {
+          this.player.body.velocity.y = 0;
+          this.player.body.velocity.x = 0;
+          this.player.anims.play('turn', true);
+        }
+      }
+    }
   }
 
   destroyElement(player, badItem) {
@@ -413,6 +436,19 @@ class PlayScene extends Phaser.Scene {
   //     selfP.scanned = true;
   //   })
   // }
+  createCode() {
+    // this.scene.pause();
+    // this.physics.pause();
+    this.isPaused = true;
+    this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
+    var selfP = this;
+    this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
+      this.controller = nes; 
+      selfP.scanned = true;
+      // selfP.scene.resume();
+    })
+  }
 }
 
 export default PlayScene;
