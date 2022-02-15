@@ -9,12 +9,20 @@ class PlayScene extends Phaser.Scene {
     super('PlayScene');
     this.config = config;
 
+    // smartcontroller
     this.globalFlag = false;
     this.controller = null;
     this.simplePeer = null;
     this.scanned = false;
     this.playerList = [];
 
+    // map layers
+    this.collision_layer = null;
+    this.object_collision_layer = null;
+    this.church_collision_layer = null;
+    this.church_roof_collision_layer = null;
+
+    // items
     this.badItems = null;
     this.player = null;
     this.beer = null;
@@ -22,6 +30,7 @@ class PlayScene extends Phaser.Scene {
     this.beer3 = null;
     this.beer4 = null;
     this.beer5 = null;
+
     this.cursors = null;
     this.scoreText = null;
     this.score = 120;
@@ -78,28 +87,27 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Fauna and flora', tileset)
     this.badItems = this.physics.add.group();
     this.timedItem();
-    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
-    this.playerList.push(this.player);
+    // this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+    // this.playerList.push(this.player);
     this.beerGroup = this.physics.add.group();
     this.createBeerItem();
     this.timedBeer();
     this.goodItems = this.physics.add.group();
     this.timedGoodItem();
 
-    this.player.setSize(28, 40);
-    this.player.setOffset(10, 7);
+    // this.player.setSize(28, 40);
+    // this.player.setOffset(10, 7);
 
 
     map.createStaticLayer('Wall Decoration', tileset)
-    var collision_layer = map.createStaticLayer('Outside', tileset)
-
-    var object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
-    var church_collision_layer = map.createStaticLayer('Church', tileset)
-    var church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
+    this.collision_layer = map.createStaticLayer('Outside', tileset)
+    this.object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
+    this.church_collision_layer = map.createStaticLayer('Church', tileset)
+    this.church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
     map.createStaticLayer('Church roof no collision', church_roof_tileset);
     map.createStaticLayer('Church window', church_window_tileset)
 
-    this.player.setCollideWorldBounds(true); // collider
+
         this.anims.create({
           key: 'left',
           frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
@@ -124,23 +132,23 @@ class PlayScene extends Phaser.Scene {
         frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
         frameRate: 10,
         repeat: -1
-    });
-    this.anims.create({
-      key: 'down',
-      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
-      frameRate: 10,
-      repeat: -1
-  });
+      });
+      this.anims.create({
+        key: 'down',
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
+        frameRate: 10,
+        repeat: -1
+      });
   
-  this.anims.create({
-    key: 'floating',
-    frames: this.anims.generateFrameNumbers('beer', { start: 0, end: 7 }),
-    frameRate: 10,
-    repeat: -1
-});
+      this.anims.create({
+        key: 'floating',
+        frames: this.anims.generateFrameNumbers('beer', { start: 0, end: 7 }),
+        frameRate: 10,
+        repeat: -1
+      });
 
 
-    this.cursors = this.input.keyboard.createCursorKeys();
+    // this.cursors = this.input.keyboard.createCursorKeys();
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
     // if (this.globalFlag == false) {
@@ -148,63 +156,100 @@ class PlayScene extends Phaser.Scene {
     //   this.globalFlag = true;
     // }
 
-    collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, collision_layer);
-    object_collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, object_collision_layer);
-    church_collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, church_collision_layer);
-    church_roof_collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, church_roof_collision_layer);
+    this.collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, collision_layer);
+    this.object_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, object_collision_layer);
+    this.church_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, church_collision_layer);
+    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, church_roof_collision_layer);
 
-
-    this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
-
-    this.tweens.add({
-      targets: this.scoreText,
-      x: this.scoreText.x + this.player.x,
-      ease: 'Linear',
-      duration: 1,
-      delay: 1,
-      yoyo: false,
-      repeat: -1
-    })
+    // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
+    // this.tweens.add({
+    //   targets: this.scoreText,
+    //   x: this.scoreText.x + this.player.x,
+    //   ease: 'Linear',
+    //   duration: 1,
+    //   delay: 1,
+    //   yoyo: false,
+    //   repeat: -1
+    // })
   }
 
+
   update() {
+
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
+      frameRate: 10,
+      repeat: -1
+  });
+
+  this.anims.create({
+      key: 'turn',
+      frames: [ { key: 'dude', frame: 1 } ],
+      frameRate: 20
+  });
+
+  this.anims.create({
+      key: 'right',
+      frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
+      frameRate: 10,
+      repeat: -1
+  });
+  this.anims.create({
+    key: 'up',
+    frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
+    frameRate: 10,
+    repeat: -1
+  });
+  this.anims.create({
+    key: 'down',
+    frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
+    frameRate: 10,
+    repeat: -1
+  });
+
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
-    this.removeItem();
-    this.removeBeerSprite();
-    this.removeGoodItem();
+    if (this.scanned == true) {
+      this.removeItem();
+      this.removeBeerSprite();
+      this.removeGoodItem();
+
+      this.scoreText.x = this.player.body.position.x;  
+      this.scoreText.y = this.player.body.position.y -10;  
+      // if (this.cursors.right.isDown) {
+      //   this.player.body.velocity.x = this.playerVelocity;
+      //   this.player.anims.play('right', true);
+      // }
+      // else if (this.cursors.left.isDown) {
+      //   this.player.body.velocity.x = -this.playerVelocity;
+      //   this.player.anims.play('left', true);
+      // }
+      // else if (this.cursors.up.isDown) {
+      //   this.player.body.velocity.y = -this.playerVelocity;
+      //   this.player.anims.play('up', true);
+      // }
+      // else if (this.cursors.down.isDown) {
+      //   this.player.body.velocity.y = this.playerVelocity;
+      //   this.player.anims.play('down', true);
+      // }
+      // else {
+      //   this.player.body.velocity.y = 0;
+      //   this.player.body.velocity.x = 0;
+      //   this.player.anims.play('turn', true);
+      // }
+    }
+
 
     if (this.score <= 0) {
       alert('gameover')
     }
     
-    this.scoreText.x = this.player.body.position.x;  
-    this.scoreText.y = this.player.body.position.y -10;  
-    if (this.cursors.right.isDown) {
-      this.player.body.velocity.x = this.playerVelocity;
-      this.player.anims.play('right', true);
-    }
-    else if (this.cursors.left.isDown) {
-      this.player.body.velocity.x = -this.playerVelocity;
-      this.player.anims.play('left', true);
-    }
-    else if (this.cursors.up.isDown) {
-      this.player.body.velocity.y = -this.playerVelocity;
-      this.player.anims.play('up', true);
-    }
-    else if (this.cursors.down.isDown) {
-      this.player.body.velocity.y = this.playerVelocity;
-      this.player.anims.play('down', true);
-    }
-    else {
-      this.player.body.velocity.y = 0;
-      this.player.body.velocity.x = 0;
-      this.player.anims.play('turn', true);
-    }
+
 
     if (this.scanned == true) {
       var controllerList = this.simplePeer.controllerList;
@@ -272,8 +317,6 @@ class PlayScene extends Phaser.Scene {
 
     var itemArray = this.goodItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
-      var boundsB = this.itemArray[i].getBounds();
-      var boundsA = this.player.getBounds();
       if (this.physics.overlap(this.player, itemArray[i])) {
         console.log(itemArray[i])
         itemArray[i].destroy();
@@ -293,8 +336,6 @@ class PlayScene extends Phaser.Scene {
   removeBeerSprite() {
     var beerArray = this.beerGroup.children.getArray();
     for (let j = 0; j < this.beerGroupArray.length; j++) {
-      var boundsB = this.beerGroupArray[j].getBounds();
-      var boundsA = this.player.getBounds();
       if (this.physics.overlap(this.player, beerArray[j])) {
 
         beerArray[j].destroy();
@@ -427,15 +468,62 @@ class PlayScene extends Phaser.Scene {
     item.setVelocity(Phaser.Math.Between(10, 150), Phaser.Math.Between(10, 150));
   }
 
-  // createCode() {
-  //   this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-  //   this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
-  //   var selfP = this;
-  //   this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
-  //     this.controller = nes; 
-  //     selfP.scanned = true;
-  //   })
-  // }
+  createCharacter() {
+    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+    this.playerList.push(this.player);
+    this.player.setSize(28, 40);
+    this.player.setOffset(10, 7);
+    this.player.setCollideWorldBounds(true); // collider
+    this.physics.add.collider(this.player, this.collision_layer);
+    this.physics.add.collider(this.player, this.object_collision_layer);
+    this.physics.add.collider(this.player, this.church_collision_layer);
+    this.physics.add.collider(this.player, this.church_roof_collision_layer);
+
+  //   this.anims.create({
+  //     key: 'left',
+  //     frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
+  //     frameRate: 10,
+  //     repeat: -1
+  // });
+
+  // this.anims.create({
+  //     key: 'turn',
+  //     frames: [ { key: 'dude', frame: 1 } ],
+  //     frameRate: 20
+  // });
+
+  // this.anims.create({
+  //     key: 'right',
+  //     frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
+  //     frameRate: 10,
+  //     repeat: -1
+  // });
+  // this.anims.create({
+  //   key: 'up',
+  //   frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
+  //   frameRate: 10,
+  //   repeat: -1
+  // });
+  // this.anims.create({
+  //   key: 'down',
+  //   frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
+  //   frameRate: 10,
+  //   repeat: -1
+  // });
+
+    this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
+
+    this.tweens.add({
+      targets: this.scoreText,
+      x: this.scoreText.x + this.player.x,
+      ease: 'Linear',
+      duration: 1,
+      delay: 1,
+      yoyo: false,
+      repeat: -1
+    })
+  }
+
   createCode() {
     // this.scene.pause();
     // this.physics.pause();
@@ -444,6 +532,7 @@ class PlayScene extends Phaser.Scene {
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1'); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
+      selfP.createCharacter();
       this.controller = nes; 
       selfP.scanned = true;
       // selfP.scene.resume();
