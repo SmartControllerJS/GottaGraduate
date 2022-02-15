@@ -140,9 +140,9 @@ class PlayScene extends Phaser.Scene {
 });
 
 
-    // this.cursors = this.input.keyboard.createCursorKeys();
-    // this.scale.displaySize.setAspectRatio( this.width/this.height );
-    // this.scale.refresh();
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.scale.displaySize.setAspectRatio( this.width/this.height );
+    this.scale.refresh();
     // if (this.globalFlag == false) {
     //   this.createCode();
     //   this.globalFlag = true;
@@ -184,27 +184,27 @@ class PlayScene extends Phaser.Scene {
     
     this.scoreText.x = this.player.body.position.x;  
     this.scoreText.y = this.player.body.position.y -10;  
-    // if (this.cursors.right.isDown) {
-    //   this.player.body.velocity.x = this.playerVelocity;
-    //   this.player.anims.play('right', true);
-    // }
-    // else if (this.cursors.left.isDown) {
-    //   this.player.body.velocity.x = -this.playerVelocity;
-    //   this.player.anims.play('left', true);
-    // }
-    // else if (this.cursors.up.isDown) {
-    //   this.player.body.velocity.y = -this.playerVelocity;
-    //   this.player.anims.play('up', true);
-    // }
-    // else if (this.cursors.down.isDown) {
-    //   this.player.body.velocity.y = this.playerVelocity;
-    //   this.player.anims.play('down', true);
-    // }
-    // else {
-    //   this.player.body.velocity.y = 0;
-    //   this.player.body.velocity.x = 0;
-    //   this.player.anims.play('turn', true);
-    // }
+    if (this.cursors.right.isDown) {
+      this.player.body.velocity.x = this.playerVelocity;
+      this.player.anims.play('right', true);
+    }
+    else if (this.cursors.left.isDown) {
+      this.player.body.velocity.x = -this.playerVelocity;
+      this.player.anims.play('left', true);
+    }
+    else if (this.cursors.up.isDown) {
+      this.player.body.velocity.y = -this.playerVelocity;
+      this.player.anims.play('up', true);
+    }
+    else if (this.cursors.down.isDown) {
+      this.player.body.velocity.y = this.playerVelocity;
+      this.player.anims.play('down', true);
+    }
+    else {
+      this.player.body.velocity.y = 0;
+      this.player.body.velocity.x = 0;
+      this.player.anims.play('turn', true);
+    }
 
     if (this.scanned == true) {
       var controllerList = this.simplePeer.controllerList;
@@ -441,12 +441,13 @@ class PlayScene extends Phaser.Scene {
     // this.physics.pause();
     this.isPaused = true;
     this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1'); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
       this.controller = nes; 
       selfP.scanned = true;
       // selfP.scene.resume();
+      // selfP.physics.resume();
     })
   }
 }
