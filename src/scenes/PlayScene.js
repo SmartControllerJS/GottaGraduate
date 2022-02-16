@@ -32,7 +32,7 @@ class PlayScene extends Phaser.Scene {
     this.cursors = null;
     this.scoreText = null;
     this.score = 120;
-    this.playerVelocity = 200;
+    this.playerVelocity = 130;
 
     this.index = 0;
  
@@ -259,31 +259,55 @@ class PlayScene extends Phaser.Scene {
       var controllerList = this.simplePeer.controllerList;
       var size = Object.keys(controllerList).length;
       var joystickController = controllerList[Object.keys(controllerList)[0]]
+
+      var direction = 0;
       // console.log(this.controller.isActive);
-      if (joystickController.isActive && !null) {
-        var direction = joystickController.state.direction.angle;
-          console.log(joystickController.state.direction.angle);
-        if (direction == 'right') {
+      if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
+        // direction = joystickController.state.direction.angle;
+          console.log(joystickController.state.angle.degree);
+        if(joystickController.state.angle.degree > 285|| joystickController.state.angle.degree <= 55 ) {
           this.player.body.velocity.x = this.playerVelocity;
           this.player.anims.play('right', true);
         }
-        else if (direction == 'left') {
-          this.player.body.velocity.x = -this.playerVelocity;
-          this.player.anims.play('left', true);
-        }
-        else if (direction == 'up') {
+        else if (joystickController.state.angle.degree > 55 && joystickController.state.angle.degree <= 105) {
           this.player.body.velocity.y = -this.playerVelocity;
           this.player.anims.play('up', true);
         }
-        else if (direction == 'down') {
+        else if (joystickController.state.angle.degree > 105 && joystickController.state.angle.degree <= 235) {
+          this.player.body.velocity.x = -this.playerVelocity;
+          this.player.anims.play('left', true);
+        }
+        else if (joystickController.state.angle.degree > 235 && joystickController.state.angle.degree <= 285) {
           this.player.body.velocity.y = this.playerVelocity;
           this.player.anims.play('down', true);
         }
-        else {
+        else{
           this.player.body.velocity.y = 0;
           this.player.body.velocity.x = 0;
           this.player.anims.play('turn', true);
         }
+
+        // if (direction == 'right') {
+        //   this.player.body.velocity.x = this.playerVelocity;
+        //   this.player.anims.play('right', true);
+        // }
+        // else if (direction == 'left') {
+        //   this.player.body.velocity.x = -this.playerVelocity;
+        //   this.player.anims.play('left', true);
+        // }
+        // else if (direction == 'up') {
+        //   this.player.body.velocity.y = -this.playerVelocity;
+        //   this.player.anims.play('up', true);
+        // }
+        // else if (direction == 'down') {
+        //   this.player.body.velocity.y = this.playerVelocity;
+        //   this.player.anims.play('down', true);
+        // }
+        // else {
+        //   this.player.body.velocity.y = 0;
+        //   this.player.body.velocity.x = 0;
+        //   this.player.anims.play('turn', true);
+        // }
       }
       else {
         this.player.body.velocity.y = 0;
@@ -376,7 +400,7 @@ class PlayScene extends Phaser.Scene {
       if (this.physics.overlap(this.player, beerArray[j])) {
 
         beerArray[j].destroy();
-        this.playerVelocity -= 100;
+        this.playerVelocity /= 2;
       }
       else {
         continue;
