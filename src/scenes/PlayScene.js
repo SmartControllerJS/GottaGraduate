@@ -1,8 +1,6 @@
 import Phaser from "phaser";
 import "smartcontroller";
 
-// all commented code is smartcontroller specific - not game specific
-
 class PlayScene extends Phaser.Scene {
 
   constructor(config) {
@@ -251,43 +249,73 @@ class PlayScene extends Phaser.Scene {
       //   this.player.body.velocity.x = 0;
       //   this.player.anims.play('turn', true);
       // }
-    }
+  
 
 
-    if (this.score <= 0) {
-      alert('gameover')
-    }
+      if (this.score <= 0) {
+        alert('gameover')
+      }
     
-
-
-    if (this.scanned == true) {
       var controllerList = this.simplePeer.controllerList;
-      var size = Object.keys(this.simplePeer.controllerList).length;
-      for (let i = 0; i < size; i++) {
-        // console.log(this.playerList[i].text);
-        if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 0) {
-          console.log("up pressed")
-          this.player.body.velocity.y = -this.playerVelocity;
-          this.player.anims.play('up', true);
-        } 
-        else if (controllerList[Object.keys(controllerList)[i]].buttons['left'] == true && i == 0) {
-          this.player.body.velocity.x = -this.playerVelocity;
-          this.player.anims.play('left', true);
-        } 
-        else if (controllerList[Object.keys(controllerList)[i]].buttons['right'] == true && i == 0) {
+      var size = Object.keys(controllerList).length;
+      var joystickController = controllerList[Object.keys(controllerList)[0]]
+      // console.log(this.controller.isActive);
+      if (joystickController.isActive && !null) {
+        var direction = joystickController.state.direction.angle;
+          console.log(joystickController.state.direction.angle);
+        if (direction == 'right') {
           this.player.body.velocity.x = this.playerVelocity;
           this.player.anims.play('right', true);
-        } 
-        else if (controllerList[Object.keys(controllerList)[i]].buttons['down'] == true && i == 0) {
+        }
+        else if (direction == 'left') {
+          this.player.body.velocity.x = -this.playerVelocity;
+          this.player.anims.play('left', true);
+        }
+        else if (direction == 'up') {
+          this.player.body.velocity.y = -this.playerVelocity;
+          this.player.anims.play('up', true);
+        }
+        else if (direction == 'down') {
           this.player.body.velocity.y = this.playerVelocity;
           this.player.anims.play('down', true);
-        } 
+        }
         else {
           this.player.body.velocity.y = 0;
           this.player.body.velocity.x = 0;
           this.player.anims.play('turn', true);
         }
       }
+      else {
+        this.player.body.velocity.y = 0;
+        this.player.body.velocity.x = 0;
+        this.player.anims.play('turn', true);
+      }
+
+      // for (let i = 0; i < size; i++) {
+      //   // console.log(this.playerList[i].text);
+      //   if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 0) {
+      //     console.log("up pressed")
+      //     this.player.body.velocity.y = -this.playerVelocity;
+      //     this.player.anims.play('up', true);
+      //   } 
+      //   else if (controllerList[Object.keys(controllerList)[i]].buttons['left'] == true && i == 0) {
+      //     this.player.body.velocity.x = -this.playerVelocity;
+      //     this.player.anims.play('left', true);
+      //   } 
+      //   else if (controllerList[Object.keys(controllerList)[i]].buttons['right'] == true && i == 0) {
+      //     this.player.body.velocity.x = this.playerVelocity;
+      //     this.player.anims.play('right', true);
+      //   } 
+      //   else if (controllerList[Object.keys(controllerList)[i]].buttons['down'] == true && i == 0) {
+      //     this.player.body.velocity.y = this.playerVelocity;
+      //     this.player.anims.play('down', true);
+      //   } 
+      //   else {
+      //     this.player.body.velocity.y = 0;
+      //     this.player.body.velocity.x = 0;
+      //     this.player.anims.play('turn', true);
+      //   }
+      // }
     }
   }
 
@@ -536,13 +564,12 @@ class PlayScene extends Phaser.Scene {
   createCode() {
     // this.scene.pause();
     // this.physics.pause();
-    this.isPaused = true;
-    this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1'); // joystick.html
+    // this.isPaused = true;
+    this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 150, 150, '1'); // joystick.html
     var selfP = this;
-    this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
+    this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
       selfP.createCharacter();
-      this.controller = nes; 
       selfP.scanned = true;
       // selfP.scene.resume();
       // selfP.physics.resume();
