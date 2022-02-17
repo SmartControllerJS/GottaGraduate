@@ -399,24 +399,17 @@ class PlayScene extends Phaser.Scene {
   decrementScore() {
     this.score -= 10;
     this.scoreText.setText(`Credits: ${this.score}`);
-    // this.item.destroy();
   } 
 
   removeItem() {
     var itemArray = this.badItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
-      var boundsB = this.itemArray[i].getBounds();
-      var boundsA = this.player.getBounds();
       if (this.physics.overlap(this.player, itemArray[i])) {
         console.log(itemArray[i])
         itemArray[i].destroy();
         this.score -= 10;
         this.scoreText.setText(`Credits: ${this.score}`);
       }
-      // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
-      //   console.log(i);
-      //   this.itemArray[i].destroy();
-      // }
       else {
         continue;
       }
@@ -434,10 +427,6 @@ class PlayScene extends Phaser.Scene {
         this.score += 5;
         this.scoreText.setText(`Credits: ${this.score}`);
       }
-      // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
-      //   console.log(i);
-      //   this.itemArray[i].destroy();
-      // }
       else {
         continue;
       }
