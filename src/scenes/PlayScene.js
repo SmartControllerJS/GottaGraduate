@@ -108,39 +108,40 @@ class PlayScene extends Phaser.Scene {
     this.church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
     map.createStaticLayer('Church roof no collision', church_roof_tileset);
     map.createStaticLayer('Church window', church_window_tileset)
+    this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
+    // this.createPlayerAnimation([17, 4, 27, 36, 0], [19, 29, 38, 2]);
 
+      //   this.anims.create({
+      //     key: 'left',
+      //     frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
+      //     frameRate: 10,
+      //     repeat: -1
+      // });
 
-        this.anims.create({
-          key: 'left',
-          frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
-          frameRate: 10,
-          repeat: -1
-      });
+      // this.anims.create({
+      //     key: 'turn',
+      //     frames: [ { key: 'dude', frame: 1 } ],
+      //     frameRate: 20
+      // });
 
-      this.anims.create({
-          key: 'turn',
-          frames: [ { key: 'dude', frame: 1 } ],
-          frameRate: 20
-      });
-
-      this.anims.create({
-          key: 'right',
-          frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
-          frameRate: 10,
-          repeat: -1
-      });
-      this.anims.create({
-        key: 'up',
-        frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
-        frameRate: 10,
-        repeat: -1
-      });
-      this.anims.create({
-        key: 'down',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
-        frameRate: 10,
-        repeat: -1
-      });
+      // this.anims.create({
+      //     key: 'right',
+      //     frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
+      //     frameRate: 10,
+      //     repeat: -1
+      // });
+      // this.anims.create({
+      //   key: 'up',
+      //   frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
+      //   frameRate: 10,
+      //   repeat: -1
+      // });
+      // this.anims.create({
+      //   key: 'down',
+      //   frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
+      //   frameRate: 10,
+      //   repeat: -1
+      // });
   
       this.anims.create({
         key: 'floating',
@@ -186,38 +187,6 @@ class PlayScene extends Phaser.Scene {
 
 
   update() {
-
-    this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
-      frameRate: 10,
-      repeat: -1
-  });
-
-  this.anims.create({
-      key: 'turn',
-      frames: [ { key: 'dude', frame: 1 } ],
-      frameRate: 20
-  });
-
-  this.anims.create({
-      key: 'right',
-      frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
-      frameRate: 10,
-      repeat: -1
-  });
-  this.anims.create({
-    key: 'up',
-    frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
-    frameRate: 10,
-    repeat: -1
-  });
-  this.anims.create({
-    key: 'down',
-    frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
-    frameRate: 10,
-    repeat: -1
-  });
 
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
@@ -579,38 +548,6 @@ class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.church_collision_layer);
     this.physics.add.collider(this.player, this.church_roof_collision_layer);
 
-  //   this.anims.create({
-  //     key: 'left',
-  //     frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
-  //     frameRate: 10,
-  //     repeat: -1
-  // });
-
-  // this.anims.create({
-  //     key: 'turn',
-  //     frames: [ { key: 'dude', frame: 1 } ],
-  //     frameRate: 20
-  // });
-
-  // this.anims.create({
-  //     key: 'right',
-  //     frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
-  //     frameRate: 10,
-  //     repeat: -1
-  // });
-  // this.anims.create({
-  //   key: 'up',
-  //   frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
-  //   frameRate: 10,
-  //   repeat: -1
-  // });
-  // this.anims.create({
-  //   key: 'down',
-  //   frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
-  //   frameRate: 10,
-  //   repeat: -1
-  // });
-
     this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
 
     this.tweens.add({
@@ -659,6 +596,22 @@ class PlayScene extends Phaser.Scene {
     goodGuysWin() {
       alert("The Good Guys Win :)");
     }
+
+  createPlayerAnimation(directions, start, end, idleFrame) {
+    for (let i = 0; i < start.length; i++) {
+      this.anims.create({
+        key: directions[i],
+        frames: this.anims.generateFrameNames('dude', { start: start[i], end: end[i]}),
+        frameRate: 10,
+        repeat: -1,
+      });
+    }
+    this.anims.create({
+        key: idleFrame[0],
+        frames: [ { key: 'dude', frame: idleFrame[1] } ],
+        frameRate: 10
+    });
+  }
 }
 
 export default PlayScene;
