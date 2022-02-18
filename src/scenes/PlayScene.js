@@ -109,39 +109,6 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Church roof no collision', church_roof_tileset);
     map.createStaticLayer('Church window', church_window_tileset)
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
-    // this.createPlayerAnimation([17, 4, 27, 36, 0], [19, 29, 38, 2]);
-
-      //   this.anims.create({
-      //     key: 'left',
-      //     frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
-      //     frameRate: 10,
-      //     repeat: -1
-      // });
-
-      // this.anims.create({
-      //     key: 'turn',
-      //     frames: [ { key: 'dude', frame: 1 } ],
-      //     frameRate: 20
-      // });
-
-      // this.anims.create({
-      //     key: 'right',
-      //     frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
-      //     frameRate: 10,
-      //     repeat: -1
-      // });
-      // this.anims.create({
-      //   key: 'up',
-      //   frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
-      //   frameRate: 10,
-      //   repeat: -1
-      // });
-      // this.anims.create({
-      //   key: 'down',
-      //   frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
-      //   frameRate: 10,
-      //   repeat: -1
-      // });
   
       this.anims.create({
         key: 'floating',
