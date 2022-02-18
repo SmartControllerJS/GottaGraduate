@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import "smartcontroller";
+import { Player } from "../helpers/player.js";
 
 class PlayScene extends Phaser.Scene {
 
@@ -162,8 +163,8 @@ class PlayScene extends Phaser.Scene {
       this.removeBeerSprite();
       this.removeGoodItem();
 
-      this.scoreText.x = this.player.body.position.x;  
-      this.scoreText.y = this.player.body.position.y -10;  
+      // this.scoreText.x = this.player.body.position.x;  
+      // this.scoreText.y = this.player.body.position.y -10;  
       // if (this.cursors.right.isDown) {
       //   this.player.body.velocity.x = this.playerVelocity;
       //   this.player.anims.play('right', true);
@@ -193,13 +194,14 @@ class PlayScene extends Phaser.Scene {
       }
     
       var controllerList = this.simplePeer.controllerList;
+
+
       var size = Object.keys(controllerList).length;
       var joystickController = controllerList[Object.keys(controllerList)[0]]
 
-      var direction = 0;
-      // console.log(this.controller.isActive);
+
+
       if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
-        // direction = joystickController.state.direction.angle;
           console.log(joystickController.state.angle.degree);
         if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
           this.player.body.velocity.x = this.playerVelocity;
@@ -226,74 +228,6 @@ class PlayScene extends Phaser.Scene {
           this.player.body.velocity.x = 0;
           this.player.anims.play('turn', true);
         }
-
-        // if (joystickController.isActive && (typeof direction !== "undefined")) {
-        //   direction = joystickController.state.angle.degree;
-        //   // direction = joystickController.state.direction.angle;
-        //     console.log(direction);
-        //   if((direction > 285 && direction <= 55) && (direction <= 305 && direction > 35) ) {
-        //     this.player.body.velocity.x = this.playerVelocity;
-        //     this.player.anims.play('right', true);
-        //   }
-        //   else if(direction > 305 || direction <= 35 ) {
-        //     this.player.body.velocity.x = this.playerVelocity;
-        //     this.player.body.velocity.y = 0;
-        //     this.player.anims.play('right', true);
-        //   }
-        //   else if (direction > 55 && direction <= 105) {
-        //     this.player.body.velocity.y = -this.playerVelocity;
-        //     this.player.anims.play('up', true);
-        //   }
-        //   else if (direction > 75 && direction <= 85) {
-        //     this.player.body.velocity.y = -this.playerVelocity;
-        //     this.player.body.velocity.x = 0;
-        //     this.player.anims.play('up', true);
-        //   }
-        //   else if (direction > 105 && direction <= 235) {
-        //     this.player.body.velocity.x = -this.playerVelocity;
-        //     this.player.anims.play('left', true);
-        //   }
-        //   else if(direction > 125 && direction <= 215 ) {
-        //     this.player.body.velocity.x = this.playerVelocity;
-        //     this.player.body.velocity.y = 0;
-        //     this.player.anims.play('left', true);
-        //   }
-        //   else if (direction > 235 && direction <= 285) {
-        //     this.player.body.velocity.y = this.playerVelocity;
-        //     this.player.anims.play('down', true);
-        //   }
-        //   else if (direction > 255 && direction <= 265) {
-        //     this.player.body.velocity.y = -this.playerVelocity;
-        //     this.player.body.velocity.x = 0;
-        //     this.player.anims.play('down', true);
-        //   }
-        //   else{
-        //     this.player.body.velocity.y = 0;
-        //     this.player.body.velocity.x = 0;
-        //     this.player.anims.play('turn', true);
-        //   }
-
-        // if (direction == 'right') {
-        //   this.player.body.velocity.x = this.playerVelocity;
-        //   this.player.anims.play('right', true);
-        // }
-        // else if (direction == 'left') {
-        //   this.player.body.velocity.x = -this.playerVelocity;
-        //   this.player.anims.play('left', true);
-        // }
-        // else if (direction == 'up') {
-        //   this.player.body.velocity.y = -this.playerVelocity;
-        //   this.player.anims.play('up', true);
-        // }
-        // else if (direction == 'down') {
-        //   this.player.body.velocity.y = this.playerVelocity;
-        //   this.player.anims.play('down', true);
-        // }
-        // else {
-        //   this.player.body.velocity.y = 0;
-        //   this.player.body.velocity.x = 0;
-        //   this.player.anims.play('turn', true);
-        // }
       }
       else {
         this.player.body.velocity.y = 0;
@@ -343,8 +277,8 @@ class PlayScene extends Phaser.Scene {
       if (this.physics.overlap(this.player, itemArray[i])) {
         console.log(itemArray[i])
         itemArray[i].destroy();
-        this.score -= 10;
-        this.scoreText.setText(`Credits: ${this.score}`);
+        // this.score -= 10;
+        // this.scoreText.setText(`Credits: ${this.score}`);
       }
       else {
         continue;
@@ -360,8 +294,8 @@ class PlayScene extends Phaser.Scene {
       if (this.physics.overlap(this.player, itemArray[i])) {
         console.log(itemArray[i])
         itemArray[i].destroy();
-        this.score += 5;
-        this.scoreText.setText(`Credits: ${this.score}`);
+        // this.score += 5;
+        // this.scoreText.setText(`Credits: ${this.score}`);
       }
       else {
         continue;
@@ -505,27 +439,19 @@ class PlayScene extends Phaser.Scene {
   }
 
   createCharacter() {
-    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
-    this.playerList.push(this.player);
-    this.player.setSize(28, 40);
-    this.player.setOffset(10, 7);
-    this.player.setCollideWorldBounds(true); // collider
-    this.physics.add.collider(this.player, this.collision_layer);
-    this.physics.add.collider(this.player, this.object_collision_layer);
-    this.physics.add.collider(this.player, this.church_collision_layer);
-    this.physics.add.collider(this.player, this.church_roof_collision_layer);
+    this.player = new Player(this, 100, 450);
 
-    this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
+    // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
 
-    this.tweens.add({
-      targets: this.scoreText,
-      x: this.scoreText.x + this.player.x,
-      ease: 'Linear',
-      duration: 1,
-      delay: 1,
-      yoyo: false,
-      repeat: -1
-    })
+    // this.tweens.add({
+    //   targets: this.scoreText,
+    //   x: this.scoreText.x + this.player.x,
+    //   ease: 'Linear',
+    //   duration: 1,
+    //   delay: 1,
+    //   yoyo: false,
+    //   repeat: -1
+    // })
   }
 
   createCode() {

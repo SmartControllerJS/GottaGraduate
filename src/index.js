@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import PlayScene from "./scenes/PlayScene";
+import Player from "./helpers/player";
 
 // const WIDTH = 800;
 // const HEIGHT = 600;
