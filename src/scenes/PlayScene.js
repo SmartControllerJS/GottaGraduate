@@ -265,57 +265,54 @@ class PlayScene extends Phaser.Scene {
       if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
         // direction = joystickController.state.direction.angle;
           console.log(joystickController.state.angle.degree);
-        // if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
-        //   this.player.body.velocity.x = this.playerVelocity;
-        //   this.player.body.velocity.y = 0;
-        //   this.player.anims.play('right', true);
-        // }
-        // else if (joystickController.state.angle.degree > 45 && joystickController.state.angle.degree <= 115) {
-        //   this.player.body.velocity.y = -this.playerVelocity;
-        //   this.player.body.velocity.x = 0;
-        //   this.player.anims.play('up', true);
-        // }
-        // else if (joystickController.state.angle.degree > 115 && joystickController.state.angle.degree <= 225) {
-        //   this.player.body.velocity.x = -this.playerVelocity;
-        //   this.player.body.velocity.y = 0;
-        //   this.player.anims.play('left', true);
-        // }
-        // else if (joystickController.state.angle.degree > 225 && joystickController.state.angle.degree <= 295) {
-        //   this.player.body.velocity.y = this.playerVelocity;
-        //   this.player.body.velocity.x = 0;
-        //   this.player.anims.play('down', true);
-        // }
-        // else{
-        //   this.player.body.velocity.y = 0;
-        //   this.player.body.velocity.x = 0;
-        //   this.player.anims.play('turn', true);
-        // }
+        if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
+          this.player.body.velocity.x = this.playerVelocity;
+          this.player.anims.play('right', true);
+        }
+        else if (joystickController.state.angle.degree > 45 && joystickController.state.angle.degree <= 115) {
+          this.player.body.velocity.y = -this.playerVelocity;
+          this.player.anims.play('up', true);
+        }
+        else if (joystickController.state.angle.degree > 115 && joystickController.state.angle.degree <= 225) {
+          this.player.body.velocity.x = -this.playerVelocity;
+          this.player.anims.play('left', true);
+        }
+        else if (joystickController.state.angle.degree > 225 && joystickController.state.angle.degree <= 295) {
+          this.player.body.velocity.y = this.playerVelocity;
+          this.player.anims.play('down', true);
+        }
+        else{
+          this.player.body.velocity.y = 0;
+          this.player.body.velocity.x = 0;
+          this.player.anims.play('turn', true);
+        }
 
-        if (joystickController.isActive && (typeof direction !== "undefined")) {
-          direction = joystickController.state.angle.degree;
-          // direction = joystickController.state.direction.angle;
-            console.log(direction);
-          if( direction > 285 || direction <= 55 ) {
-            this.player.body.velocity.x = this.playerVelocity;
-            this.player.anims.play('right', true);
-          }
-          else if (direction > 55 && direction <= 105) {
-            this.player.body.velocity.y = -this.playerVelocity;
-            this.player.anims.play('up', true);
-          }
-          else if (direction > 105 && direction <= 235) {
-            this.player.body.velocity.x = -this.playerVelocity;
-            this.player.anims.play('left', true);
-          }
-          else if (direction > 235 && direction <= 285) {
-            this.player.body.velocity.y = this.playerVelocity;
-            this.player.anims.play('down', true);
-          }
-          else {
-            this.player.body.velocity.y = 0;
-            this.player.body.velocity.x = 0;
-            this.player.anims.play('turn', true);
-          }
+      //   if (joystickController.isActive && (typeof direction !== "undefined")) {
+      //     direction = joystickController.state.angle.degree;
+      //     // direction = joystickController.state.direction.angle;
+      //       console.log(direction);
+      //     if( direction > 285 || direction <= 55 ) {
+      //       this.player.body.velocity.x = this.playerVelocity;
+      //       this.player.anims.play('right', true);
+      //     }
+      //     else if (direction > 55 && direction <= 105) {
+      //       this.player.body.velocity.y = -this.playerVelocity;
+      //       this.player.anims.play('up', true);
+      //     }
+      //     else if (direction > 105 && direction <= 235) {
+      //       this.player.body.velocity.x = -this.playerVelocity;
+      //       this.player.anims.play('left', true);
+      //     }
+      //     else if (direction > 235 && direction <= 285) {
+      //       this.player.body.velocity.y = this.playerVelocity;
+      //       this.player.anims.play('down', true);
+      //     }
+      //     else {
+      //       this.player.body.velocity.y = 0;
+      //       this.player.body.velocity.x = 0;
+      //       this.player.anims.play('turn', true);
+      //     }
+      // }
       }
       else {
         this.player.body.velocity.y = 0;
@@ -348,7 +345,7 @@ class PlayScene extends Phaser.Scene {
       //     this.player.anims.play('turn', true);
       //   }
       // }
-    }
+    
   }
 }
 
