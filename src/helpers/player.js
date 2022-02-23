@@ -18,8 +18,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       scene.physics.add.collider(this, scene.object_collision_layer);
       scene.physics.add.collider(this, scene.church_collision_layer);
       scene.physics.add.collider(this, scene.church_roof_collision_layer);
-      // this.body.onWorldBounds = true;
-
       // this.setVelocity(0, -200);
   }
 }

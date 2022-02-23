@@ -76,7 +76,6 @@ class PlayScene extends Phaser.Scene {
       this.createCode();
       this.globalFlag = true;
     }
-
     // create the Tilemap
     const map = this.make.tilemap({ key: 'tilemap' })
 
@@ -88,9 +87,38 @@ class PlayScene extends Phaser.Scene {
     map.createStaticLayer('Bottom of floor', tileset)
     map.createStaticLayer('Top of floor', tileset)
     map.createStaticLayer('Fauna and flora', tileset)
+
+    this.collision_layer = map.createStaticLayer('Outside', tileset)
+    this.object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
+    this.church_collision_layer = map.createStaticLayer('Church', tileset)
+    this.church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
+
+    this.createCharacter()
+    this.player.setVisible(false);
+    map.createStaticLayer('Wall Decoration', tileset)
+    map.createStaticLayer('Church roof no collision', church_roof_tileset);
+    map.createStaticLayer('Church window', church_window_tileset)
+
+    this.collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, collision_layer);
+    this.object_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, object_collision_layer);
+    this.church_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, church_collision_layer);
+    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, church_roof_collision_layer);
+
+
+
+
+
+
     this.badItems = this.physics.add.group();
     this.timedItem();
+
+    // this.player.setVisible(false);
     // this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
+    // this.player.setVisible
     // this.playerList.push(this.player);
     this.beerGroup = this.physics.add.group();
     this.createBeerItem();
@@ -98,19 +126,11 @@ class PlayScene extends Phaser.Scene {
     this.goodItems = this.physics.add.group();
     this.timedGoodItem();
 
-    // this.player.setSize(28, 40);
-    // this.player.setOffset(10, 7);
 
 
-    map.createStaticLayer('Wall Decoration', tileset)
-    this.collision_layer = map.createStaticLayer('Outside', tileset)
-    this.object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
-    this.church_collision_layer = map.createStaticLayer('Church', tileset)
-    this.church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
-    map.createStaticLayer('Church roof no collision', church_roof_tileset);
-    map.createStaticLayer('Church window', church_window_tileset)
+
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
-  
+
       this.anims.create({
         key: 'floating',
         frames: this.anims.generateFrameNumbers('beer', { start: 0, end: 7 }),
@@ -127,14 +147,6 @@ class PlayScene extends Phaser.Scene {
     //   this.globalFlag = true;
     // }
 
-    this.collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, collision_layer);
-    this.object_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, object_collision_layer);
-    this.church_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, church_collision_layer);
-    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, church_roof_collision_layer);
 
     // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
     // this.tweens.add({
@@ -234,33 +246,41 @@ class PlayScene extends Phaser.Scene {
         this.player.body.velocity.x = 0;
         this.player.anims.play('turn', true);
       }
-
-      // for (let i = 0; i < size; i++) {
-      //   // console.log(this.playerList[i].text);
-      //   if (controllerList[Object.keys(controllerList)[i]].buttons['up'] == true && i == 0) {
-      //     console.log("up pressed")
-      //     this.player.body.velocity.y = -this.playerVelocity;
-      //     this.player.anims.play('up', true);
-      //   } 
-      //   else if (controllerList[Object.keys(controllerList)[i]].buttons['left'] == true && i == 0) {
-      //     this.player.body.velocity.x = -this.playerVelocity;
-      //     this.player.anims.play('left', true);
-      //   } 
-      //   else if (controllerList[Object.keys(controllerList)[i]].buttons['right'] == true && i == 0) {
-      //     this.player.body.velocity.x = this.playerVelocity;
-      //     this.player.anims.play('right', true);
-      //   } 
-      //   else if (controllerList[Object.keys(controllerList)[i]].buttons['down'] == true && i == 0) {
-      //     this.player.body.velocity.y = this.playerVelocity;
-      //     this.player.anims.play('down', true);
-      //   } 
-      //   else {
-      //     this.player.body.velocity.y = 0;
-      //     this.player.body.velocity.x = 0;
-      //     this.player.anims.play('turn', true);
-      //   }
-      // }
     }
+  }
+
+  createMap() {
+
+    // create the Tilemap
+    const map = this.make.tilemap({ key: 'tilemap' })
+
+    // add the tileset images we are using
+    const tileset = map.addTilesetImage('background', 'base_tiles')
+    const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
+    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
+
+    map.createStaticLayer('Bottom of floor', tileset)
+    map.createStaticLayer('Top of floor', tileset)
+    map.createStaticLayer('Fauna and flora', tileset)
+    map.createStaticLayer('Wall Decoration', tileset)
+    map.createStaticLayer('Church roof no collision', church_roof_tileset);
+
+    this.collision_layer = map.createStaticLayer('Outside', tileset)
+    this.object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
+    this.church_collision_layer = map.createStaticLayer('Church', tileset)
+    this.church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
+
+    map.createStaticLayer('Church window', church_window_tileset)
+
+    this.collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, collision_layer);
+    this.object_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, object_collision_layer);
+    this.church_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, church_collision_layer);
+    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
+    // this.physics.add.collider(this.player, church_roof_collision_layer);
+
   }
 
   destroyElement(player, badItem) {
@@ -462,8 +482,9 @@ class PlayScene extends Phaser.Scene {
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 150, 150, '1'); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
-      selfP.createCharacter();
+      // selfP.createCharacter();
       selfP.scanned = true;
+      selfP.player.setVisible(true);
       // selfP.scene.resume();
       // selfP.physics.resume();
     })
