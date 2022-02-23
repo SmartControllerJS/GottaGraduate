@@ -51,24 +51,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('base_tiles', 'assets/base_tiles.png')
-    this.load.image('church_tiles', 'assets/church_tiles.png')
-    this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
-    this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
-    this.load.spritesheet('dude', 
-      'assets/dude.png',
-      { frameWidth: 48, frameHeight: 48 }
-    );
-    this.load.spritesheet('beer', 
-      'assets/beer.png',
-      { frameWidth: 48, frameHeight: 48 }
-    );
-    this.load.image('tiktok', 'assets/tiktok.png')
-    this.load.image('facebook', 'assets/facebook.png')
-    this.load.image('instagram', 'assets/instagram.png')
-    this.load.image('netflix', 'assets/netflix.png')
-    this.load.image('youtube', 'assets/youtube.png')
-    this.load.image('ipad', 'assets/ipad.png');
+    this.loadImages();
   }
 
   create() {
@@ -76,42 +59,12 @@ class PlayScene extends Phaser.Scene {
       this.createCode();
       this.globalFlag = true;
     }
-    // create the Tilemap
-    const map = this.make.tilemap({ key: 'tilemap' })
-
-    // add the tileset images we are using
-    const tileset = map.addTilesetImage('background', 'base_tiles')
-    const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
-    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
-
-    map.createStaticLayer('Bottom of floor', tileset)
-    map.createStaticLayer('Top of floor', tileset)
-    map.createStaticLayer('Fauna and flora', tileset)
-
-    this.collision_layer = map.createStaticLayer('Outside', tileset)
-    this.object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
-    this.church_collision_layer = map.createStaticLayer('Church', tileset)
-    this.church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
+    this.createCollidableMap();
 
     this.createCharacter()
     this.player.setVisible(false);
-    map.createStaticLayer('Wall Decoration', tileset)
-    map.createStaticLayer('Church roof no collision', church_roof_tileset);
-    map.createStaticLayer('Church window', church_window_tileset)
-
-    this.collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, collision_layer);
-    this.object_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, object_collision_layer);
-    this.church_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, church_collision_layer);
-    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, church_roof_collision_layer);
-
-
-
-
-
+  
+    this.createNonCollidablemMap();
 
     this.badItems = this.physics.add.group();
     this.timedItem();
@@ -249,9 +202,30 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
-  createMap() {
-
+  createCollidableMap() {
     // create the Tilemap
+    const map = this.make.tilemap({ key: 'tilemap' })
+
+    // add the tileset images we are using
+    const tileset = map.addTilesetImage('background', 'base_tiles')
+    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
+
+    map.createLayer('Bottom of floor', tileset)
+    map.createLayer('Top of floor', tileset)
+    map.createLayer('Fauna and flora', tileset)
+
+    this.collision_layer = map.createLayer('Outside', tileset)
+    this.object_collision_layer = map.createLayer('Furniture and trees', tileset)
+    this.church_collision_layer = map.createLayer('Church', tileset)
+    this.church_roof_collision_layer = map.createLayer('Church roof', church_roof_tileset)
+
+    this.collision_layer.setCollisionByExclusion([-1]);
+    this.object_collision_layer.setCollisionByExclusion([-1]);
+    this.church_collision_layer.setCollisionByExclusion([-1]);
+    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
+  }
+
+  createNonCollidablemMap() {
     const map = this.make.tilemap({ key: 'tilemap' })
 
     // add the tileset images we are using
@@ -259,28 +233,9 @@ class PlayScene extends Phaser.Scene {
     const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
     const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
 
-    map.createStaticLayer('Bottom of floor', tileset)
-    map.createStaticLayer('Top of floor', tileset)
-    map.createStaticLayer('Fauna and flora', tileset)
-    map.createStaticLayer('Wall Decoration', tileset)
-    map.createStaticLayer('Church roof no collision', church_roof_tileset);
-
-    this.collision_layer = map.createStaticLayer('Outside', tileset)
-    this.object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
-    this.church_collision_layer = map.createStaticLayer('Church', tileset)
-    this.church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
-
-    map.createStaticLayer('Church window', church_window_tileset)
-
-    this.collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, collision_layer);
-    this.object_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, object_collision_layer);
-    this.church_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, church_collision_layer);
-    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
-    // this.physics.add.collider(this.player, church_roof_collision_layer);
-
+    map.createLayer('Wall Decoration', tileset)
+    map.createLayer('Church roof no collision', church_roof_tileset);
+    map.createLayer('Church window', church_window_tileset)
   }
 
   destroyElement(player, badItem) {
@@ -525,6 +480,27 @@ class PlayScene extends Phaser.Scene {
         frames: [ { key: 'dude', frame: idleFrame[1] } ],
         frameRate: 10
     });
+  }
+
+  loadImages() {
+    this.load.image('base_tiles', 'assets/base_tiles.png')
+    this.load.image('church_tiles', 'assets/church_tiles.png')
+    this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
+    this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
+    this.load.spritesheet('dude', 
+      'assets/dude.png',
+      { frameWidth: 48, frameHeight: 48 }
+    );
+    this.load.spritesheet('beer', 
+      'assets/beer.png',
+      { frameWidth: 48, frameHeight: 48 }
+    );
+    this.load.image('tiktok', 'assets/tiktok.png')
+    this.load.image('facebook', 'assets/facebook.png')
+    this.load.image('instagram', 'assets/instagram.png')
+    this.load.image('netflix', 'assets/netflix.png')
+    this.load.image('youtube', 'assets/youtube.png')
+    this.load.image('ipad', 'assets/ipad.png');
   }
 }
 
