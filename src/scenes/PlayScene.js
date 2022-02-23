@@ -130,30 +130,7 @@ class PlayScene extends Phaser.Scene {
 
       // this.scoreText.x = this.player.body.position.x;  
       // this.scoreText.y = this.player.body.position.y -10;  
-      // if (this.cursors.right.isDown) {
-      //   this.player.body.velocity.x = this.playerVelocity;
-      //   this.player.anims.play('right', true);
-      // }
-      // else if (this.cursors.left.isDown) {
-      //   this.player.body.velocity.x = -this.playerVelocity;
-      //   this.player.anims.play('left', true);
-      // }
-      // else if (this.cursors.up.isDown) {
-      //   this.player.body.velocity.y = -this.playerVelocity;
-      //   this.player.anims.play('up', true);
-      // }
-      // else if (this.cursors.down.isDown) {
-      //   this.player.body.velocity.y = this.playerVelocity;
-      //   this.player.anims.play('down', true);
-      // }
-      // else {
-      //   this.player.body.velocity.y = 0;
-      //   this.player.body.velocity.x = 0;
-      //   this.player.anims.play('turn', true);
-      // }
   
-
-
       if (this.score <= 0) {
         alert('gameover')
       }
