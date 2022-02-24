@@ -294,64 +294,7 @@ class PlayScene extends Phaser.Scene {
     var yPosition = randomNumber < 0.5 ? -100 : 1500
     this.beer = new Beer(this, this.getRandomArbitraryX(), yPosition);
     this.beer.anims.play('floating', this);
-    // var randomNumber = Math.random();
-    // var yPosition = randomNumber < 0.5 ? -100 : 1500;
-    // this.beer = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    // this.beer2 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    // this.beer3 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    // this.beer4 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    // this.beer5 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    // this.beerGroup.add(this.beer);
-    // this.beerGroup.add(this.beer2);
-    // this.beerGroup.add(this.beer3);
-    // this.beerGroup.add(this.beer4);
-    // this.beerGroup.add(this.beer5);
   }
-
-  // createIndividualBeer() {
-  //   var arr = this.beerGroup.children.getArray();
-  //   this.playerVelocity= 200;
-
-  //   for (let k = 0; k < 5; k++) {
-  //     console.log(k);
-  //     if (k == this.index && this.index == 0) {
-  //       this.beer.setBounce(1).setCollideWorldBounds(true);
-  //       this.moveIndividualBeer(this.beer);
-  //       this.beer.anims.play('floating', this)
-  //       this.beer.setSize(28, 36);
-  //       this.beer.setOffset(10, 10);
-  //     }
-  //     else if (k == this.index && this.index == 1) {
-  //       this.beer2.setBounce(1).setCollideWorldBounds(true);
-  //       this.moveIndividualBeer(this.beer2);
-  //       this.beer2.anims.play('floating', this)
-  //       this.beer2.setSize(28, 36);
-  //       this.beer2.setOffset(10, 10);
-  //     }
-  //     else if (k == this.index && this.index == 2) {
-  //       this.beer3.setBounce(1).setCollideWorldBounds(true);
-  //       this.moveIndividualBeer(this.beer3);
-  //       this.beer3.anims.play('floating', this)
-  //       this.beer3.setSize(28, 36);
-  //       this.beer3.setOffset(10, 10);
-  //     }
-  //     else if (k == this.index && this.index == 3) {
-  //       this.beer4.setBounce(1).setCollideWorldBounds(true);
-  //       this.moveIndividualBeer(this.beer4);
-  //       this.beer4.anims.play('floating', this)
-  //       this.beer4.setSize(28, 36);
-  //       this.beer4.setOffset(10, 10);
-  //     }
-  //     else if (k == this.index && this.index == 4) {
-  //       this.beer5.setBounce(1).setCollideWorldBounds(true);
-  //       this.moveIndividualBeer(this.beer5);
-  //       this.beer5.anims.play('floating', this)
-  //       this.beer5.setSize(28, 36);
-  //       this.beer5.setOffset(10, 10);
-  //     }
-  //   }
-  //   this.index += 1;
-  // }
 
   timedItem() {
     this.timedEvent = this.time.addEvent({
