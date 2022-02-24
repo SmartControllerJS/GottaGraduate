@@ -22,9 +22,13 @@ class PlayScene extends Phaser.Scene {
     this.church_collision_layer = null;
     this.church_roof_collision_layer = null;
 
+    // players
+    this.player = null;
+    this.player2 = null;
+    this.numberOfScans = 0;
+
     // items
     this.badItems = null;
-    this.player = null;
     this.beer = null;
     this.beer2 = null;
     this.beer3 = null;
@@ -64,7 +68,9 @@ class PlayScene extends Phaser.Scene {
 
     this.createCharacter()
     this.player.setVisible(false);
-  
+    this.player2.setVisible(false);
+    this.playerList.push(this.player);
+    this.playerList.push(this.player2);
     this.createNonCollidablemMap();
 
     this.badItems = this.physics.add.group();
@@ -78,7 +84,7 @@ class PlayScene extends Phaser.Scene {
 
 
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
-
+    this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
     // if (this.globalFlag == false) {
@@ -106,7 +112,6 @@ class PlayScene extends Phaser.Scene {
 
 
   update() {
-
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
     if (this.scanned == true) {
@@ -122,46 +127,155 @@ class PlayScene extends Phaser.Scene {
       }
     
       var controllerList = this.simplePeer.controllerList;
-
-
       var size = Object.keys(controllerList).length;
-      var joystickController = controllerList[Object.keys(controllerList)[0]]
-
-
-
-      if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
-          console.log(joystickController.state.angle.degree);
-        if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
-          this.player.body.velocity.x = this.playerVelocity;
-          this.player.body.velocity.y = 0;
-          this.player.anims.play('right', true);
+      console.log(size);
+      for (let i = 0; i < size; i++) {
+        var joystickController = controllerList[Object.keys(controllerList)[0]]
+        var joystickController1 = controllerList[Object.keys(controllerList)[i]]
+        if (controllerList[Object.keys(controllerList)[i]].isActive && (typeof controllerList[Object.keys(controllerList)[i]].state.angle.degree !== "undefined")) {
+          if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 295 || controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 45) {
+            this.playerList[i].body.velocity.x = this.playerVelocity;
+            this.playerList[i].body.velocity.y = 0;
+            this.playerList[i].anims.play('right', true);
+          }
+          else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 45 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 115) {
+            this.playerList[i].body.velocity.y = -this.playerVelocity;
+            this.playerList[i].body.velocity.x = 0;
+            this.playerList[i].anims.play('up', true);
+          }
+          else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 115 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 225) {
+            this.playerList[i].body.velocity.x = -this.playerVelocity;
+            this.playerList[i].body.velocity.y = 0;
+            this.playerList[i].anims.play('left', true);
+          }
+          else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 225 && controllerList[Object.keys(controllerList)[i]].state.angle.degree  <= 295) {
+            this.playerList[i].body.velocity.y = this.playerVelocity;
+            this.playerList[i].body.velocity.x = 0;
+            this.playerList[i].anims.play('down', true);
+          }
+          else{
+            this.playerList[i].body.velocity.y = 0;
+            this.playerList[i].body.velocity.x = 0;
+            this.playerList[i].anims.play('turn', true);
+          }
         }
-        else if (joystickController.state.angle.degree > 45 && joystickController.state.angle.degree <= 115) {
-          this.player.body.velocity.y = -this.playerVelocity;
-          this.player.body.velocity.x = 0;
-          this.player.anims.play('up', true);
-        }
-        else if (joystickController.state.angle.degree > 115 && joystickController.state.angle.degree <= 225) {
-          this.player.body.velocity.x = -this.playerVelocity;
-          this.player.body.velocity.y = 0;
-          this.player.anims.play('left', true);
-        }
-        else if (joystickController.state.angle.degree > 225 && joystickController.state.angle.degree <= 295) {
-          this.player.body.velocity.y = this.playerVelocity;
-          this.player.body.velocity.x = 0;
-          this.player.anims.play('down', true);
-        }
-        else{
-          this.player.body.velocity.y = 0;
-          this.player.body.velocity.x = 0;
-          this.player.anims.play('turn', true);
+        else {
+          this.playerList[i].body.velocity.y = 0;
+          this.playerList[i].body.velocity.x = 0;
+          this.playerList[i].anims.play('turn', true);
         }
       }
-      else {
-        this.player.body.velocity.y = 0;
-        this.player.body.velocity.x = 0;
-        this.player.anims.play('turn', true);
-      }
+
+
+    //   var joystickController = controllerList[Object.keys(controllerList)[0]]
+    //   var joystickController1 = controllerList[Object.keys(controllerList)[1]]
+    //   if (this.numberOfScans == 1) {
+    //     if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
+    //       console.log(joystickController.state.angle.degree);
+    //       if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
+    //         this.player.body.velocity.x = this.playerVelocity;
+    //         this.player.body.velocity.y = 0;
+    //         this.player.anims.play('right', true);
+    //       }
+    //       else if (joystickController.state.angle.degree > 45 && joystickController.state.angle.degree <= 115) {
+    //         this.player.body.velocity.y = -this.playerVelocity;
+    //         this.player.body.velocity.x = 0;
+    //         this.player.anims.play('up', true);
+    //       }
+    //       else if (joystickController.state.angle.degree > 115 && joystickController.state.angle.degree <= 225) {
+    //         this.player.body.velocity.x = -this.playerVelocity;
+    //         this.player.body.velocity.y = 0;
+    //         this.player.anims.play('left', true);
+    //       }
+    //       else if (joystickController.state.angle.degree > 225 && joystickController.state.angle.degree <= 295) {
+    //         this.player.body.velocity.y = this.playerVelocity;
+    //         this.player.body.velocity.x = 0;
+    //         this.player.anims.play('down', true);
+    //       }
+    //       else{
+    //         this.player.body.velocity.y = 0;
+    //         this.player.body.velocity.x = 0;
+    //         this.player.anims.play('turn', true);
+    //       }
+    //     }
+    //     else {
+    //       this.player.body.velocity.y = 0;
+    //       this.player.body.velocity.x = 0;
+    //       this.player.anims.play('turn', true);
+    //     }
+    //  }
+
+    //   else if (this.numberOfScans == 3) {
+
+    //     if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
+    //       console.log(joystickController.state.angle.degree);
+    //     if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
+    //       this.player.body.velocity.x = this.playerVelocity;
+    //       this.player.body.velocity.y = 0;
+    //       this.player.anims.play('right', true);
+    //     }
+    //     else if (joystickController.state.angle.degree > 45 && joystickController.state.angle.degree <= 115) {
+    //       this.player.body.velocity.y = -this.playerVelocity;
+    //       this.player.body.velocity.x = 0;
+    //       this.player.anims.play('up', true);
+    //     }
+    //     else if (joystickController.state.angle.degree > 115 && joystickController.state.angle.degree <= 225) {
+    //       this.player.body.velocity.x = -this.playerVelocity;
+    //       this.player.body.velocity.y = 0;
+    //       this.player.anims.play('left', true);
+    //     }
+    //     else if (joystickController.state.angle.degree > 225 && joystickController.state.angle.degree <= 295) {
+    //       this.player.body.velocity.y = this.playerVelocity;
+    //       this.player.body.velocity.x = 0;
+    //       this.player.anims.play('down', true);
+    //     }
+    //     else{
+    //       this.player.body.velocity.y = 0;
+    //       this.player.body.velocity.x = 0;
+    //       this.player.anims.play('turn', true);
+    //     }
+    //   }
+    //   else {
+    //     this.player.body.velocity.y = 0;
+    //     this.player.body.velocity.x = 0;
+    //     this.player.anims.play('turn', true);
+    //   }
+
+    //     console.log(joystickController1);
+    //     if (joystickController1.isActive && (typeof joystickController1.state.angle.degree !== "undefined")) {
+    //       console.log(joystickController1.state.angle.degree);
+    //     if(joystickController1.state.angle.degree > 295|| joystickController1.state.angle.degree <= 45 ) {
+    //       this.player2.body.velocity.x = this.playerVelocity;
+    //       this.player2.body.velocity.y = 0;
+    //       this.player2.anims.play('right1', true);
+    //     }
+    //     else if (joystickController1.state.angle.degree > 45 && joystickController1.state.angle.degree <= 115) {
+    //       this.player2.body.velocity.y = -this.playerVelocity;
+    //       this.player2.body.velocity.x = 0;
+    //       this.player2.anims.play('up1', true);
+    //     }
+    //     else if (joystickController1.state.angle.degree > 115 && joystickController1.state.angle.degree <= 225) {
+    //       this.player2.body.velocity.x = -this.playerVelocity;
+    //       this.player2.body.velocity.y = 0;
+    //       this.player2.anims.play('left1', true);
+    //     }
+    //     else if (joystickController1.state.angle.degree > 225 && joystickController1.state.angle.degree <= 295) {
+    //       this.player2.body.velocity.y = this.playerVelocity;
+    //       this.player2.body.velocity.x = 0;
+    //       this.player2.anims.play('down1', true);
+    //     }
+    //     else{
+    //       this.player2.body.velocity.y = 0;
+    //       this.player2.body.velocity.x = 0;
+    //       this.player2.anims.play('turn', true);
+    //     }
+    //   }
+    //   else {
+    //     this.player2.body.velocity.y = 0;
+    //     this.player2.body.velocity.x = 0;
+    //     this.player2.anims.play('turn', true);
+    //   }
+    //   }
     }
   }
 
@@ -332,7 +446,7 @@ class PlayScene extends Phaser.Scene {
 
   createCharacter() {
     this.player = new Player(this, 100, 450);
-
+    this.player2 = new Player(this, 200, 450);
     // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
 
     // this.tweens.add({
@@ -351,12 +465,19 @@ class PlayScene extends Phaser.Scene {
     // this.physics.pause();
     // this.isPaused = true;
     this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 150, 150, '1'); // joystick.html
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 150, 150); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
       // selfP.createCharacter();
+      selfP.numberOfScans++;
       selfP.scanned = true;
+      console.log("hello");
+
       selfP.player.setVisible(true);
+      if (selfP.numberOfScans ==2 ) {
+        selfP.player2.setVisible(true);
+      }
+
       // selfP.scene.resume();
       // selfP.physics.resume();
     })
