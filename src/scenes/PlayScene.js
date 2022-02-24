@@ -291,7 +291,6 @@ class PlayScene extends Phaser.Scene {
       repeat: -1
     });
     var randomNumber = Math.random();
-
     var yPosition = randomNumber < 0.5 ? -100 : 1500
     this.beer = new Beer(this, this.getRandomArbitraryX(), yPosition);
     this.beer.anims.play('floating', this);
@@ -366,7 +365,7 @@ class PlayScene extends Phaser.Scene {
   timedBeer() {
     this.timedEvent = this.time.addEvent({
       delay: 15000,
-      callback: this.createIndividualBeer,
+      callback: this.createBeerItem,
       callbackScope: this,
       loop: true,
     })
