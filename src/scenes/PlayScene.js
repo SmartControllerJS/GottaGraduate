@@ -153,11 +153,6 @@ class PlayScene extends Phaser.Scene {
             this.playerList[i].body.velocity.x = 0;
             this.playerList[i].anims.play(ANIMATIONS[i][3], true);
           }
-          // else{
-          //   this.playerList[i].body.velocity.y = 0;
-          //   this.playerList[i].body.velocity.x = 0;
-          //   this.playerList[i].anims.play(ANIMATIONS[i][4], true);
-          // }
         }
         else {
           this.playerList[i].body.velocity.y = 0;
@@ -332,6 +327,13 @@ class PlayScene extends Phaser.Scene {
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
+      else if (this.physics.overlap(this.player2, itemArray[i])) {
+        console.log(itemArray[i])
+        itemArray[i].destroy();
+        // this.score -= 10;
+        // this.scoreText.setText(`Credits: ${this.score}`);
+      }
+
       else {
         continue;
       }
@@ -349,6 +351,12 @@ class PlayScene extends Phaser.Scene {
         // this.score += 5;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
+      else if (this.physics.overlap(this.player2, itemArray[i])) {
+        console.log(itemArray[i])
+        itemArray[i].destroy();
+        // this.score -= 10;
+        // this.scoreText.setText(`Credits: ${this.score}`);
+      }
       else {
         continue;
       }
@@ -362,6 +370,12 @@ class PlayScene extends Phaser.Scene {
 
         beerArray[j].destroy();
         this.playerVelocity /= 2;
+      }
+      else if (this.physics.overlap(this.player2, beerArray[j])) {
+        console.log(itemArray[i])
+        beerArray[j].destroy();
+        // this.score -= 10;
+        // this.scoreText.setText(`Credits: ${this.score}`);
       }
       else {
         continue;
