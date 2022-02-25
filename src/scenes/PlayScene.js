@@ -3,12 +3,13 @@ import "smartcontroller";
 import { Player } from "../helpers/player.js";
 import { Beer } from "../helpers/beer.js";
 
-const ANIMATIONS = [['right','up','left','down','turn'],['right1','up1','left1','down1','turn1']]
+const ANIMATIONS = [['right','up','left','down','turn'],['right1','up1','left1','down1','turn1'],['right2','up2','left2','down2','turn2']]
 class PlayScene extends Phaser.Scene {
 
   constructor(config) {
     super('PlayScene');
     this.config = config;
+    this.startGame = null;
 
     // smartcontroller
     this.globalFlag = false;
@@ -26,6 +27,7 @@ class PlayScene extends Phaser.Scene {
     // players
     this.player = null;
     this.player2 = null;
+    this.player3 = null;
     this.numberOfScans = 0;
 
     // items
@@ -70,9 +72,12 @@ class PlayScene extends Phaser.Scene {
     this.createCharacter()
     this.player.setVisible(false);
     this.player2.setVisible(false);
+    this.player3.setVisible(false);
     this.playerList.push(this.player);
     this.playerList.push(this.player2);
+    this.playerList.push(this.player3);
     this.createNonCollidablemMap();
+
 
     this.badItems = this.physics.add.group();
     this.timedItem();
@@ -85,7 +90,8 @@ class PlayScene extends Phaser.Scene {
 
 
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
-    this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [15, 27, 39, 3], [16, 29, 41, 5], ['turn1', 4]);
+    this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [15, 27, 39, 3], [17, 29, 41, 5], ['turn1', 4]);
+    this.createPlayerAnimation(['left2', 'right2', 'up2', 'down2'], [18, 30, 42, 6], [20, 32, 44, 8], ['turn2', 7]);
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
     // if (this.globalFlag == false) {
@@ -113,6 +119,10 @@ class PlayScene extends Phaser.Scene {
 
 
   update() {
+    if (this.physics.overlap(this.player, this.collision_layer)) {
+      console.log('ello');
+    }
+
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
     if (this.scanned == true) {
@@ -282,8 +292,10 @@ class PlayScene extends Phaser.Scene {
     const tileset = map.addTilesetImage('background', 'base_tiles')
     const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
 
+
     map.createLayer('Bottom of floor', tileset)
     map.createLayer('Top of floor', tileset)
+    map.createLayer('Start layer', tileset);
     map.createLayer('Fauna and flora', tileset)
 
     this.collision_layer = map.createLayer('Outside', tileset)
@@ -333,6 +345,12 @@ class PlayScene extends Phaser.Scene {
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
+      else if (this.physics.overlap(this.player3, itemArray[i])) {
+        console.log(itemArray[i])
+        itemArray[i].destroy();
+        // this.score -= 10;
+        // this.scoreText.setText(`Credits: ${this.score}`);
+      }
 
       else {
         continue;
@@ -357,6 +375,12 @@ class PlayScene extends Phaser.Scene {
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
+      else if (this.physics.overlap(this.player3, itemArray[i])) {
+        console.log(itemArray[i])
+        itemArray[i].destroy();
+        // this.score -= 10;
+        // this.scoreText.setText(`Credits: ${this.score}`);
+      }
       else {
         continue;
       }
@@ -372,7 +396,11 @@ class PlayScene extends Phaser.Scene {
         this.playerVelocity /= 2;
       }
       else if (this.physics.overlap(this.player2, beerArray[j])) {
-        console.log(itemArray[i])
+        beerArray[j].destroy();
+        // this.score -= 10;
+        // this.scoreText.setText(`Credits: ${this.score}`);
+      }
+      else if (this.physics.overlap(this.player3, beerArray[j])) {
         beerArray[j].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
@@ -461,6 +489,7 @@ class PlayScene extends Phaser.Scene {
   createCharacter() {
     this.player = new Player(this, 100, 450);
     this.player2 = new Player(this, 200, 450);
+    this.player3 = new Player(this, 300, 450);
     // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
 
     // this.tweens.add({
@@ -479,7 +508,7 @@ class PlayScene extends Phaser.Scene {
     // this.physics.pause();
     // this.isPaused = true;
     this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 150, 150); // joystick.html
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 200, 200); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
       // selfP.createCharacter();
@@ -490,6 +519,9 @@ class PlayScene extends Phaser.Scene {
       selfP.player.setVisible(true);
       if (selfP.numberOfScans ==2 ) {
         selfP.player2.setVisible(true);
+      }
+      else if (selfP.numberOfScans ==3 ) {
+        selfP.player3.setVisible(true);
       }
 
       // selfP.scene.resume();
