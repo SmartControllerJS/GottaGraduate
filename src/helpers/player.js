@@ -5,7 +5,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   {
       super(scene, x, y, 'dude');
 
-      //  You can either do this:
       scene.add.existing(this);
       scene.physics.add.existing(this);
 
@@ -14,11 +13,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setCollideWorldBounds(true);
       this.setVisible(false);
 
-
       scene.physics.add.collider(this, scene.collision_layer);
       scene.physics.add.collider(this, scene.object_collision_layer);
       scene.physics.add.collider(this, scene.church_collision_layer);
       scene.physics.add.collider(this, scene.church_roof_collision_layer);
-      // this.setVelocity(0, -200);
   }
 }
