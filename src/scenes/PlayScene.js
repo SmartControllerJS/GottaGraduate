@@ -64,43 +64,25 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    if (this.globalFlag == false) {
-      this.createCode();
-      this.globalFlag = true;
-    }
+    this.createCode();
     this.createCollidableMap();
-
     this.createCharacter()
-    this.player.setVisible(false);
-    this.player2.setVisible(false);
-    this.player3.setVisible(false);
-    this.playerList.push(this.player);
-    this.playerList.push(this.player2);
-    this.playerList.push(this.player3);
     this.createNonCollidablemMap();
-
 
     this.badItems = this.physics.add.group();
     this.timedItem();
-
     this.beerGroup = this.physics.add.group();
     this.createBeerItem();
     this.timedBeer();
     this.goodItems = this.physics.add.group();
     this.timedGoodItem();
 
-
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
     this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [15, 27, 39, 3], [17, 29, 41, 5], ['turn1', 4]);
     this.createPlayerAnimation(['left2', 'right2', 'up2', 'down2'], [18, 30, 42, 6], [20, 32, 44, 8], ['turn2', 7]);
+
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
-    // if (this.globalFlag == false) {
-    //   this.createCode();
-    //   this.globalFlag = true;
-    // }
-
-
 
     // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
     // this.tweens.add({
@@ -132,10 +114,6 @@ class PlayScene extends Phaser.Scene {
       if (this.physics.overlap(this.player, this.overlapStart)) {
         alert('START THE GAME');
       }
-      // if (this.physics.overlap(this.player, this.startLayer)) {
-
-      //   console.log('overlap');
-      // }
 
       // this.scoreText.x = this.player.body.position.x;  
       // this.scoreText.y = this.player.body.position.y -10;  
@@ -143,15 +121,10 @@ class PlayScene extends Phaser.Scene {
       if (this.score <= 0) {
         alert('gameover')
       }
+
       var controllerList = this.simplePeer.controllerList;
       var size = Object.keys(controllerList).length;
-      // console.log(size);
       for (let i = 0; i < size; i++) {
-        // var tile = this.startLayer.getTileAtWorldXY(this.player.x, this.player.y);
-
-        // console.log(tile.getTileData());
-        var joystickController = controllerList[Object.keys(controllerList)[0]]
-        var joystickController1 = controllerList[Object.keys(controllerList)[i]]
         if (controllerList[Object.keys(controllerList)[i]].isActive && (typeof controllerList[Object.keys(controllerList)[i]].state.angle.degree !== "undefined")) {
           if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 295 || controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 45) {
             this.playerList[i].body.velocity.x = this.playerVelocity;
@@ -180,143 +153,22 @@ class PlayScene extends Phaser.Scene {
           this.playerList[i].anims.play(ANIMATIONS[i][4], true);
         }
       }
-
-
-    //   var joystickController = controllerList[Object.keys(controllerList)[0]]
-    //   var joystickController1 = controllerList[Object.keys(controllerList)[1]]
-    //   if (this.numberOfScans == 1) {
-    //     if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
-    //       console.log(joystickController.state.angle.degree);
-    //       if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
-    //         this.player.body.velocity.x = this.playerVelocity;
-    //         this.player.body.velocity.y = 0;
-    //         this.player.anims.play('right', true);
-    //       }
-    //       else if (joystickController.state.angle.degree > 45 && joystickController.state.angle.degree <= 115) {
-    //         this.player.body.velocity.y = -this.playerVelocity;
-    //         this.player.body.velocity.x = 0;
-    //         this.player.anims.play('up', true);
-    //       }
-    //       else if (joystickController.state.angle.degree > 115 && joystickController.state.angle.degree <= 225) {
-    //         this.player.body.velocity.x = -this.playerVelocity;
-    //         this.player.body.velocity.y = 0;
-    //         this.player.anims.play('left', true);
-    //       }
-    //       else if (joystickController.state.angle.degree > 225 && joystickController.state.angle.degree <= 295) {
-    //         this.player.body.velocity.y = this.playerVelocity;
-    //         this.player.body.velocity.x = 0;
-    //         this.player.anims.play('down', true);
-    //       }
-    //       else{
-    //         this.player.body.velocity.y = 0;
-    //         this.player.body.velocity.x = 0;
-    //         this.player.anims.play('turn', true);
-    //       }
-    //     }
-    //     else {
-    //       this.player.body.velocity.y = 0;
-    //       this.player.body.velocity.x = 0;
-    //       this.player.anims.play('turn', true);
-    //     }
-    //  }
-
-    //   else if (this.numberOfScans == 3) {
-
-    //     if (joystickController.isActive && (typeof joystickController.state.angle.degree !== "undefined")) {
-    //       console.log(joystickController.state.angle.degree);
-    //     if(joystickController.state.angle.degree > 295|| joystickController.state.angle.degree <= 45 ) {
-    //       this.player.body.velocity.x = this.playerVelocity;
-    //       this.player.body.velocity.y = 0;
-    //       this.player.anims.play('right', true);
-    //     }
-    //     else if (joystickController.state.angle.degree > 45 && joystickController.state.angle.degree <= 115) {
-    //       this.player.body.velocity.y = -this.playerVelocity;
-    //       this.player.body.velocity.x = 0;
-    //       this.player.anims.play('up', true);
-    //     }
-    //     else if (joystickController.state.angle.degree > 115 && joystickController.state.angle.degree <= 225) {
-    //       this.player.body.velocity.x = -this.playerVelocity;
-    //       this.player.body.velocity.y = 0;
-    //       this.player.anims.play('left', true);
-    //     }
-    //     else if (joystickController.state.angle.degree > 225 && joystickController.state.angle.degree <= 295) {
-    //       this.player.body.velocity.y = this.playerVelocity;
-    //       this.player.body.velocity.x = 0;
-    //       this.player.anims.play('down', true);
-    //     }
-    //     else{
-    //       this.player.body.velocity.y = 0;
-    //       this.player.body.velocity.x = 0;
-    //       this.player.anims.play('turn', true);
-    //     }
-    //   }
-    //   else {
-    //     this.player.body.velocity.y = 0;
-    //     this.player.body.velocity.x = 0;
-    //     this.player.anims.play('turn', true);
-    //   }
-
-    //     console.log(joystickController1);
-    //     if (joystickController1.isActive && (typeof joystickController1.state.angle.degree !== "undefined")) {
-    //       console.log(joystickController1.state.angle.degree);
-    //     if(joystickController1.state.angle.degree > 295|| joystickController1.state.angle.degree <= 45 ) {
-    //       this.player2.body.velocity.x = this.playerVelocity;
-    //       this.player2.body.velocity.y = 0;
-    //       this.player2.anims.play('right1', true);
-    //     }
-    //     else if (joystickController1.state.angle.degree > 45 && joystickController1.state.angle.degree <= 115) {
-    //       this.player2.body.velocity.y = -this.playerVelocity;
-    //       this.player2.body.velocity.x = 0;
-    //       this.player2.anims.play('up1', true);
-    //     }
-    //     else if (joystickController1.state.angle.degree > 115 && joystickController1.state.angle.degree <= 225) {
-    //       this.player2.body.velocity.x = -this.playerVelocity;
-    //       this.player2.body.velocity.y = 0;
-    //       this.player2.anims.play('left1', true);
-    //     }
-    //     else if (joystickController1.state.angle.degree > 225 && joystickController1.state.angle.degree <= 295) {
-    //       this.player2.body.velocity.y = this.playerVelocity;
-    //       this.player2.body.velocity.x = 0;
-    //       this.player2.anims.play('down1', true);
-    //     }
-    //     else{
-    //       this.player2.body.velocity.y = 0;
-    //       this.player2.body.velocity.x = 0;
-    //       this.player2.anims.play('turn', true);
-    //     }
-    //   }
-    //   else {
-    //     this.player2.body.velocity.y = 0;
-    //     this.player2.body.velocity.x = 0;
-    //     this.player2.anims.play('turn', true);
-    //   }
-    //   }
     }
   }
 
   createCollidableMap() {
-    // create the Tilemap
     const map = this.make.tilemap({ key: 'tilemap' })
-
-    // add the tileset images we are using
     const tileset = map.addTilesetImage('background', 'base_tiles')
     const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
-
-
     map.createLayer('Bottom of floor', tileset)
     map.createLayer('Top of floor', tileset)
     this.startLayer = map.createLayer('Start layer', tileset);
     map.createLayer('Fauna and flora', tileset)
 
-    this.collision_layer = map.createLayer('Outside', tileset)
-    this.object_collision_layer = map.createLayer('Furniture and trees', tileset)
-    this.church_collision_layer = map.createLayer('Church', tileset)
-    this.church_roof_collision_layer = map.createLayer('Church roof', church_roof_tileset)
-
-    this.collision_layer.setCollisionByExclusion([-1]);
-    this.object_collision_layer.setCollisionByExclusion([-1]);
-    this.church_collision_layer.setCollisionByExclusion([-1]);
-    this.church_roof_collision_layer.setCollisionByExclusion([-1]);
+    this.collision_layer = map.createLayer('Outside', tileset).setCollisionByExclusion([-1]);
+    this.object_collision_layer = map.createLayer('Furniture and trees', tileset).setCollisionByExclusion([-1]);
+    this.church_collision_layer = map.createLayer('Church', tileset).setCollisionByExclusion([-1]);
+    this.church_roof_collision_layer = map.createLayer('Church roof', church_roof_tileset).setCollisionByExclusion([-1]);
 
     this.overlapStart = map.createFromObjects('Start game', {
       id: 19
@@ -325,26 +177,18 @@ class PlayScene extends Phaser.Scene {
     this.overlapStart.forEach(start => {
       this.physics.world.enable(start);
     })
-    // console.log(this.overlapStart);
-
   }
 
   createNonCollidablemMap() {
     const map = this.make.tilemap({ key: 'tilemap' })
-
-    // add the tileset images we are using
     const tileset = map.addTilesetImage('background', 'base_tiles')
     const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
     const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
-
     map.createLayer('Wall Decoration', tileset)
     map.createLayer('Church roof no collision', church_roof_tileset);
     map.createLayer('Church window', church_window_tileset)
   }
 
-  destroyElement(player, badItem) {
-    this.badItems.kill();
-  }
   decrementScore() {
     this.score -= 10;
     this.scoreText.setText(`Credits: ${this.score}`);
@@ -368,16 +212,13 @@ class PlayScene extends Phaser.Scene {
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-
       else {
         continue;
       }
     }
   }
 
-  
   removeGoodItem() {
-
     var itemArray = this.goodItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i])) {
@@ -405,7 +246,6 @@ class PlayScene extends Phaser.Scene {
     var beerArray = this.beerGroup.children.getArray();
     for (let j = 0; j < this.beerGroupArray.length; j++) {
       if (this.physics.overlap(this.player, beerArray[j])) {
-
         beerArray[j].destroy();
         this.playerVelocity /= 2;
       }
@@ -424,7 +264,6 @@ class PlayScene extends Phaser.Scene {
       }
     }
   }
-
 
   getRandomArbitrary() {
     return Math.random() * (0 - 700) + 720;
@@ -453,7 +292,6 @@ class PlayScene extends Phaser.Scene {
   }
 
   createBeerItem() {
-    
     this.anims.create({
       key: 'floating',
       frames: this.anims.generateFrameNumbers('beer', { start: 0, end: 7 }),
@@ -504,6 +342,9 @@ class PlayScene extends Phaser.Scene {
     this.player = new Player(this, 100, 450);
     this.player2 = new Player(this, 200, 450);
     this.player3 = new Player(this, 300, 450);
+    this.playerList.push(this.player);
+    this.playerList.push(this.player2);
+    this.playerList.push(this.player3);
     // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
 
     // this.tweens.add({
@@ -528,7 +369,6 @@ class PlayScene extends Phaser.Scene {
       // selfP.createCharacter();
       selfP.numberOfScans++;
       selfP.scanned = true;
-
       selfP.player.setVisible(true);
       if (selfP.numberOfScans ==2 ) {
         selfP.player2.setVisible(true);
@@ -536,7 +376,6 @@ class PlayScene extends Phaser.Scene {
       else if (selfP.numberOfScans ==3 ) {
         selfP.player3.setVisible(true);
       }
-
       // selfP.scene.resume();
       // selfP.physics.resume();
     })
@@ -554,14 +393,14 @@ class PlayScene extends Phaser.Scene {
     return `${minutes}:${partInSeconds}`;
     }
 
-    onEvent ()
-    {
-      this.initialTime -= 1; // One second
-      this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
-    }
-    goodGuysWin() {
-      alert("The Good Guys Win :)");
-    }
+  onEvent () {
+    this.initialTime -= 1; // One second
+    this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
+  }
+
+  goodGuysWin() {
+    alert("The Good Guys Win :)");
+  }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
     for (let i = 0; i < start.length; i++) {

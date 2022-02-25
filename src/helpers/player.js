@@ -12,6 +12,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setSize(28, 40);
       this.setOffset(10, 7);
       this.setCollideWorldBounds(true);
+      this.setVisible(false);
 
 
       scene.physics.add.collider(this, scene.collision_layer);
