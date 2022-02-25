@@ -1,8 +1,9 @@
-import Phaser from "phaser";
+import Phaser, { RIGHT } from "phaser";
 import "smartcontroller";
 import { Player } from "../helpers/player.js";
 import { Beer } from "../helpers/beer.js";
 
+const ANIMATIONS = [['right','up','left','down','turn'],['right1','up1','left1','down1','turn1']]
 class PlayScene extends Phaser.Scene {
 
   constructor(config) {
@@ -84,7 +85,7 @@ class PlayScene extends Phaser.Scene {
 
 
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
-    this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
+    this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [15, 27, 39, 3], [16, 29, 41, 5], ['turn1', 4]);
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
     // if (this.globalFlag == false) {
@@ -125,7 +126,6 @@ class PlayScene extends Phaser.Scene {
       if (this.score <= 0) {
         alert('gameover')
       }
-    
       var controllerList = this.simplePeer.controllerList;
       var size = Object.keys(controllerList).length;
       console.log(size);
@@ -136,33 +136,33 @@ class PlayScene extends Phaser.Scene {
           if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 295 || controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 45) {
             this.playerList[i].body.velocity.x = this.playerVelocity;
             this.playerList[i].body.velocity.y = 0;
-            this.playerList[i].anims.play('right', true);
+            this.playerList[i].anims.play(ANIMATIONS[i][0], true);
           }
           else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 45 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 115) {
             this.playerList[i].body.velocity.y = -this.playerVelocity;
             this.playerList[i].body.velocity.x = 0;
-            this.playerList[i].anims.play('up', true);
+            this.playerList[i].anims.play(ANIMATIONS[i][1], true);
           }
           else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 115 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 225) {
             this.playerList[i].body.velocity.x = -this.playerVelocity;
             this.playerList[i].body.velocity.y = 0;
-            this.playerList[i].anims.play('left', true);
+            this.playerList[i].anims.play(ANIMATIONS[i][2], true);
           }
           else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 225 && controllerList[Object.keys(controllerList)[i]].state.angle.degree  <= 295) {
             this.playerList[i].body.velocity.y = this.playerVelocity;
             this.playerList[i].body.velocity.x = 0;
-            this.playerList[i].anims.play('down', true);
+            this.playerList[i].anims.play(ANIMATIONS[i][3], true);
           }
-          else{
-            this.playerList[i].body.velocity.y = 0;
-            this.playerList[i].body.velocity.x = 0;
-            this.playerList[i].anims.play('turn', true);
-          }
+          // else{
+          //   this.playerList[i].body.velocity.y = 0;
+          //   this.playerList[i].body.velocity.x = 0;
+          //   this.playerList[i].anims.play(ANIMATIONS[i][4], true);
+          // }
         }
         else {
           this.playerList[i].body.velocity.y = 0;
           this.playerList[i].body.velocity.x = 0;
-          this.playerList[i].anims.play('turn', true);
+          this.playerList[i].anims.play(ANIMATIONS[i][4], true);
         }
       }
 
