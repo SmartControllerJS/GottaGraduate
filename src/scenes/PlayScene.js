@@ -9,7 +9,8 @@ class PlayScene extends Phaser.Scene {
   constructor(config) {
     super('PlayScene');
     this.config = config;
-    this.startGame = null;
+    this.startLayer = null;
+    this.overlapStart = null;
 
     // smartcontroller
     this.globalFlag = false;
@@ -100,6 +101,7 @@ class PlayScene extends Phaser.Scene {
     // }
 
 
+
     // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
     // this.tweens.add({
     //   targets: this.scoreText,
@@ -119,9 +121,6 @@ class PlayScene extends Phaser.Scene {
 
 
   update() {
-    if (this.physics.overlap(this.player, this.collision_layer)) {
-      console.log('ello');
-    }
 
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
@@ -129,6 +128,14 @@ class PlayScene extends Phaser.Scene {
       this.removeItem();
       this.removeBeerSprite();
       this.removeGoodItem();
+
+      if (this.physics.overlap(this.player, this.overlapStart)) {
+        alert('START THE GAME');
+      }
+      // if (this.physics.overlap(this.player, this.startLayer)) {
+
+      //   console.log('overlap');
+      // }
 
       // this.scoreText.x = this.player.body.position.x;  
       // this.scoreText.y = this.player.body.position.y -10;  
@@ -138,8 +145,11 @@ class PlayScene extends Phaser.Scene {
       }
       var controllerList = this.simplePeer.controllerList;
       var size = Object.keys(controllerList).length;
-      console.log(size);
+      // console.log(size);
       for (let i = 0; i < size; i++) {
+        // var tile = this.startLayer.getTileAtWorldXY(this.player.x, this.player.y);
+
+        // console.log(tile.getTileData());
         var joystickController = controllerList[Object.keys(controllerList)[0]]
         var joystickController1 = controllerList[Object.keys(controllerList)[i]]
         if (controllerList[Object.keys(controllerList)[i]].isActive && (typeof controllerList[Object.keys(controllerList)[i]].state.angle.degree !== "undefined")) {
@@ -295,7 +305,7 @@ class PlayScene extends Phaser.Scene {
 
     map.createLayer('Bottom of floor', tileset)
     map.createLayer('Top of floor', tileset)
-    map.createLayer('Start layer', tileset);
+    this.startLayer = map.createLayer('Start layer', tileset);
     map.createLayer('Fauna and flora', tileset)
 
     this.collision_layer = map.createLayer('Outside', tileset)
@@ -307,6 +317,16 @@ class PlayScene extends Phaser.Scene {
     this.object_collision_layer.setCollisionByExclusion([-1]);
     this.church_collision_layer.setCollisionByExclusion([-1]);
     this.church_roof_collision_layer.setCollisionByExclusion([-1]);
+
+    this.overlapStart = map.createFromObjects('Start game', {
+      id: 19
+    });
+
+    this.overlapStart.forEach(start => {
+      this.physics.world.enable(start);
+    })
+    // console.log(this.overlapStart);
+
   }
 
   createNonCollidablemMap() {
@@ -334,19 +354,16 @@ class PlayScene extends Phaser.Scene {
     var itemArray = this.badItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i])) {
-        console.log(itemArray[i])
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i])) {
-        console.log(itemArray[i])
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
       else if (this.physics.overlap(this.player3, itemArray[i])) {
-        console.log(itemArray[i])
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
@@ -364,19 +381,16 @@ class PlayScene extends Phaser.Scene {
     var itemArray = this.goodItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i])) {
-        console.log(itemArray[i])
         itemArray[i].destroy();
         // this.score += 5;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i])) {
-        console.log(itemArray[i])
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
       else if (this.physics.overlap(this.player3, itemArray[i])) {
-        console.log(itemArray[i])
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
@@ -514,7 +528,6 @@ class PlayScene extends Phaser.Scene {
       // selfP.createCharacter();
       selfP.numberOfScans++;
       selfP.scanned = true;
-      console.log("hello");
 
       selfP.player.setVisible(true);
       if (selfP.numberOfScans ==2 ) {
