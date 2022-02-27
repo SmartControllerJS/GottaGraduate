@@ -40,6 +40,7 @@ class PlayScene extends Phaser.Scene {
     this.player2Score = 120;
     this.player3Score = 120;
     this.player4Score = 120;
+    this.scores = []
     this.playerScoreText = null;
     this.player2ScoreText = null;
     this.player3ScoreText = null;
@@ -110,15 +111,16 @@ class PlayScene extends Phaser.Scene {
 
 
   update() {
+    this.scores = [this.playerScore, this.player2Score, this.player3Score, this.player4Score]
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
     this.removeItem();
     this.removeBeerSprite();
     this.removeGoodItem();
 
-    if (this.physics.overlap(this.player, this.overlapStart)) {
-      alert('START THE GAME');
-    }
+    // if (this.physics.overlap(this.player, this.overlapStart)) {
+    //   alert('START THE GAME');
+    // }
 
     this.playerScoreText.x = this.player.body.position.x - 20;  
     this.playerScoreText.y = this.player.body.position.y - 15;  
@@ -130,9 +132,10 @@ class PlayScene extends Phaser.Scene {
     this.player4ScoreText.y = this.player4.body.position.y - 15;  
     // this.scoreText.setVisible(false);
 
-    if (this.score <= 0) {
-      alert('gameover')
-    }
+    // if (this.score <= 0) {
+    //   alert('gameover')
+    // }
+    this.checkPlayersScore();
 
     var controllerList = this.simplePeer.controllerList;
     var size = Object.keys(controllerList).length;
@@ -243,6 +246,17 @@ class PlayScene extends Phaser.Scene {
       }
       else {
         continue;
+      }
+    }
+  }
+
+  checkPlayersScore() {
+
+    for (let i = 0; i < this.scores.length; i++) {
+      console.log(this.scores[i]);
+      if (this.scores[i] <= 0) {
+        console.log(this.scores[i]);
+        this.playerList[i].disableBody(true, true);
       }
     }
   }
