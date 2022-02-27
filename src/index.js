@@ -1,12 +1,5 @@
 import Phaser from "phaser";
 import PlayScene from "./scenes/PlayScene";
-import Player from "./helpers/player";
-
-// const WIDTH = 800;
-// const HEIGHT = 600;
-
-// window.innerWidth * window.devicePixelRatio,
-//   window.innerHeight * window.devicePixelRatio,
 
 const SIZE_WIDTH_SCREEN = 1280
 const SIZE_HEIGHT_SCREEN = 720

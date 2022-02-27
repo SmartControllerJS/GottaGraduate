@@ -70,7 +70,7 @@ class PlayScene extends Phaser.Scene {
   create() {
     this.createCode();
     this.createCollidableMap();
-    this.createCharacter()
+    this.createCharacters()
     this.createNonCollidablemMap();
 
     this.badItems = this.physics.add.group();
@@ -110,52 +110,50 @@ class PlayScene extends Phaser.Scene {
 
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
-    if (this.scanned == true) {
-      this.removeItem();
-      this.removeBeerSprite();
-      this.removeGoodItem();
+    this.removeItem();
+    this.removeBeerSprite();
+    this.removeGoodItem();
 
-      if (this.physics.overlap(this.player, this.overlapStart)) {
-        alert('START THE GAME');
-      }
+    if (this.physics.overlap(this.player, this.overlapStart)) {
+      alert('START THE GAME');
+    }
 
-      this.scoreText.x = this.player.body.position.x;  
-      this.scoreText.y = this.player.body.position.y -10;  
-  
-      if (this.score <= 0) {
-        alert('gameover')
-      }
+    this.scoreText.x = this.player.body.position.x;  
+    this.scoreText.y = this.player.body.position.y -10;  
 
-      var controllerList = this.simplePeer.controllerList;
-      var size = Object.keys(controllerList).length;
-      for (let i = 0; i < size; i++) {
-        if (controllerList[Object.keys(controllerList)[i]].isActive && (typeof controllerList[Object.keys(controllerList)[i]].state.angle.degree !== "undefined")) {
-          if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 295 || controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 45) {
-            this.playerList[i].body.velocity.x = this.playerVelocity;
-            this.playerList[i].body.velocity.y = 0;
-            this.playerList[i].anims.play(ANIMATIONS[i][0], true);
-          }
-          else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 45 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 115) {
-            this.playerList[i].body.velocity.y = -this.playerVelocity;
-            this.playerList[i].body.velocity.x = 0;
-            this.playerList[i].anims.play(ANIMATIONS[i][1], true);
-          }
-          else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 115 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 225) {
-            this.playerList[i].body.velocity.x = -this.playerVelocity;
-            this.playerList[i].body.velocity.y = 0;
-            this.playerList[i].anims.play(ANIMATIONS[i][2], true);
-          }
-          else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 225 && controllerList[Object.keys(controllerList)[i]].state.angle.degree  <= 295) {
-            this.playerList[i].body.velocity.y = this.playerVelocity;
-            this.playerList[i].body.velocity.x = 0;
-            this.playerList[i].anims.play(ANIMATIONS[i][3], true);
-          }
-        }
-        else {
+    if (this.score <= 0) {
+      alert('gameover')
+    }
+
+    var controllerList = this.simplePeer.controllerList;
+    var size = Object.keys(controllerList).length;
+    for (let i = 0; i < size; i++) {
+      if (controllerList[Object.keys(controllerList)[i]].isActive && (typeof controllerList[Object.keys(controllerList)[i]].state.angle.degree !== "undefined")) {
+        if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 295 || controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 45) {
+          this.playerList[i].body.velocity.x = this.playerVelocity;
           this.playerList[i].body.velocity.y = 0;
-          this.playerList[i].body.velocity.x = 0;
-          this.playerList[i].anims.play(ANIMATIONS[i][4], true);
+          this.playerList[i].anims.play(ANIMATIONS[i][0], true);
         }
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 45 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 115) {
+          this.playerList[i].body.velocity.y = -this.playerVelocity;
+          this.playerList[i].body.velocity.x = 0;
+          this.playerList[i].anims.play(ANIMATIONS[i][1], true);
+        }
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 115 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 225) {
+          this.playerList[i].body.velocity.x = -this.playerVelocity;
+          this.playerList[i].body.velocity.y = 0;
+          this.playerList[i].anims.play(ANIMATIONS[i][2], true);
+        }
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 225 && controllerList[Object.keys(controllerList)[i]].state.angle.degree  <= 295) {
+          this.playerList[i].body.velocity.y = this.playerVelocity;
+          this.playerList[i].body.velocity.x = 0;
+          this.playerList[i].anims.play(ANIMATIONS[i][3], true);
+        }
+      }
+      else {
+        this.playerList[i].body.velocity.y = 0;
+        this.playerList[i].body.velocity.x = 0;
+        this.playerList[i].anims.play(ANIMATIONS[i][4], true);
       }
     }
   }
@@ -201,7 +199,7 @@ class PlayScene extends Phaser.Scene {
   removeItem() {
     var itemArray = this.badItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
-      if (this.physics.overlap(this.player, itemArray[i])) {
+      if (this.physics.overlap(this.player, itemArray[i])  && this.numberOfScans == 1) {
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
@@ -230,7 +228,7 @@ class PlayScene extends Phaser.Scene {
   removeGoodItem() {
     var itemArray = this.goodItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
-      if (this.physics.overlap(this.player, itemArray[i])) {
+      if (this.physics.overlap(this.player, itemArray[i]) && this.numberOfScans == 1) {
         itemArray[i].destroy();
         // this.score += 5;
         // this.scoreText.setText(`Credits: ${this.score}`);
@@ -259,7 +257,7 @@ class PlayScene extends Phaser.Scene {
   removeBeerSprite() {
     var beerArray = this.beerGroup.children.getArray();
     for (let j = 0; j < this.beerGroupArray.length; j++) {
-      if (this.physics.overlap(this.player, beerArray[j])) {
+      if (this.physics.overlap(this.player, beerArray[j]) && this.numberOfScans == 1) {
         beerArray[j].destroy();
         this.playerVelocity /= 2;
       }
@@ -284,19 +282,11 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
-  getRandomArbitrary() {
-    return Math.random() * (0 - 700) + 720;
-  }
-
-  getRandomArbitraryX() {
-    return Math.random() * (0 - 1200) + 1200;
-  }
-
   createBadItem() {
     var socialMediaImages = ["netflix", "instagram", "youtube", "facebook", "tiktok"];
     var randomNumber = Math.floor(Math.random()*socialMediaImages.length);
     var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.item = this.badItems.create(xPosition, this.getRandomArbitrary(), socialMediaImages[randomNumber]);
+    this.item = this.badItems.create(xPosition, Math.random() * (0 - 700) + 720, socialMediaImages[randomNumber]);
     this.item.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.item);
   }
@@ -304,7 +294,7 @@ class PlayScene extends Phaser.Scene {
   createGoodItem() {
     var randomNumber = Math.random();
     var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.goodItem = this.goodItems.create(xPosition, this.getRandomArbitrary(), 'ipad').setScale(2);
+    this.goodItem = this.goodItems.create(xPosition, randomNumber * (0 - 700) + 720, 'ipad').setScale(2);
     this.goodItem.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.goodItem);
     this.goodItem.setSize(20, 20);
@@ -319,7 +309,7 @@ class PlayScene extends Phaser.Scene {
     });
     var randomNumber = Math.random();
     var yPosition = randomNumber < 0.5 ? -100 : 1500
-    this.beer = new Beer(this, this.getRandomArbitraryX(), yPosition);
+    this.beer = new Beer(this, randomNumber * (0 - 1200) + 1200, yPosition);
     this.beer.anims.play('floating', this);
   }
 
@@ -357,7 +347,7 @@ class PlayScene extends Phaser.Scene {
     item.setVelocity(Phaser.Math.Between(10, 150), Phaser.Math.Between(10, 150));
   }
 
-  createCharacter() {
+  createCharacters() {
     this.player = new Player(this, 100, 450);
     this.player2 = new Player(this, 200, 450);
     this.player3 = new Player(this, 300, 450);
@@ -387,7 +377,6 @@ class PlayScene extends Phaser.Scene {
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 175, 175); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
-      // selfP.createCharacter();
       selfP.numberOfScans++;
       selfP.scanned = true;
       selfP.player.setVisible(true);
