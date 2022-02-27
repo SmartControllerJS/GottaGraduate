@@ -3,7 +3,10 @@ import "smartcontroller";
 import { Player } from "../helpers/player.js";
 import { Beer } from "../helpers/beer.js";
 
-const ANIMATIONS = [['right','up','left','down','turn'],['right1','up1','left1','down1','turn1'],['right2','up2','left2','down2','turn2'],['right3','up3','left3','down3','turn3']]
+const ANIMATIONS = [['right','up','left','down','turn'],
+                    ['right1','up1','left1','down1','turn1'],
+                    ['right2','up2','left2','down2','turn2'],
+                    ['right3','up3','left3','down3','turn3']]
 class PlayScene extends Phaser.Scene {
 
   constructor(config) {
@@ -86,19 +89,18 @@ class PlayScene extends Phaser.Scene {
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
 
-    // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
-    // this.tweens.add({
-    //   targets: this.scoreText,
-    //   x: this.scoreText.x + this.player.x,
-    //   ease: 'Linear',
-    //   duration: 1,
-    //   delay: 1,
-    //   yoyo: false,
-    //   repeat: -1
-    // })
+    this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
+    this.tweens.add({
+      targets: this.scoreText,
+      x: this.scoreText.x + this.player.x,
+      ease: 'Linear',
+      duration: 1,
+      delay: 1,
+      yoyo: false,
+      repeat: -1
+    })
 
     this.text = this.add.text(600, 32, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
-    // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
     this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
     this.time.addEvent({ delay: 90000, callback: this.goodGuysWin, callbackScope: this, loop: false });
   }
@@ -117,8 +119,8 @@ class PlayScene extends Phaser.Scene {
         alert('START THE GAME');
       }
 
-      // this.scoreText.x = this.player.body.position.x;  
-      // this.scoreText.y = this.player.body.position.y -10;  
+      this.scoreText.x = this.player.body.position.x;  
+      this.scoreText.y = this.player.body.position.y -10;  
   
       if (this.score <= 0) {
         alert('gameover')
@@ -204,17 +206,17 @@ class PlayScene extends Phaser.Scene {
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player2, itemArray[i])) {
+      else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans == 2) {
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player3, itemArray[i])) {
+      else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans == 3) {
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player4, itemArray[i])) {
+      else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans == 4) {
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
@@ -233,17 +235,17 @@ class PlayScene extends Phaser.Scene {
         // this.score += 5;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player2, itemArray[i])) {
+      else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans == 2) {
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player3, itemArray[i])) {
+      else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans == 3) {
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player4, itemArray[i])) {
+      else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans == 4) {
         itemArray[i].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
@@ -261,17 +263,17 @@ class PlayScene extends Phaser.Scene {
         beerArray[j].destroy();
         this.playerVelocity /= 2;
       }
-      else if (this.physics.overlap(this.player2, beerArray[j])) {
+      else if (this.physics.overlap(this.player2, beerArray[j]) && this.numberOfScans == 2) {
         beerArray[j].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player3, beerArray[j])) {
+      else if (this.physics.overlap(this.player3, beerArray[j]) && this.numberOfScans == 3) {
         beerArray[j].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
       }
-      else if (this.physics.overlap(this.player4, beerArray[j])) {
+      else if (this.physics.overlap(this.player4, beerArray[j]) && this.numberOfScans == 4) {
         beerArray[j].destroy();
         // this.score -= 10;
         // this.scoreText.setText(`Credits: ${this.score}`);
