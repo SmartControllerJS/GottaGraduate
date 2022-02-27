@@ -1,12 +1,6 @@
 import Phaser from "phaser";
 import PlayScene from "./scenes/PlayScene";
 
-// const WIDTH = 800;
-// const HEIGHT = 600;
-
-// window.innerWidth * window.devicePixelRatio,
-//   window.innerHeight * window.devicePixelRatio,
-
 const SIZE_WIDTH_SCREEN = 1280
 const SIZE_HEIGHT_SCREEN = 720
 
@@ -20,11 +14,11 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      // debug: true
+      debug: true
     }
   },
   scale: {
-    parent: 'qrcode',
+    parent: 'game',
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     ...SHARED_CONFIG

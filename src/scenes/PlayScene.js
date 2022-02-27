@@ -1,31 +1,64 @@
 import Phaser from "phaser";
-// import 'smartcontroller';
+import "smartcontroller";
+import { Player } from "../helpers/player.js";
+import { Beer } from "../helpers/beer.js";
 
-// all commented code is smartcontroller specific - not game specific
-
+const ANIMATIONS = [['right','up','left','down','turn'],
+                    ['right1','up1','left1','down1','turn1'],
+                    ['right2','up2','left2','down2','turn2'],
+                    ['right3','up3','left3','down3','turn3']]
 class PlayScene extends Phaser.Scene {
 
   constructor(config) {
     super('PlayScene');
     this.config = config;
 
+    // start the game
+    this.startLayer = null;
+    this.overlapStart = null;
+
+    // smartcontroller
     this.globalFlag = false;
     this.controller = null;
     this.simplePeer = null;
     this.scanned = false;
-    this.badItems = null;
+    this.playerList = [];
+
+    // difficulties via item delays
+    this.goodItemDelay = 10000;
+    this.badItemDelay = 4000;
+    this.beerItemDelay = 15000;
+
+    // map layers
+    this.collision_layer = null;
+    this.object_collision_layer = null;
+    this.church_collision_layer = null;
+    this.church_roof_collision_layer = null;
+
+    // players
     this.player = null;
+    this.player2 = null;
+    this.player3 = null;
+    this.player4 = null;
+    this.numberOfScans = 0;
+
+    // scores
+    this.scores = [120, 120, 120, 120]
+    this.playerScoreText = null;
+    this.player2ScoreText = null;
+    this.player3ScoreText = null;
+    this.player4ScoreText = null;
+    this.scoresText = null;
+
+    // items
+    this.badItems = null;
     this.beer = null;
     this.beer2 = null;
     this.beer3 = null;
     this.beer4 = null;
     this.beer5 = null;
-    this.cursors = null;
-    this.scoreText = null;
-    this.score = 120;
-    this.playerVelocity = 200;
 
-    this.index = 0;
+    this.playerVelocities = [200, 200, 200, 200]
  
     this.item = null;
 
@@ -34,9 +67,395 @@ class PlayScene extends Phaser.Scene {
     this.itemArray = null;
     this.beerGroup = null;
     this.beerGroupArray = null;
+
+    // timer
+    this.text = null;
+    this.initialTime = 180;
   }
 
   preload() {
+    this.loadImages();
+  }
+
+  create() {
+    this.createCode();
+    this.createCollidableMap();
+    this.createCharacters()
+    this.createNonCollidablemMap();
+
+    this.badItems = this.physics.add.group();
+    this.timedItem();
+    this.beerGroup = this.physics.add.group();
+    this.createBeerItem();
+    this.timedBeer();
+    this.goodItems = this.physics.add.group();
+    this.timedGoodItem();
+
+    this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
+    this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [15, 27, 39, 3], [17, 29, 41, 5], ['turn1', 4]);
+    this.createPlayerAnimation(['left2', 'right2', 'up2', 'down2'], [18, 30, 42, 6], [20, 32, 44, 8], ['turn2', 7]);
+    this.createPlayerAnimation(['left3', 'right3', 'up3', 'down3'], [60, 72, 84, 48], [62, 74, 86, 50], ['turn3', 49]);
+
+    this.createPlayerScores();
+    this.scoresText = [this.playerScoreText, this.player2ScoreText, this.player3ScoreText, this.player4ScoreText];
+
+    this.scale.displaySize.setAspectRatio( this.width/this.height );
+    this.scale.refresh();
+
+    this.text = this.add.text(600, 32, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
+    this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+    this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
+  }
+
+
+  update() {
+    
+    this.itemArray = this.badItems.children.getArray();
+    this.beerGroupArray = this.beerGroup.children.getArray();
+    this.removeItem();
+    this.removeBeerSprite();
+    this.removeGoodItem();
+
+    // if (this.physics.overlap(this.player, this.overlapStart)) {
+    //   alert('START THE GAME');
+    // }
+
+    this.playerScoreText.x = this.player.body.position.x - 20;  
+    this.playerScoreText.y = this.player.body.position.y - 15;  
+    this.player2ScoreText.x = this.player2.body.position.x - 20;  
+    this.player2ScoreText.y = this.player2.body.position.y - 15;  
+    this.player3ScoreText.x = this.player3.body.position.x - 20;  
+    this.player3ScoreText.y = this.player3.body.position.y - 15;  
+    this.player4ScoreText.x = this.player4.body.position.x - 20;  
+    this.player4ScoreText.y = this.player4.body.position.y - 15;  
+
+    this.checkPlayersScore();
+
+    var controllerList = this.simplePeer.controllerList;
+    var size = Object.keys(controllerList).length;
+    for (let i = 0; i < size; i++) {
+      if (controllerList[Object.keys(controllerList)[i]].isActive && (typeof controllerList[Object.keys(controllerList)[i]].state.angle.degree !== "undefined")) {
+        if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 295 || controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 45) {
+          this.playerList[i].body.velocity.x = this.playerVelocities[i];
+          this.playerList[i].body.velocity.y = 0;
+          this.playerList[i].anims.play(ANIMATIONS[i][0], true);
+        }
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 45 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 115) {
+          this.playerList[i].body.velocity.y = -this.playerVelocities[i];
+          this.playerList[i].body.velocity.x = 0;
+          this.playerList[i].anims.play(ANIMATIONS[i][1], true);
+        }
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 115 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 225) {
+          this.playerList[i].body.velocity.x = -this.playerVelocities[i];
+          this.playerList[i].body.velocity.y = 0;
+          this.playerList[i].anims.play(ANIMATIONS[i][2], true);
+        }
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 225 && controllerList[Object.keys(controllerList)[i]].state.angle.degree  <= 295) {
+          this.playerList[i].body.velocity.y = this.playerVelocities[i];
+          this.playerList[i].body.velocity.x = 0;
+          this.playerList[i].anims.play(ANIMATIONS[i][3], true);
+        }
+      }
+      else {
+        this.playerList[i].body.velocity.y = 0;
+        this.playerList[i].body.velocity.x = 0;
+        this.playerList[i].anims.play(ANIMATIONS[i][4], true);
+      }
+    }
+  }
+
+  removeItem() {
+    var itemArray = this.badItems.children.getArray();
+    for (let i = 0; i < this.itemArray.length; i++) {
+      if (this.physics.overlap(this.player, itemArray[i])  && this.numberOfScans >= 1) {
+        itemArray[i].destroy();
+        this.scores[0] -= 10;
+        this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
+      }
+      else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans >= 2) {
+        itemArray[i].destroy();
+        this.scores[1] -= 10;
+        this.player2ScoreText.setText(`Credits: ${this.scores[1]}`);
+      }
+      else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans >= 3) {
+        itemArray[i].destroy();
+        this.scores[2] -= 10;
+        this.player3ScoreText.setText(`Credits: ${this.scores[2]}`);
+      }
+      else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans >= 4) {
+        itemArray[i].destroy();
+        this.scores[3] -= 10;
+        this.player4ScoreText.setText(`Credits: ${this.scores[3]}`);
+      }
+      else {
+        continue;
+      }
+    }
+  }
+
+  removeGoodItem() {
+    var itemArray = this.goodItems.children.getArray();
+    for (let i = 0; i < this.itemArray.length; i++) {
+      if (this.physics.overlap(this.player, itemArray[i]) && this.numberOfScans >= 1) {
+        itemArray[i].destroy();
+        this.scores[0] += 5;
+        this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
+      }
+      else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans >= 2) {
+        itemArray[i].destroy();
+        this.scores[1] += 5;
+        this.player2ScoreText.setText(`Credits: ${this.scores[1]}`);
+      }
+      else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans >= 3) {
+        itemArray[i].destroy();
+        this.scores[2] += 5;
+        this.player3ScoreText.setText(`Credits: ${this.scores[2]}`);
+      }
+      else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans >= 4) {
+        itemArray[i].destroy();
+        this.scores[3] += 5;
+        this.player4ScoreText.setText(`Credits: ${this.scores[3]}`);
+      }
+      else {
+        continue;
+      }
+    }
+  }
+
+  removeBeerSprite() {
+    var beerArray = this.beerGroup.children.getArray();
+    for (let j = 0; j < this.beerGroupArray.length; j++) {
+      if (this.physics.overlap(this.player, beerArray[j]) && this.numberOfScans >= 1) {
+        beerArray[j].destroy();
+        this.playerVelocities[0] /= 2;
+      }
+      else if (this.physics.overlap(this.player2, beerArray[j]) && this.numberOfScans >= 2) {
+        beerArray[j].destroy();
+        this.playerVelocities[1] /= 2;
+      }
+      else if (this.physics.overlap(this.player3, beerArray[j]) && this.numberOfScans >= 3) {
+        beerArray[j].destroy();
+        this.playerVelocities[3] /= 2;
+      }
+      else if (this.physics.overlap(this.player4, beerArray[j]) && this.numberOfScans >= 4) {
+        beerArray[j].destroy();
+        this.playerVelocities[4] /= 2;
+      }
+      else {
+        continue;
+      }
+    }
+  }
+
+  checkPlayersScore() {
+    for (let i = 0; i < this.scores.length; i++) {
+      if ((this.scores[0] <= 0) && (this.scores[1] <= 0)) {
+        alert('game over');
+      }
+      if (this.scores[i] <= 0) {
+        this.playerList[i].disableBody(true, true);
+        this.scoresText[i].setVisible(false);
+      }
+    }
+  }
+
+  createBadItem() {
+    var socialMediaImages = ["netflix", "instagram", "youtube", "facebook", "tiktok"];
+    var randomNumber = Math.floor(Math.random()*socialMediaImages.length);
+    var xPosition = randomNumber < 0.5 ? 0 : 2000;
+    this.item = this.badItems.create(xPosition, Math.random() * (0 - 700) + 720, socialMediaImages[randomNumber]);
+    this.item.setBounce(1).setCollideWorldBounds(true);
+    this.moveIndividual(this.item);
+  }
+
+  createGoodItem() {
+    var randomNumber = Math.random();
+    var xPosition = randomNumber < 0.5 ? 0 : 2000;
+    this.goodItem = this.goodItems.create(xPosition, randomNumber * (0 - 700) + 720, 'ipad').setScale(2);
+    this.goodItem.setBounce(1).setCollideWorldBounds(true);
+    this.moveIndividual(this.goodItem);
+    this.goodItem.setSize(20, 20);
+  }
+
+  createBeerItem() {
+    this.anims.create({
+      key: 'floating',
+      frames: this.anims.generateFrameNumbers('beer', { start: 0, end: 7 }),
+      frameRate: 10,
+      repeat: -1
+    });
+    var randomNumber = Math.random();
+    var yPosition = randomNumber < 0.5 ? -100 : 1500
+    this.beer = new Beer(this, randomNumber * (0 - 1200) + 1200, yPosition);
+    this.beer.anims.play('floating', this);
+    for (let i = 0; i < this.playerVelocities.length; i++) {
+      this.playerVelocities[i] = 200;
+    }
+  }
+
+  timedItem() {
+    this.timedEvent = this.time.addEvent({
+      delay: this.badItemDelay,
+      callback: this.createBadItem,
+      callbackScope: this,
+      loop: true,
+    })
+  }
+
+  timedBeer() {
+    this.timedEvent = this.time.addEvent({
+      delay: this.goodItemDelay,
+      callback: this.createBeerItem,
+      callbackScope: this,
+      loop: true,
+    })
+  }
+
+  timedGoodItem() {
+    this.timedEvent = this.time.addEvent({
+      delay: this.beerItemDelay,
+      callback: this.createGoodItem,
+      callbackScope: this,
+      loop: true,
+    })
+  }
+
+
+  moveIndividual(item) {
+    item.setVelocity(Phaser.Math.Between(10, 300), Phaser.Math.Between(10, 300));
+  }
+  moveIndividualBeer(item) {
+    item.setVelocity(Phaser.Math.Between(10, 150), Phaser.Math.Between(10, 150));
+  }
+
+  createCharacters() {
+    this.player = new Player(this, 100, 450);
+    this.player2 = new Player(this, 200, 450);
+    this.player3 = new Player(this, 300, 450);
+    this.player4 = new Player(this, 400, 450);
+  }
+
+  createPlayerScores() {
+    this.playerScoreText = this.add.text(this.player.x, 0, "Credits:" + this.scores[0], {fontSize: '12px', color: '#000'});
+    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits:" + this.scores[1], {fontSize: '12px', color: '#000'});
+    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits:" + this.scores[2], {fontSize: '12px', color: '#000'});
+    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits:" + this.scores[3], {fontSize: '12px', color: '#000'});
+    this.playerScoreText.setVisible(false);
+    this.player2ScoreText.setVisible(false);
+    this.player3ScoreText.setVisible(false);
+    this.player4ScoreText.setVisible(false);
+  }
+
+  createCode() {
+    // this.scene.pause();
+    // this.physics.pause();
+    // this.isPaused = true;
+    this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 175, 175); // joystick.html
+    var selfP = this;
+    this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
+      selfP.numberOfScans++;
+      selfP.scanned = true;
+      selfP.player.setVisible(true);
+      selfP.playerScoreText.setVisible(true);
+      if (selfP.numberOfScans == 2 ) {
+        selfP.player2.setVisible(true);
+        selfP.player2ScoreText.setVisible(true);
+        selfP.badItemDelay = 3000;
+        selfP.goodItemDelay = 10000;
+        selfP.beerItemDelay = 13000;
+      }
+      else if (selfP.numberOfScans == 3 ) {
+        selfP.player3.setVisible(true);
+        selfP.player3ScoreText.setVisible(true);
+        selfP.badItemDelay = 2500;
+        selfP.goodItemDelay = 8000;
+        selfP.beerItemDelay = 10000;
+      }
+      else if (selfP.numberOfScans == 4 ) {
+        selfP.player4.setVisible(true);
+        selfP.player4ScoreText.setVisible(true);
+        document.getElementById('qrcode').style.display = "none";
+        selfP.badItemDelay = 2000;
+        selfP.goodItemDelay = 8000;
+        selfP.beerItemDelay = 8500;
+      }
+      // selfP.scene.resume();
+      // selfP.physics.resume();
+    })
+  }
+
+  // round timer functions
+  formatTime(seconds){
+    // Minutes
+      var minutes = Math.floor(seconds/60);
+      // Seconds
+      var partInSeconds = seconds%60;
+      // Adds left zeros to seconds
+      partInSeconds = partInSeconds.toString().padStart(2,'0');
+      // Returns formated time
+    return `${minutes}:${partInSeconds}`;
+    }
+
+  onEvent () {
+    this.initialTime -= 1; // One second
+    this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
+  }
+
+  goodGuysWin() {
+    alert("The Good Guys Win :)");
+  }
+
+  createPlayerAnimation(directions, start, end, idleFrame) {
+    for (let i = 0; i < start.length; i++) {
+      this.anims.create({
+        key: directions[i],
+        frames: this.anims.generateFrameNames('dude', { start: start[i], end: end[i]}),
+        frameRate: 10,
+        repeat: -1,
+      });
+    }
+    this.anims.create({
+        key: idleFrame[0],
+        frames: [ { key: 'dude', frame: idleFrame[1] } ],
+        frameRate: 10
+    });
+  }
+
+  createCollidableMap() {
+    const map = this.make.tilemap({ key: 'tilemap' })
+    const tileset = map.addTilesetImage('background', 'base_tiles')
+    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
+    map.createLayer('Bottom of floor', tileset)
+    map.createLayer('Top of floor', tileset)
+    this.startLayer = map.createLayer('Start layer', tileset);
+    map.createLayer('Fauna and flora', tileset)
+
+    this.collision_layer = map.createLayer('Outside', tileset).setCollisionByExclusion([-1]);
+    this.object_collision_layer = map.createLayer('Furniture and trees', tileset).setCollisionByExclusion([-1]);
+    this.church_collision_layer = map.createLayer('Church', tileset).setCollisionByExclusion([-1]);
+    this.church_roof_collision_layer = map.createLayer('Church roof', church_roof_tileset).setCollisionByExclusion([-1]);
+
+    this.overlapStart = map.createFromObjects('Start game', {
+      id: 19
+    });
+
+    this.overlapStart.forEach(start => {
+      this.physics.world.enable(start);
+    })
+  }
+
+  createNonCollidablemMap() {
+    const map = this.make.tilemap({ key: 'tilemap' })
+    const tileset = map.addTilesetImage('background', 'base_tiles')
+    const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
+    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
+    map.createLayer('Wall Decoration', tileset)
+    map.createLayer('Church roof no collision', church_roof_tileset);
+    map.createLayer('Church window', church_window_tileset)
+  }
+
+  loadImages() {
     this.load.image('base_tiles', 'assets/base_tiles.png')
     this.load.image('church_tiles', 'assets/church_tiles.png')
     this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
@@ -56,363 +475,6 @@ class PlayScene extends Phaser.Scene {
     this.load.image('youtube', 'assets/youtube.png')
     this.load.image('ipad', 'assets/ipad.png');
   }
-
-  create() {
-
-    // create the Tilemap
-    const map = this.make.tilemap({ key: 'tilemap' })
-
-    // add the tileset images we are using
-    const tileset = map.addTilesetImage('background', 'base_tiles')
-    const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
-    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
-
-    map.createStaticLayer('Bottom of floor', tileset)
-    map.createStaticLayer('Top of floor', tileset)
-    map.createStaticLayer('Fauna and flora', tileset)
-    this.badItems = this.physics.add.group();
-    this.timedItem();
-    this.player = this.physics.add.sprite(100, 450, 'dude'); // loaded as sprite because it has animation frames
-    this.beerGroup = this.physics.add.group();
-    this.createBeerItem();
-    this.timedBeer();
-    this.goodItems = this.physics.add.group();
-    this.timedGoodItem();
-
-    this.player.setSize(28, 40);
-    this.player.setOffset(10, 7);
-
-
-    map.createStaticLayer('Wall Decoration', tileset)
-    var collision_layer = map.createStaticLayer('Outside', tileset)
-
-    var object_collision_layer = map.createStaticLayer('Furniture and trees', tileset)
-    var church_collision_layer = map.createStaticLayer('Church', tileset)
-    var church_roof_collision_layer = map.createStaticLayer('Church roof', church_roof_tileset)
-    map.createStaticLayer('Church roof no collision', church_roof_tileset);
-    map.createStaticLayer('Church window', church_window_tileset)
-
-    this.player.setCollideWorldBounds(true); // collider
-        this.anims.create({
-          key: 'left',
-          frames: this.anims.generateFrameNumbers('dude', { start: 12, end: 14 }),
-          frameRate: 10,
-          repeat: -1
-      });
-
-      this.anims.create({
-          key: 'turn',
-          frames: [ { key: 'dude', frame: 1 } ],
-          frameRate: 20
-      });
-
-      this.anims.create({
-          key: 'right',
-          frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
-          frameRate: 10,
-          repeat: -1
-      });
-      this.anims.create({
-        key: 'up',
-        frames: this.anims.generateFrameNumbers('dude', { start: 36, end: 38 }),
-        frameRate: 10,
-        repeat: -1
-    });
-    this.anims.create({
-      key: 'down',
-      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
-      frameRate: 10,
-      repeat: -1
-  });
-  
-  this.anims.create({
-    key: 'floating',
-    frames: this.anims.generateFrameNumbers('beer', { start: 0, end: 7 }),
-    frameRate: 10,
-    repeat: -1
-});
-
-
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.scale.displaySize.setAspectRatio( this.width/this.height );
-    this.scale.refresh();
-    // if (this.globalFlag == false) {
-    //   this.createCode();
-    //   this.globalFlag = true;
-    // }
-
-    collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, collision_layer);
-    object_collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, object_collision_layer);
-    church_collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, church_collision_layer);
-    church_roof_collision_layer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, church_roof_collision_layer);
-
-
-    this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
-
-    this.tweens.add({
-      targets: this.scoreText,
-      x: this.scoreText.x + this.player.x,
-      ease: 'Linear',
-      duration: 1,
-      delay: 1,
-      yoyo: false,
-      repeat: -1
-    })
-  }
-
-  update() {
-    this.itemArray = this.badItems.children.getArray();
-    this.beerGroupArray = this.beerGroup.children.getArray();
-    this.removeItem();
-    this.removeBeerSprite();
-    this.removeGoodItem();
-
-    if (this.score <= 0) {
-      alert('gameover')
-    }
-    
-    this.scoreText.x = this.player.body.position.x;  
-    this.scoreText.y = this.player.body.position.y -10;  
-    if (this.cursors.right.isDown) {
-      this.player.body.velocity.x = this.playerVelocity;
-      this.player.anims.play('right', true);
-    }
-    else if (this.cursors.left.isDown) {
-      this.player.body.velocity.x = -this.playerVelocity;
-      this.player.anims.play('left', true);
-    }
-    else if (this.cursors.up.isDown) {
-      this.player.body.velocity.y = -this.playerVelocity;
-      this.player.anims.play('up', true);
-    }
-    else if (this.cursors.down.isDown) {
-      this.player.body.velocity.y = this.playerVelocity;
-      this.player.anims.play('down', true);
-    }
-    else {
-      this.player.body.velocity.y = 0;
-      this.player.body.velocity.x = 0;
-      this.player.anims.play('turn', true);
-    }
-    // if (this.scanned == true) {
-    //   var controllerList = this.simplePeer.controllerList;
-    //   var size = Object.keys(this.simplePeer.controllerList).length;
-    //   for (let i = 0; i < size; i++) {
-    //     console.log(this.playerList[i].text);
-    //     if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 0) {
-    //       this.bird.body.velocity.y = -this.flapVelocity;
-    //     } else if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 1) {
-    //       this.secondBird.body.velocity.y = -this.flapVelocity;
-    //     } else if (controllerList[Object.keys(controllerList)[i]].buttons['a'] == true && i == 2) {
-    //       this.thirdBird.body.velocity.y = -this.flapVelocity;
-    //     }
-    //   }
-    // }
-  }
-
-  destroyElement(player, badItem) {
-    this.badItems.kill();
-  }
-  decrementScore() {
-    this.score -= 10;
-    this.scoreText.setText(`Credits: ${this.score}`);
-    // this.item.destroy();
-  } 
-
-  removeItem() {
-    var itemArray = this.badItems.children.getArray();
-    for (let i = 0; i < this.itemArray.length; i++) {
-      var boundsB = this.itemArray[i].getBounds();
-      var boundsA = this.player.getBounds();
-      if (this.physics.overlap(this.player, itemArray[i])) {
-        console.log(itemArray[i])
-        itemArray[i].destroy();
-        this.score -= 10;
-        this.scoreText.setText(`Credits: ${this.score}`);
-      }
-      // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
-      //   console.log(i);
-      //   this.itemArray[i].destroy();
-      // }
-      else {
-        continue;
-      }
-    }
-  }
-
-  
-  removeGoodItem() {
-
-    var itemArray = this.goodItems.children.getArray();
-    for (let i = 0; i < this.itemArray.length; i++) {
-      var boundsB = this.itemArray[i].getBounds();
-      var boundsA = this.player.getBounds();
-      if (this.physics.overlap(this.player, itemArray[i])) {
-        console.log(itemArray[i])
-        itemArray[i].destroy();
-        this.score += 5;
-        this.scoreText.setText(`Credits: ${this.score}`);
-      }
-      // if (Phaser.Geom.Intersects.RectangleToRectangle(boundsA + 0.1, boundsB +0.1)) {
-      //   console.log(i);
-      //   this.itemArray[i].destroy();
-      // }
-      else {
-        continue;
-      }
-    }
-  }
-
-  removeBeerSprite() {
-    var beerArray = this.beerGroup.children.getArray();
-    for (let j = 0; j < this.beerGroupArray.length; j++) {
-      var boundsB = this.beerGroupArray[j].getBounds();
-      var boundsA = this.player.getBounds();
-      if (this.physics.overlap(this.player, beerArray[j])) {
-
-        beerArray[j].destroy();
-        this.playerVelocity -= 100;
-      }
-      else {
-        continue;
-      }
-    }
-  }
-
-
-  getRandomArbitrary() {
-    return Math.random() * (0 - 700) + 720;
-  }
-
-  getRandomArbitraryX() {
-    return Math.random() * (0 - 1200) + 1200;
-  }
-
-  createBadItem() {
-    var socialMediaImages = ["netflix", "instagram", "youtube", "facebook", "tiktok"];
-    var randomNumber = Math.floor(Math.random()*socialMediaImages.length);
-    var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.item = this.badItems.create(xPosition, this.getRandomArbitrary(), socialMediaImages[randomNumber]);
-    this.item.setBounce(1).setCollideWorldBounds(true);
-    this.moveIndividual(this.item);
-  }
-
-  createGoodItem() {
-    var randomNumber = Math.random();
-    var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.goodItem = this.goodItems.create(xPosition, this.getRandomArbitrary(), 'ipad').setScale(2);
-    this.goodItem.setBounce(1).setCollideWorldBounds(true);
-    this.moveIndividual(this.goodItem);
-    this.goodItem.setSize(20, 20);
-  }
-
-  createBeerItem() {
-    var randomNumber = Math.random();
-    var yPosition = randomNumber < 0.5 ? 0 : 1500;
-    this.beer = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    this.beer2 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    this.beer3 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    this.beer4 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    this.beer5 = this.physics.add.sprite(this.getRandomArbitraryX(), yPosition, 'beer').setScale(2); // loaded as sprite because it has animation frames
-    this.beerGroup.add(this.beer);
-    this.beerGroup.add(this.beer2);
-    this.beerGroup.add(this.beer3);
-    this.beerGroup.add(this.beer4);
-    this.beerGroup.add(this.beer5);
-  }
-
-  createIndividualBeer() {
-    var arr = this.beerGroup.children.getArray();
-    this.playerVelocity= 200;
-
-    for (let k = 0; k < 5; k++) {
-      console.log(k);
-      if (k == this.index && this.index == 0) {
-        this.beer.setBounce(1).setCollideWorldBounds(true);
-        this.moveIndividualBeer(this.beer);
-        this.beer.anims.play('floating', this)
-        this.beer.setSize(28, 36);
-        this.beer.setOffset(10, 10);
-      }
-      else if (k == this.index && this.index == 1) {
-        this.beer2.setBounce(1).setCollideWorldBounds(true);
-        this.moveIndividualBeer(this.beer2);
-        this.beer2.anims.play('floating', this)
-        this.beer2.setSize(28, 36);
-        this.beer2.setOffset(10, 10);
-      }
-      else if (k == this.index && this.index == 2) {
-        this.beer3.setBounce(1).setCollideWorldBounds(true);
-        this.moveIndividualBeer(this.beer3);
-        this.beer3.anims.play('floating', this)
-        this.beer3.setSize(28, 36);
-        this.beer3.setOffset(10, 10);
-      }
-      else if (k == this.index && this.index == 3) {
-        this.beer4.setBounce(1).setCollideWorldBounds(true);
-        this.moveIndividualBeer(this.beer4);
-        this.beer4.anims.play('floating', this)
-        this.beer4.setSize(28, 36);
-        this.beer4.setOffset(10, 10);
-      }
-      else if (k == this.index && this.index == 4) {
-        this.beer5.setBounce(1).setCollideWorldBounds(true);
-        this.moveIndividualBeer(this.beer5);
-        this.beer5.anims.play('floating', this)
-        this.beer5.setSize(28, 36);
-        this.beer5.setOffset(10, 10);
-      }
-    }
-    this.index += 1;
-  }
-
-  timedItem() {
-    this.timedEvent = this.time.addEvent({
-      delay: 3000,
-      callback: this.createBadItem,
-      callbackScope: this,
-      loop: true,
-    })
-  }
-
-  timedBeer() {
-    this.timedEvent = this.time.addEvent({
-      delay: 15000,
-      callback: this.createIndividualBeer,
-      callbackScope: this,
-      loop: true,
-    })
-  }
-
-  timedGoodItem() {
-    this.timedEvent = this.time.addEvent({
-      delay: 10000,
-      callback: this.createGoodItem,
-      callbackScope: this,
-      loop: true,
-    })
-  }
-
-  moveIndividual(item) {
-    item.setVelocity(Phaser.Math.Between(10, 300), Phaser.Math.Between(10, 300));
-  }
-  moveIndividualBeer(item) {
-    item.setVelocity(Phaser.Math.Between(10, 150), Phaser.Math.Between(10, 150));
-  }
-
-  // createCode() {
-  //   this.simplePeer = new smartcontroller.NesSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-  //   this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/nesController.html', 'qrcode', 150, 150, '1');
-  //   var selfP = this;
-  //   this.simplePeer.on("connection", function(nes){ // this can also be outside the update loop that is a listener on it's own
-  //     this.controller = nes; 
-  //     selfP.scanned = true;
-  //   })
-  // }
 }
 
 export default PlayScene;
