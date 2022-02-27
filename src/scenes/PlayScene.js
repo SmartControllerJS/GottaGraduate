@@ -1,4 +1,4 @@
-import Phaser, { RIGHT } from "phaser";
+import Phaser from "phaser";
 import "smartcontroller";
 import { Player } from "../helpers/player.js";
 import { Beer } from "../helpers/beer.js";
@@ -12,6 +12,8 @@ class PlayScene extends Phaser.Scene {
   constructor(config) {
     super('PlayScene');
     this.config = config;
+
+    // start the game
     this.startLayer = null;
     this.overlapStart = null;
 
@@ -21,6 +23,11 @@ class PlayScene extends Phaser.Scene {
     this.simplePeer = null;
     this.scanned = false;
     this.playerList = [];
+
+    // difficulties via item delays
+    this.goodItemDelay = 10000;
+    this.badItemDelay = 4000;
+    this.beerItemDelay = 15000;
 
     // map layers
     this.collision_layer = null;
@@ -51,11 +58,7 @@ class PlayScene extends Phaser.Scene {
     this.beer4 = null;
     this.beer5 = null;
 
-    this.cursors = null;
-
     this.playerVelocities = [200, 200, 200, 200]
-
-    this.index = 0;
  
     this.item = null;
 
@@ -67,7 +70,7 @@ class PlayScene extends Phaser.Scene {
 
     // timer
     this.text = null;
-    this.initialTime = 90;
+    this.initialTime = 180;
   }
 
   preload() {
@@ -101,7 +104,7 @@ class PlayScene extends Phaser.Scene {
 
     this.text = this.add.text(600, 32, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
     this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-    this.time.addEvent({ delay: 90000, callback: this.goodGuysWin, callbackScope: this, loop: false });
+    this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
   }
 
 
@@ -125,11 +128,7 @@ class PlayScene extends Phaser.Scene {
     this.player3ScoreText.y = this.player3.body.position.y - 15;  
     this.player4ScoreText.x = this.player4.body.position.x - 20;  
     this.player4ScoreText.y = this.player4.body.position.y - 15;  
-    // this.scoreText.setVisible(false);
 
-    // if (this.score <= 0) {
-    //   alert('gameover')
-    // }
     this.checkPlayersScore();
 
     var controllerList = this.simplePeer.controllerList;
@@ -293,7 +292,7 @@ class PlayScene extends Phaser.Scene {
 
   timedItem() {
     this.timedEvent = this.time.addEvent({
-      delay: 3000,
+      delay: this.badItemDelay,
       callback: this.createBadItem,
       callbackScope: this,
       loop: true,
@@ -302,7 +301,7 @@ class PlayScene extends Phaser.Scene {
 
   timedBeer() {
     this.timedEvent = this.time.addEvent({
-      delay: 15000,
+      delay: this.goodItemDelay,
       callback: this.createBeerItem,
       callbackScope: this,
       loop: true,
@@ -311,7 +310,7 @@ class PlayScene extends Phaser.Scene {
 
   timedGoodItem() {
     this.timedEvent = this.time.addEvent({
-      delay: 10000,
+      delay: this.beerItemDelay,
       callback: this.createGoodItem,
       callbackScope: this,
       loop: true,
@@ -358,15 +357,24 @@ class PlayScene extends Phaser.Scene {
       if (selfP.numberOfScans == 2 ) {
         selfP.player2.setVisible(true);
         selfP.player2ScoreText.setVisible(true);
+        selfP.badItemDelay = 3000;
+        selfP.goodItemDelay = 10000;
+        selfP.beerItemDelay = 13000;
       }
       else if (selfP.numberOfScans == 3 ) {
         selfP.player3.setVisible(true);
         selfP.player3ScoreText.setVisible(true);
+        selfP.badItemDelay = 2500;
+        selfP.goodItemDelay = 8000;
+        selfP.beerItemDelay = 10000;
       }
       else if (selfP.numberOfScans == 4 ) {
         selfP.player4.setVisible(true);
         selfP.player4ScoreText.setVisible(true);
         document.getElementById('qrcode').style.display = "none";
+        selfP.badItemDelay = 2000;
+        selfP.goodItemDelay = 8000;
+        selfP.beerItemDelay = 8500;
       }
       // selfP.scene.resume();
       // selfP.physics.resume();
