@@ -89,7 +89,7 @@ class PlayScene extends Phaser.Scene {
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
 
-    this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
+    this.scoreText = this.add.text(this.player.x, this.player.y, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
     this.tweens.add({
       targets: this.scoreText,
       x: this.scoreText.x + this.player.x,
@@ -118,8 +118,9 @@ class PlayScene extends Phaser.Scene {
       alert('START THE GAME');
     }
 
-    this.scoreText.x = this.player.body.position.x;  
-    this.scoreText.y = this.player.body.position.y -10;  
+    this.scoreText.x = this.player.body.position.x - 20;  
+    this.scoreText.y = this.player.body.position.y - 15;  
+    // this.scoreText.setVisible(false);
 
     if (this.score <= 0) {
       alert('gameover')
@@ -158,39 +159,6 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
-  createCollidableMap() {
-    const map = this.make.tilemap({ key: 'tilemap' })
-    const tileset = map.addTilesetImage('background', 'base_tiles')
-    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
-    map.createLayer('Bottom of floor', tileset)
-    map.createLayer('Top of floor', tileset)
-    this.startLayer = map.createLayer('Start layer', tileset);
-    map.createLayer('Fauna and flora', tileset)
-
-    this.collision_layer = map.createLayer('Outside', tileset).setCollisionByExclusion([-1]);
-    this.object_collision_layer = map.createLayer('Furniture and trees', tileset).setCollisionByExclusion([-1]);
-    this.church_collision_layer = map.createLayer('Church', tileset).setCollisionByExclusion([-1]);
-    this.church_roof_collision_layer = map.createLayer('Church roof', church_roof_tileset).setCollisionByExclusion([-1]);
-
-    this.overlapStart = map.createFromObjects('Start game', {
-      id: 19
-    });
-
-    this.overlapStart.forEach(start => {
-      this.physics.world.enable(start);
-    })
-  }
-
-  createNonCollidablemMap() {
-    const map = this.make.tilemap({ key: 'tilemap' })
-    const tileset = map.addTilesetImage('background', 'base_tiles')
-    const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
-    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
-    map.createLayer('Wall Decoration', tileset)
-    map.createLayer('Church roof no collision', church_roof_tileset);
-    map.createLayer('Church window', church_window_tileset)
-  }
-
   decrementScore() {
     this.score -= 10;
     this.scoreText.setText(`Credits: ${this.score}`);
@@ -201,8 +169,8 @@ class PlayScene extends Phaser.Scene {
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i])  && this.numberOfScans == 1) {
         itemArray[i].destroy();
-        // this.score -= 10;
-        // this.scoreText.setText(`Credits: ${this.score}`);
+        this.score -= 10;
+        this.scoreText.setText(`Credits: ${this.score}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans == 2) {
         itemArray[i].destroy();
@@ -352,21 +320,6 @@ class PlayScene extends Phaser.Scene {
     this.player2 = new Player(this, 200, 450);
     this.player3 = new Player(this, 300, 450);
     this.player4 = new Player(this, 400, 450);
-    this.playerList.push(this.player);
-    this.playerList.push(this.player2);
-    this.playerList.push(this.player3);
-    this.playerList.push(this.player4);
-    // this.scoreText = this.add.text(this.player.x, 600, "Credits:" + this.score, {fontSize: '12px', color: '#000'});
-
-    // this.tweens.add({
-    //   targets: this.scoreText,
-    //   x: this.scoreText.x + this.player.x,
-    //   ease: 'Linear',
-    //   duration: 1,
-    //   delay: 1,
-    //   yoyo: false,
-    //   repeat: -1
-    // })
   }
 
   createCode() {
@@ -430,6 +383,39 @@ class PlayScene extends Phaser.Scene {
         frames: [ { key: 'dude', frame: idleFrame[1] } ],
         frameRate: 10
     });
+  }
+
+  createCollidableMap() {
+    const map = this.make.tilemap({ key: 'tilemap' })
+    const tileset = map.addTilesetImage('background', 'base_tiles')
+    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
+    map.createLayer('Bottom of floor', tileset)
+    map.createLayer('Top of floor', tileset)
+    this.startLayer = map.createLayer('Start layer', tileset);
+    map.createLayer('Fauna and flora', tileset)
+
+    this.collision_layer = map.createLayer('Outside', tileset).setCollisionByExclusion([-1]);
+    this.object_collision_layer = map.createLayer('Furniture and trees', tileset).setCollisionByExclusion([-1]);
+    this.church_collision_layer = map.createLayer('Church', tileset).setCollisionByExclusion([-1]);
+    this.church_roof_collision_layer = map.createLayer('Church roof', church_roof_tileset).setCollisionByExclusion([-1]);
+
+    this.overlapStart = map.createFromObjects('Start game', {
+      id: 19
+    });
+
+    this.overlapStart.forEach(start => {
+      this.physics.world.enable(start);
+    })
+  }
+
+  createNonCollidablemMap() {
+    const map = this.make.tilemap({ key: 'tilemap' })
+    const tileset = map.addTilesetImage('background', 'base_tiles')
+    const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
+    const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
+    map.createLayer('Wall Decoration', tileset)
+    map.createLayer('Church roof no collision', church_roof_tileset);
+    map.createLayer('Church window', church_window_tileset)
   }
 
   loadImages() {

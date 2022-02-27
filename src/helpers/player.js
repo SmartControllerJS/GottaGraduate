@@ -7,6 +7,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
       scene.add.existing(this);
       scene.physics.add.existing(this);
+      scene.playerList.push(this);
 
       this.setSize(28, 40);
       this.setOffset(10, 7);
