@@ -324,26 +324,10 @@ class PlayScene extends Phaser.Scene {
     this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits:" + this.player2Score, {fontSize: '12px', color: '#000'});
     this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits:" + this.player3Score, {fontSize: '12px', color: '#000'});
     this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits:" + this.player4Score, {fontSize: '12px', color: '#000'});
-    this.createTweens(this.playerScoreText, this.player);
-    this.createTweens(this.player2ScoreText, this.player2);
-    this.createTweens(this.player3ScoreText, this.player3);
-    this.createTweens(this.player4ScoreText, this.player4);
     this.playerScoreText.setVisible(false);
     this.player2ScoreText.setVisible(false);
     this.player3ScoreText.setVisible(false);
     this.player4ScoreText.setVisible(false);
-  }
-
-  createTweens(scoreText, player) {
-    this.tweens.add({
-      targets: scoreText,
-      x: scoreText.x + player.x,
-      ease: 'Linear',
-      duration: 1,
-      delay: 1,
-      yoyo: false,
-      repeat: -1
-    })
   }
 
   createCode() {
