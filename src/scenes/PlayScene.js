@@ -16,6 +16,9 @@ class PlayScene extends Phaser.Scene {
     // start the game
     this.startLayer = null;
     this.overlapStart = null;
+    this.gameStarted = false;
+    this.playersReady = 0;
+    this.playerReadyStatus = [false, false, false, false];
 
     // smartcontroller
     this.globalFlag = false;
@@ -105,20 +108,30 @@ class PlayScene extends Phaser.Scene {
     this.text = this.add.text(600, 32, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
     this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
     this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
+
+    this.startingInText = this.add.text(400,150, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
+    this.startInstructions = this.add.text(100,220, 'Head to START when all students have enrolled!', { fontSize: '20px', fill: '#000' });
   }
 
 
   update() {
-    
+    this.updateText();
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
     this.removeItem();
     this.removeBeerSprite();
     this.removeGoodItem();
+    console.log(this.gameStarted);
 
-    // if (this.physics.overlap(this.player, this.overlapStart)) {
-    //   alert('START THE GAME');
-    // }
+    for (let i = 0; i < this.playerReadyStatus.length; i++) {
+      if (this.physics.overlap(this.playerList[i], this.overlapStart) && (this.playerReadyStatus[i] == false)) {
+        this.playersReady += 1;
+        this.playerReadyStatus[i] = true;
+      }
+      if ((this.playersReady == this.numberOfScans) && (this.playersReady != 0)) {
+        this.gameStarted = true;
+      }
+    }
 
     this.playerScoreText.x = this.player.body.position.x - 20;  
     this.playerScoreText.y = this.player.body.position.y - 15;  
@@ -162,6 +175,10 @@ class PlayScene extends Phaser.Scene {
         this.playerList[i].anims.play(ANIMATIONS[i][4], true);
       }
     }
+  }
+
+  updateText() {
+    this.startingInText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
   }
 
   removeItem() {
@@ -320,7 +337,6 @@ class PlayScene extends Phaser.Scene {
     })
   }
 
-
   moveIndividual(item) {
     item.setVelocity(Phaser.Math.Between(10, 300), Phaser.Math.Between(10, 300));
   }
@@ -387,7 +403,6 @@ class PlayScene extends Phaser.Scene {
 
   // round timer functions
   formatTime(seconds){
-    // Minutes
       var minutes = Math.floor(seconds/60);
       // Seconds
       var partInSeconds = seconds%60;
