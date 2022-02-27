@@ -288,6 +288,9 @@ class PlayScene extends Phaser.Scene {
     var yPosition = randomNumber < 0.5 ? -100 : 1500
     this.beer = new Beer(this, randomNumber * (0 - 1200) + 1200, yPosition);
     this.beer.anims.play('floating', this);
+    for (let i = 0; i < this.playerVelocities.length; i++) {
+      this.playerVelocities[i] = 200;
+    }
   }
 
   timedItem() {
@@ -316,6 +319,7 @@ class PlayScene extends Phaser.Scene {
       loop: true,
     })
   }
+
 
   moveIndividual(item) {
     item.setVelocity(Phaser.Math.Between(10, 300), Phaser.Math.Between(10, 300));
