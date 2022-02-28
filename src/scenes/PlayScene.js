@@ -106,8 +106,7 @@ class PlayScene extends Phaser.Scene {
 
     this.text = this.add.text(850, 50, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
     this.text.setVisible(false);
-    this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-    this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
+
 
     this.playerReadyText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
     this.startInstructions = this.add.text(450,130, 'Head to START when all students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
@@ -153,10 +152,12 @@ class PlayScene extends Phaser.Scene {
         delay: 3000, 
         callback: this.updateStartText, 
         callbackScope: this, 
-        loop: false});
-
+        loop: false
+      });
+      this.text.setVisible(true);
+      this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+      this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
     }
-
     this.playerScoreText.x = this.player.body.position.x - 20;  
     this.playerScoreText.y = this.player.body.position.y - 15;  
     this.player2ScoreText.x = this.player2.body.position.x - 20;  
