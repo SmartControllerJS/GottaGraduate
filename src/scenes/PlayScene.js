@@ -74,6 +74,8 @@ class PlayScene extends Phaser.Scene {
     // timer
     this.text = null;
     this.initialTime = 180;
+
+    this.startOnce = true;
   }
 
   preload() {
@@ -87,12 +89,8 @@ class PlayScene extends Phaser.Scene {
     this.createNonCollidablemMap();
 
     this.badItems = this.physics.add.group();
-    this.timedItem();
     this.beerGroup = this.physics.add.group();
-    this.createBeerItem();
-    this.timedBeer();
     this.goodItems = this.physics.add.group();
-    this.timedGoodItem();
 
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
     this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [15, 27, 39, 3], [17, 29, 41, 5], ['turn1', 4]);
@@ -123,23 +121,24 @@ class PlayScene extends Phaser.Scene {
     this.removeItem();
     this.removeBeerSprite();
     this.removeGoodItem();
-    console.log(this.gameStarted);
+
 
     for (let i = 0; i < this.playerReadyStatus.length; i++) {
       if (this.physics.overlap(this.playerList[i], this.overlapStart) && (this.playerReadyStatus[i] == false)) {
         this.playersReady += 1;
         this.playerReadyStatus[i] = true;
       }
-      else if (!this.physics.overlap(this.playerList[i], this.overlapStart) && (this.playerReadyStatus[i] == true)) {
-        this.playerReadyStatus[i] = false;
-        this.playersReady -= 1;
-      }
-      if ((this.playersReady == this.numberOfScans) && (this.playersReady != 0)) {
+      if ((this.playersReady == this.numberOfScans) && (this.playersReady != 0) && (this.startOnce == true)) {
+        this.startOnce = false;
         this.gameStarted = true;
       }
-      else {
-        this.gameStarted = false;
-      }
+    }
+
+    if (this.gameStarted) {
+      this.gameStarted = false;
+      console.log(this.gameStarted);
+      this.createItemsOnStart();
+      
     }
 
     this.playerScoreText.x = this.player.body.position.x - 20;  
@@ -184,6 +183,12 @@ class PlayScene extends Phaser.Scene {
         this.playerList[i].anims.play(ANIMATIONS[i][4], true);
       }
     }
+  }
+
+  createItemsOnStart() {
+    this.timedItem();
+    this.timedBeer();
+    this.timedGoodItem();
   }
 
   updateText() {
