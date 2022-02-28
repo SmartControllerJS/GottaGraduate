@@ -77,6 +77,7 @@ class PlayScene extends Phaser.Scene {
     this.initialTime = 180;
 
     this.startOnce = true;
+    this.reloaded = false;
   }
 
   preload() {
@@ -84,6 +85,31 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
+    (() => {
+      if (window.localStorage) {
+
+          // If there is no item as 'reload'
+          // in localstorage then create one &
+          // reload the page
+          if (!localStorage.getItem('reload')) {
+              localStorage['reload'] = true;
+              window.location.reload();
+          } else {
+
+              // If there exists a 'reload' item
+              // then clear the 'reload' item in
+              // local storage
+              localStorage.removeItem('reload');
+          }
+      }
+  })(); //
+    // if (this.reloaded == false) {
+    //   location.reload(true);
+    //   this.reloaded = true;
+    // }
+    // var div =  document.createElement('qrcode');
+    // document.getElementById('game').append(div);
+
     this.createCode();
     this.createCollidableMap();
     this.createCharacters()
@@ -144,7 +170,7 @@ class PlayScene extends Phaser.Scene {
       this.maxPlayerText.setVisible(false);
       this.startInstructions.setVisible(false);
       this.playerReadyText.setVisible(false);
-      document.getElementById('qrcode').style.display = "none";
+      document.getElementById('qrcode').remove();
 
       this.start = this.add.text(400,300, 'START', { font: 'bold 100px Arial', fill: '#FFFF00' });
 
@@ -156,7 +182,7 @@ class PlayScene extends Phaser.Scene {
       });
       this.text.setVisible(true);
       this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-      this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
+      this.time.addEvent({ delay: 1000, callback: this.gameover, callbackScope: this, loop: false });
     }
     this.playerScoreText.x = this.player.body.position.x - 20;  
     this.playerScoreText.y = this.player.body.position.y - 15;  
@@ -206,7 +232,7 @@ class PlayScene extends Phaser.Scene {
     this.playerReadyText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
   }
 
-  
+
   updateStartText() {
     this.start.destroy();
   }
@@ -421,7 +447,7 @@ class PlayScene extends Phaser.Scene {
       else if (selfP.numberOfScans == 4 ) {
         selfP.player4.setVisible(true);
         selfP.player4ScoreText.setVisible(true);
-        document.getElementById('qrcode').style.display = "none";
+        document.getElementById('qrcode').remove();
         selfP.badItemDelay = 2000;
         selfP.goodItemDelay = 8000;
         selfP.beerItemDelay = 8500;
@@ -447,8 +473,8 @@ class PlayScene extends Phaser.Scene {
     this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
   }
 
-  goodGuysWin() {
-    alert("The Good Guys Win :)");
+  gameover() {
+    this.scene.start('GameoverScene');
   }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
