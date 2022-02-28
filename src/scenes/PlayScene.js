@@ -206,6 +206,7 @@ class PlayScene extends Phaser.Scene {
     this.playerReadyText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
   }
 
+  
   updateStartText() {
     this.start.destroy();
   }
