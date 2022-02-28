@@ -22,7 +22,7 @@ jobs:
         run: npm install
         
       - name: Install smartcontroller
-        run: npm install smartcontroller@3.2.1
+        run: npm install smartcontroller
         
       - name: Build
         run: npm run build
