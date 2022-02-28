@@ -105,12 +105,14 @@ class PlayScene extends Phaser.Scene {
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
 
-    this.text = this.add.text(600, 32, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
+    this.text = this.add.text(850, 50, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
+    this.text.setVisible(false);
     this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
     this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
 
-    this.startingInText = this.add.text(400,150, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
-    this.startInstructions = this.add.text(100,220, 'Head to START when all students have enrolled!', { fontSize: '20px', fill: '#000' });
+    this.startingInText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
+    this.startInstructions = this.add.text(450,130, 'Head to START when all students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
+    this.maxPlayerText = this.add.text(10,150, 'Max Players: 4', { font: 'bold 20px Arial', fill: '#000' });
   }
 
 
@@ -128,8 +130,15 @@ class PlayScene extends Phaser.Scene {
         this.playersReady += 1;
         this.playerReadyStatus[i] = true;
       }
+      else if (!this.physics.overlap(this.playerList[i], this.overlapStart) && (this.playerReadyStatus[i] == true)) {
+        this.playerReadyStatus[i] = false;
+        this.playersReady -= 1;
+      }
       if ((this.playersReady == this.numberOfScans) && (this.playersReady != 0)) {
         this.gameStarted = true;
+      }
+      else {
+        this.gameStarted = false;
       }
     }
 
