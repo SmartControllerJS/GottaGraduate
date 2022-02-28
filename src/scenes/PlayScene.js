@@ -47,7 +47,7 @@ class PlayScene extends Phaser.Scene {
     this.numberOfScans = 0;
 
     // scores
-    this.scores = [120, 120, 120, 120]
+    this.scores = [480, 480, 480, 480]
     this.playerScoreText = null;
     this.player2ScoreText = null;
     this.player3ScoreText = null;
@@ -215,22 +215,22 @@ class PlayScene extends Phaser.Scene {
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i])  && this.numberOfScans >= 1) {
         itemArray[i].destroy();
-        this.scores[0] -= 10;
+        this.scores[0] -= 20;
         this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans >= 2) {
         itemArray[i].destroy();
-        this.scores[1] -= 10;
+        this.scores[1] -= 20;
         this.player2ScoreText.setText(`Credits: ${this.scores[1]}`);
       }
       else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans >= 3) {
         itemArray[i].destroy();
-        this.scores[2] -= 10;
+        this.scores[2] -= 20;
         this.player3ScoreText.setText(`Credits: ${this.scores[2]}`);
       }
       else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans >= 4) {
         itemArray[i].destroy();
-        this.scores[3] -= 10;
+        this.scores[3] -= 20;
         this.player4ScoreText.setText(`Credits: ${this.scores[3]}`);
       }
       else {
@@ -381,10 +381,10 @@ class PlayScene extends Phaser.Scene {
   }
 
   createPlayerScores() {
-    this.playerScoreText = this.add.text(this.player.x, 0, "Credits:" + this.scores[0], {fontSize: '12px', color: '#000'});
-    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits:" + this.scores[1], {fontSize: '12px', color: '#000'});
-    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits:" + this.scores[2], {fontSize: '12px', color: '#000'});
-    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits:" + this.scores[3], {fontSize: '12px', color: '#000'});
+    this.playerScoreText = this.add.text(this.player.x, 0, "Credits:" + this.scores[0], {font: 'bold 12px Arial', color: '#000'});
+    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits:" + this.scores[1], {fontSize: 'bold 12px Arial', color: '#000'});
+    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits:" + this.scores[2], {fontSize: 'bold 12px Arial', color: '#000'});
+    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits:" + this.scores[3], {fontSize: 'bold 12px Arial', color: '#000'});
     this.playerScoreText.setVisible(false);
     this.player2ScoreText.setVisible(false);
     this.player3ScoreText.setVisible(false);
