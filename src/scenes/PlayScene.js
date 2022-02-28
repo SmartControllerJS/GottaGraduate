@@ -109,7 +109,7 @@ class PlayScene extends Phaser.Scene {
 
 
     this.playerReadyText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
-    this.startInstructions = this.add.text(450,130, 'Head to START when all students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
+    this.startInstructions = this.add.text(450,130, 'Head to START when ALL students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
     this.maxPlayerText = this.add.text(10,160, 'Max Players: 4', { font: 'bold 20px Arial', fill: '#000' });
   }
 
