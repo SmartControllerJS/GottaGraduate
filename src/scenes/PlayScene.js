@@ -19,6 +19,7 @@ class PlayScene extends Phaser.Scene {
     this.gameStarted = false;
     this.playersReady = 0;
     this.playerReadyStatus = [false, false, false, false];
+    this.playerReadyText = null;
 
     // smartcontroller
     this.globalFlag = false;
@@ -108,7 +109,7 @@ class PlayScene extends Phaser.Scene {
     this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
     this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
 
-    this.startingInText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
+    this.playerReadyText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
     this.startInstructions = this.add.text(450,130, 'Head to START when all students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
     this.maxPlayerText = this.add.text(10,150, 'Max Players: 4', { font: 'bold 20px Arial', fill: '#000' });
   }
@@ -137,8 +138,23 @@ class PlayScene extends Phaser.Scene {
     if (this.gameStarted) {
       this.gameStarted = false;
       console.log(this.gameStarted);
-      this.createItemsOnStart();
+      this.timedItem();
+      this.timedBeer();
+      this.timedGoodItem();
       
+      this.maxPlayerText.setVisible(false);
+      this.startInstructions.setVisible(false);
+      this.playerReadyText.setVisible(false);
+      document.getElementById('qrcode').style.display = "none";
+
+      this.start = this.add.text(400,300, 'START', { font: 'bold 100px Arial', fill: '#FFFF00' });
+
+      this.time.addEvent({
+        delay: 3000, 
+        callback: this.updateStartText, 
+        callbackScope: this, 
+        loop: false});
+
     }
 
     this.playerScoreText.x = this.player.body.position.x - 20;  
@@ -185,14 +201,12 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
-  createItemsOnStart() {
-    this.timedItem();
-    this.timedBeer();
-    this.timedGoodItem();
+  updateText() {
+    this.playerReadyText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
   }
 
-  updateText() {
-    this.startingInText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
+  updateStartText() {
+    this.start.destroy();
   }
 
   removeItem() {
