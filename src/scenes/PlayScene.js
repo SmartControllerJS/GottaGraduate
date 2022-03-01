@@ -308,8 +308,8 @@ class PlayScene extends Phaser.Scene {
 
   checkPlayersScore() {
     for (let i = 0; i < this.scores.length; i++) {
-      if ((this.scores[0] <= 0) && (this.scores[1] <= 0)) {
-        alert('game over');
+      if ((this.scores[0] <= 0) && (this.scores[1] <= 0) && (this.scores[2] <= 0) && (this.scores[3] <= 0)) {
+        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
       }
       if (this.scores[i] <= 0) {
         this.playerList[i].disableBody(true, true);
@@ -467,7 +467,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   gameover() {
-    this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans, controllerList: this.simplePeer.controllerList, players: this.playerList});
+    this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
   }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
