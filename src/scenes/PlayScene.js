@@ -450,7 +450,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   gameover() {
-    this.scene.start('GameoverScene', {score1: this.scores[0], score2: this.scores[1], score3: this.scores[2], score4: this.scores[3], numberOfPlayers: this.numberOfScans, controllerList: this.simplePeer.controllerList, players: this.playerList});
+    this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans, controllerList: this.simplePeer.controllerList, players: this.playerList});
   }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
