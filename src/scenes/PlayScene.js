@@ -85,31 +85,6 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    (() => {
-      if (window.localStorage) {
-
-          // If there is no item as 'reload'
-          // in localstorage then create one &
-          // reload the page
-          if (!localStorage.getItem('reload')) {
-              localStorage['reload'] = true;
-              window.location.reload();
-          } else {
-
-              // If there exists a 'reload' item
-              // then clear the 'reload' item in
-              // local storage
-              localStorage.removeItem('reload');
-          }
-      }
-  })(); //
-    // if (this.reloaded == false) {
-    //   location.reload(true);
-    //   this.reloaded = true;
-    // }
-    // var div =  document.createElement('qrcode');
-    // document.getElementById('game').append(div);
-
     this.createCode();
     this.createCollidableMap();
     this.createCharacters()
@@ -320,6 +295,7 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
+
   checkPlayersScore() {
     for (let i = 0; i < this.scores.length; i++) {
       if ((this.scores[0] <= 0) && (this.scores[1] <= 0)) {
@@ -474,7 +450,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   gameover() {
-    this.scene.start('GameoverScene');
+    this.scene.start('GameoverScene', {score1: this.scores[0], score2: this.scores[1], score3: this.scores[2], score4: this.scores[3], numberOfPlayers: this.numberOfScans, controllerList: this.simplePeer.controllerList, players: this.playerList});
   }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
