@@ -216,10 +216,6 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
-  createPlayerToPlayerCollision() {
-
-  }
-
   updateText() {
     this.playerReadyText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
   }
@@ -431,6 +427,7 @@ class PlayScene extends Phaser.Scene {
       selfP.playerScoreText.setVisible(true);
       selfP.playerNumberText.setVisible(true);
       if (selfP.numberOfScans == 2 ) {
+        selfP.physics.add.collider(selfP.player, selfP.player2);
         selfP.player2.setVisible(true);
         selfP.player2ScoreText.setVisible(true);
         selfP.player2NumberText.setVisible(true);
@@ -439,6 +436,8 @@ class PlayScene extends Phaser.Scene {
         selfP.beerItemDelay = 13000;
       }
       else if (selfP.numberOfScans == 3 ) {
+        selfP.physics.add.collider(selfP.player, selfP.player3);
+        selfP.physics.add.collider(selfP.player2, selfP.player3);
         selfP.player3.setVisible(true);
         selfP.player3ScoreText.setVisible(true);
         selfP.player3NumberText.setVisible(true);
@@ -447,6 +446,9 @@ class PlayScene extends Phaser.Scene {
         selfP.beerItemDelay = 10000;
       }
       else if (selfP.numberOfScans == 4 ) {
+        selfP.physics.add.collider(selfP.player, selfP.player4);
+        selfP.physics.add.collider(selfP.player2, selfP.player4);
+        selfP.physics.add.collider(selfP.player3, selfP.player4);
         selfP.player4.setVisible(true);
         selfP.player4ScoreText.setVisible(true);
         selfP.player4NumberText.setVisible(true);
