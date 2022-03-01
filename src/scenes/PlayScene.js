@@ -105,7 +105,7 @@ class PlayScene extends Phaser.Scene {
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
 
-    this.text = this.add.text(850, 50, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
+    this.text = this.add.text(500, 50, 'Graduating in: ' + this.formatTime(this.initialTime) + ' minutes', { fontSize: '40px', fill: '#000' });
     this.text.setVisible(false);
 
 
@@ -446,7 +446,7 @@ class PlayScene extends Phaser.Scene {
 
   onEvent () {
     this.initialTime -= 1; // One second
-    this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
+    this.text.setText('Graduating in: ' + this.formatTime(this.initialTime) + ' minutes');
   }
 
   gameover() {

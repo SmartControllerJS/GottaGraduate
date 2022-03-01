@@ -30,7 +30,7 @@ class GameoverScene extends Phaser.Scene {
     this.saveBestScore();
 
     const bestScore = localStorage.getItem('bestScore');
-    this.add.text(400, 400, `Best score: ${bestScore}`, style);
+    this.add.text(this.config.width/2 + 150, this.config.height/2 - 300, `Best score: ${bestScore}`, style);
 
     this.timedReload();
   }
@@ -87,7 +87,7 @@ class GameoverScene extends Phaser.Scene {
       loop: false
     })
   }
-  
+
   reloadOnStart() {
     if (window.localStorage) {
       if (!localStorage.getItem('reload')) {
