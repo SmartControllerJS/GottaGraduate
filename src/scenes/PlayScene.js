@@ -109,7 +109,6 @@ class PlayScene extends Phaser.Scene {
     this.text = this.add.text(500, 50, 'Graduating in: ' + this.formatTime(this.initialTime) + ' minutes', { fontSize: '40px', fill: '#000' });
     this.text.setVisible(false);
 
-
     this.playerReadyText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
     this.startInstructions = this.add.text(450,130, 'Head to START when ALL students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
     this.maxPlayerText = this.add.text(10,160, 'Max Players: 4', { font: 'bold 20px Arial', fill: '#000' });
@@ -124,6 +123,9 @@ class PlayScene extends Phaser.Scene {
     this.removeBeerSprite();
     this.removeGoodItem();
 
+    if (this.initialTime <= 3) {
+      this.updateCountdown();
+    }
 
     for (let i = 0; i < this.playerReadyStatus.length; i++) {
       if (this.physics.overlap(this.playerList[i], this.overlapStart) && (this.playerReadyStatus[i] == false)) {
@@ -220,6 +222,13 @@ class PlayScene extends Phaser.Scene {
     this.playerReadyText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
   }
 
+  updateCountdown() {
+    this.text.setColor('#FF0000');
+    this.text.setFontSize('70px')
+    this.text.setPosition(300, 350);
+    this.text.setText('Graduating in ' + this.formatTime(this.initialTime));
+  }
+
 
   updateStartText() {
     this.start.destroy();
@@ -259,22 +268,22 @@ class PlayScene extends Phaser.Scene {
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i]) && this.numberOfScans >= 1) {
         itemArray[i].destroy();
-        this.scores[0] += 5;
+        this.scores[0] += 10;
         this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans >= 2) {
         itemArray[i].destroy();
-        this.scores[1] += 5;
+        this.scores[1] += 10;
         this.player2ScoreText.setText(`Credits: ${this.scores[1]}`);
       }
       else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans >= 3) {
         itemArray[i].destroy();
-        this.scores[2] += 5;
+        this.scores[2] += 10;
         this.player3ScoreText.setText(`Credits: ${this.scores[2]}`);
       }
       else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans >= 4) {
         itemArray[i].destroy();
-        this.scores[3] += 5;
+        this.scores[3] += 10;
         this.player4ScoreText.setText(`Credits: ${this.scores[3]}`);
       }
       else {
@@ -334,10 +343,10 @@ class PlayScene extends Phaser.Scene {
   createGoodItem() {
     var randomNumber = Math.random();
     var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.goodItem = this.goodItems.create(xPosition, randomNumber * (0 - 700) + 720, 'ipad').setScale(2);
+    this.goodItem = this.goodItems.create(xPosition, randomNumber * (0 - 700) + 720, 'uofg');
     this.goodItem.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.goodItem);
-    this.goodItem.setSize(20, 20);
+    this.goodItem.setSize(60, 60);
   }
 
   createBeerItem() {
@@ -547,7 +556,7 @@ class PlayScene extends Phaser.Scene {
     this.load.image('instagram', 'assets/instagram.png')
     this.load.image('netflix', 'assets/netflix.png')
     this.load.image('youtube', 'assets/youtube.png')
-    this.load.image('ipad', 'assets/ipad.png');
+    this.load.image('uofg', 'assets/uofg.png');
   }
 }
 
