@@ -168,6 +168,16 @@ class PlayScene extends Phaser.Scene {
     this.player4ScoreText.x = this.player4.body.position.x - 20;  
     this.player4ScoreText.y = this.player4.body.position.y - 15;  
 
+    this.playerNumberText.x = this.player.body.position.x - 10;  
+    this.playerNumberText.y = this.player.body.position.y + 40; 
+    this.player2NumberText.x = this.player2.body.position.x - 10;  
+    this.player2NumberText.y = this.player2.body.position.y + 40; 
+    this.player3NumberText.x = this.player3.body.position.x - 10;  
+    this.player3NumberText.y = this.player3.body.position.y + 40; 
+    this.player4NumberText.x = this.player4.body.position.x - 10;  
+    this.player4NumberText.y = this.player4.body.position.y + 40; 
+
+
     this.checkPlayersScore();
 
     var controllerList = this.simplePeer.controllerList;
@@ -385,9 +395,17 @@ class PlayScene extends Phaser.Scene {
 
   createPlayerScores() {
     this.playerScoreText = this.add.text(this.player.x, 0, "Credits: " + this.scores[0], {font: 'bold 12px Arial', color: '#000'});
-    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits: " + this.scores[1], {fontSize: 'bold 12px Arial', color: '#000'});
-    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits: " + this.scores[2], {fontSize: 'bold 12px Arial', color: '#000'});
-    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits: " + this.scores[3], {fontSize: 'bold 12px Arial', color: '#000'});
+    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits: " + this.scores[1], {font: 'bold 12px Arial', color: '#000'});
+    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits: " + this.scores[2], {font: 'bold 12px Arial', color: '#000'});
+    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits: " + this.scores[3], {font: 'bold 12px Arial', color: '#000'});
+    this.playerNumberText = this.add.text(this.player.x, 0, "Player 1", {font: 'bold 12px Arial', color: '#FFF'});
+    this.player2NumberText = this.add.text(this.player2.x, 0, "Player 2", {font: 'bold 12px Arial', color: '#FFF'});
+    this.player3NumberText = this.add.text(this.player3.x, 0, "Player 3", {font: 'bold 12px Arial', color: '#FFF'});
+    this.player4NumberText = this.add.text(this.player4.x, 0, "Player 4", {font: 'bold 12px Arial', color: '#FFF'});
+    this.playerNumberText.setVisible(false);
+    this.player2NumberText.setVisible(false);
+    this.player3NumberText.setVisible(false);
+    this.player4NumberText.setVisible(false);
     this.playerScoreText.setVisible(false);
     this.player2ScoreText.setVisible(false);
     this.player3ScoreText.setVisible(false);
@@ -395,9 +413,6 @@ class PlayScene extends Phaser.Scene {
   }
 
   createCode() {
-    // this.scene.pause();
-    // this.physics.pause();
-    // this.isPaused = true;
     this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 170, 170); // joystick.html
     var selfP = this;
@@ -406,9 +421,11 @@ class PlayScene extends Phaser.Scene {
       selfP.scanned = true;
       selfP.player.setVisible(true);
       selfP.playerScoreText.setVisible(true);
+      selfP.playerNumberText.setVisible(true);
       if (selfP.numberOfScans == 2 ) {
         selfP.player2.setVisible(true);
         selfP.player2ScoreText.setVisible(true);
+        selfP.player2NumberText.setVisible(true);
         selfP.badItemDelay = 3000;
         selfP.goodItemDelay = 10000;
         selfP.beerItemDelay = 13000;
@@ -416,6 +433,7 @@ class PlayScene extends Phaser.Scene {
       else if (selfP.numberOfScans == 3 ) {
         selfP.player3.setVisible(true);
         selfP.player3ScoreText.setVisible(true);
+        selfP.player3NumberText.setVisible(true);
         selfP.badItemDelay = 2500;
         selfP.goodItemDelay = 8000;
         selfP.beerItemDelay = 10000;
@@ -423,13 +441,12 @@ class PlayScene extends Phaser.Scene {
       else if (selfP.numberOfScans == 4 ) {
         selfP.player4.setVisible(true);
         selfP.player4ScoreText.setVisible(true);
+        selfP.player4NumberText.setVisible(true);
         document.getElementById('qrcode').style.display = "none";
         selfP.badItemDelay = 2000;
         selfP.goodItemDelay = 8000;
         selfP.beerItemDelay = 8500;
       }
-      // selfP.scene.resume();
-      // selfP.physics.resume();
     })
   }
 
