@@ -9,6 +9,7 @@ class GameoverScene extends Phaser.Scene {
 
     this.scoreText = null;
     this.max = 0;
+    this.playerImages = ['player1', 'player2', 'player3', 'player4']
   }
 
   init(data) {
@@ -49,26 +50,46 @@ class GameoverScene extends Phaser.Scene {
         this.max = this.scores[i];
       }
       if (i == 0) {
-        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.player1ScoreText = this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
         this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add.image(this.scoreText.width + 150, 230 + height, 'player1');
       }
       else if (i == 1) {
-        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.player2ScoreText = this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
         this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add.image(this.scoreText.width + 150, 230 + height, 'player2');
       }
       else if (i == 2) {
-        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.player3ScoreText = this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
         this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add.image(this.scoreText.width + 150, 230 + height, 'player3');
       }
       else if (i == 3) {
-        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.player4ScoreText = this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
         this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add.image(this.scoreText.width + 150, 230 + height, 'player4');
       }
       height += 150
+    }
+    for (let i=0; i < this.numberOfPlayers; i++) {
+      if (this.max == this.scores[i]) {
+        if (i == 0) {
+          this.player1ScoreText.setText('Score: ' + this.scores[i] + ' - WINNER')
+          this.player1ScoreText.setColor('green');
+        }
+        else if (i == 1) {
+          this.player2ScoreText.setText('Score: ' + this.scores[i] + ' - WINNER')
+          this.player2ScoreText.setColor('green');
+        }
+        else if (i == 2) {
+          this.player3ScoreText.setText('Score: ' + this.scores[i] + ' - WINNER')
+          this.player3ScoreText.setColor('green');
+        }
+        else if (i ==3) {
+          this.player4ScoreText.setText('Score: ' + this.scores[i] + ' - WINNER')
+          this.player4ScoreText.setColor('green');
+        }
+      }
     }
   }
 
