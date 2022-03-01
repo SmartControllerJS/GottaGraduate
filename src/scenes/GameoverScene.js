@@ -24,7 +24,7 @@ class GameoverScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(600, 200, 'player1');
+
     console.log(this.scores[0]);
 
 
@@ -53,8 +53,16 @@ class GameoverScene extends Phaser.Scene {
       if (max < this.scores[i]) {
         max = this.scores[i];
       }
-      this.add.text(this.scoreText.width+ 50,200 + height, 'Player ' + (i + 1) + ' Score: ' + this.scores[0], style);
+
+      this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[0], style);
       height += 100
+      if (i == 0) {
+        this.add.text(this.scoreText.width + 115, 65 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.add.image(this.scoreText.width + 150, 130 + height, 'player1');
+      }
+      else if (i == 1) {
+
+      }
     }
     this.add.text(this.scoreText.width + 50)
   }
