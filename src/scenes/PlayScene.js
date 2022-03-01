@@ -47,7 +47,7 @@ class PlayScene extends Phaser.Scene {
     this.numberOfScans = 0;
 
     // scores
-    this.scores = [200, 480, 480, 480]
+    this.scores = [480, 480, 480, 480]
     this.playerScoreText = null;
     this.player2ScoreText = null;
     this.player3ScoreText = null;
