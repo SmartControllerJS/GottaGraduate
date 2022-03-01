@@ -16,6 +16,10 @@ class PlayScene extends Phaser.Scene {
     // start the game
     this.startLayer = null;
     this.overlapStart = null;
+    this.gameStarted = false;
+    this.playersReady = 0;
+    this.playerReadyStatus = [false, false, false, false];
+    this.playerReadyText = null;
 
     // smartcontroller
     this.globalFlag = false;
@@ -43,7 +47,7 @@ class PlayScene extends Phaser.Scene {
     this.numberOfScans = 0;
 
     // scores
-    this.scores = [120, 120, 120, 120]
+    this.scores = [480, 480, 480, 480]
     this.playerScoreText = null;
     this.player2ScoreText = null;
     this.player3ScoreText = null;
@@ -70,7 +74,10 @@ class PlayScene extends Phaser.Scene {
 
     // timer
     this.text = null;
-    this.initialTime = 180;
+    this.initialTime = 150;
+
+    this.startOnce = true;
+    this.reloaded = false;
   }
 
   preload() {
@@ -84,12 +91,8 @@ class PlayScene extends Phaser.Scene {
     this.createNonCollidablemMap();
 
     this.badItems = this.physics.add.group();
-    this.timedItem();
     this.beerGroup = this.physics.add.group();
-    this.createBeerItem();
-    this.timedBeer();
     this.goodItems = this.physics.add.group();
-    this.timedGoodItem();
 
     this.createPlayerAnimation(['left', 'right', 'up', 'down'], [12, 24, 36, 0], [14, 26, 38, 2], ['turn', 1]);
     this.createPlayerAnimation(['left1', 'right1', 'up1', 'down1'], [15, 27, 39, 3], [17, 29, 41, 5], ['turn1', 4]);
@@ -102,24 +105,60 @@ class PlayScene extends Phaser.Scene {
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
 
-    this.text = this.add.text(600, 32, 'Countdown: ' + this.formatTime(this.initialTime), { fontSize: '40px', fill: '#000' });
-    this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-    this.time.addEvent({ delay: 180000, callback: this.goodGuysWin, callbackScope: this, loop: false });
+    this.text = this.add.text(500, 50, 'Graduating in: ' + this.formatTime(this.initialTime) + ' minutes', { fontSize: '40px', fill: '#000' });
+    this.text.setVisible(false);
+
+
+    this.playerReadyText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
+    this.startInstructions = this.add.text(450,130, 'Head to START when ALL students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
+    this.maxPlayerText = this.add.text(10,160, 'Max Players: 4', { font: 'bold 20px Arial', fill: '#000' });
   }
 
 
   update() {
-    
+    this.updateText();
     this.itemArray = this.badItems.children.getArray();
     this.beerGroupArray = this.beerGroup.children.getArray();
     this.removeItem();
     this.removeBeerSprite();
     this.removeGoodItem();
 
-    // if (this.physics.overlap(this.player, this.overlapStart)) {
-    //   alert('START THE GAME');
-    // }
 
+    for (let i = 0; i < this.playerReadyStatus.length; i++) {
+      if (this.physics.overlap(this.playerList[i], this.overlapStart) && (this.playerReadyStatus[i] == false)) {
+        this.playersReady += 1;
+        this.playerReadyStatus[i] = true;
+      }
+      if ((this.playersReady == this.numberOfScans) && (this.playersReady != 0) && (this.startOnce == true)) {
+        this.startOnce = false;
+        this.gameStarted = true;
+      }
+    }
+
+    if (this.gameStarted) {
+      this.gameStarted = false;
+      console.log(this.gameStarted);
+      this.timedItem();
+      this.timedBeer();
+      this.timedGoodItem();
+      
+      this.maxPlayerText.setVisible(false);
+      this.startInstructions.setVisible(false);
+      this.playerReadyText.setVisible(false);
+      document.getElementById('qrcode').style.display = "none";
+
+      this.start = this.add.text(400,300, 'START', { font: 'bold 100px Arial', fill: '#FFFF00' });
+
+      this.time.addEvent({
+        delay: 3000, 
+        callback: this.updateStartText, 
+        callbackScope: this, 
+        loop: false
+      });
+      this.text.setVisible(true);
+      this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+      this.time.addEvent({ delay: 150000, callback: this.gameover, callbackScope: this, loop: false });
+    }
     this.playerScoreText.x = this.player.body.position.x - 20;  
     this.playerScoreText.y = this.player.body.position.y - 15;  
     this.player2ScoreText.x = this.player2.body.position.x - 20;  
@@ -164,27 +203,36 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
+  updateText() {
+    this.playerReadyText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
+  }
+
+
+  updateStartText() {
+    this.start.destroy();
+  }
+
   removeItem() {
     var itemArray = this.badItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i])  && this.numberOfScans >= 1) {
         itemArray[i].destroy();
-        this.scores[0] -= 10;
+        this.scores[0] -= 20;
         this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans >= 2) {
         itemArray[i].destroy();
-        this.scores[1] -= 10;
+        this.scores[1] -= 20;
         this.player2ScoreText.setText(`Credits: ${this.scores[1]}`);
       }
       else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans >= 3) {
         itemArray[i].destroy();
-        this.scores[2] -= 10;
+        this.scores[2] -= 20;
         this.player3ScoreText.setText(`Credits: ${this.scores[2]}`);
       }
       else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans >= 4) {
         itemArray[i].destroy();
-        this.scores[3] -= 10;
+        this.scores[3] -= 20;
         this.player4ScoreText.setText(`Credits: ${this.scores[3]}`);
       }
       else {
@@ -246,6 +294,7 @@ class PlayScene extends Phaser.Scene {
       }
     }
   }
+
 
   checkPlayersScore() {
     for (let i = 0; i < this.scores.length; i++) {
@@ -320,7 +369,6 @@ class PlayScene extends Phaser.Scene {
     })
   }
 
-
   moveIndividual(item) {
     item.setVelocity(Phaser.Math.Between(10, 300), Phaser.Math.Between(10, 300));
   }
@@ -336,10 +384,10 @@ class PlayScene extends Phaser.Scene {
   }
 
   createPlayerScores() {
-    this.playerScoreText = this.add.text(this.player.x, 0, "Credits:" + this.scores[0], {fontSize: '12px', color: '#000'});
-    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits:" + this.scores[1], {fontSize: '12px', color: '#000'});
-    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits:" + this.scores[2], {fontSize: '12px', color: '#000'});
-    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits:" + this.scores[3], {fontSize: '12px', color: '#000'});
+    this.playerScoreText = this.add.text(this.player.x, 0, "Credits: " + this.scores[0], {font: 'bold 12px Arial', color: '#000'});
+    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits: " + this.scores[1], {fontSize: 'bold 12px Arial', color: '#000'});
+    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits: " + this.scores[2], {fontSize: 'bold 12px Arial', color: '#000'});
+    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits: " + this.scores[3], {fontSize: 'bold 12px Arial', color: '#000'});
     this.playerScoreText.setVisible(false);
     this.player2ScoreText.setVisible(false);
     this.player3ScoreText.setVisible(false);
@@ -351,7 +399,7 @@ class PlayScene extends Phaser.Scene {
     // this.physics.pause();
     // this.isPaused = true;
     this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 175, 175); // joystick.html
+    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 170, 170); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
       selfP.numberOfScans++;
@@ -387,7 +435,6 @@ class PlayScene extends Phaser.Scene {
 
   // round timer functions
   formatTime(seconds){
-    // Minutes
       var minutes = Math.floor(seconds/60);
       // Seconds
       var partInSeconds = seconds%60;
@@ -399,11 +446,11 @@ class PlayScene extends Phaser.Scene {
 
   onEvent () {
     this.initialTime -= 1; // One second
-    this.text.setText('Countdown: ' + this.formatTime(this.initialTime));
+    this.text.setText('Graduating in: ' + this.formatTime(this.initialTime) + ' minutes');
   }
 
-  goodGuysWin() {
-    alert("The Good Guys Win :)");
+  gameover() {
+    this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans, controllerList: this.simplePeer.controllerList, players: this.playerList});
   }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
