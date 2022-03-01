@@ -24,13 +24,14 @@ class GameoverScene extends Phaser.Scene {
   }
 
   create() {
-    this.scoreText = this.add.text(this.config.width/2 - 150,this.config.height/2 - 300, 'SCORES', style).setOrigin(0,0);
+    this.scoreText = this.add.text(this.config.width/2 - 170,this.config.height/2 - 200, 'SCORES', style).setOrigin(0,0);
+    this.add.text(this.config.width/2 - 250,this.config.height/2 - 250, 'Thank you for playing Gotta Graduate!', { font: "24px Arial", fill: "#00FFFF" }).setOrigin(0,0);
 
     this.createScoreText();
     this.saveBestScore();
 
     const bestScore = localStorage.getItem('bestScore');
-    this.add.text(this.config.width/2 + 150, this.config.height/2 - 300, `Best score: ${bestScore}`, style);
+    this.add.text(this.config.width/2 - 350, this.config.height/2 - 320, `All-time Highscore: ${bestScore}`, { font: "64px Arial", fill: "#ffff00" });
 
     this.timedReload();
   }
@@ -41,7 +42,7 @@ class GameoverScene extends Phaser.Scene {
 
   createScoreText() {
 
-    var height = 0;
+    var height = 60;
 
     for (let i = 0; i < this.numberOfPlayers; i++) {
       if (this.max < this.scores[i]) {
