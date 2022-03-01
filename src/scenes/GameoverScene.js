@@ -7,15 +7,12 @@ class GameoverScene extends Phaser.Scene {
     super('GameoverScene');
     this.config = config;
 
-    this.gameoverText = null;
     this.scoreText = null;
-    this.playerList = [];
+    this.max = 0;
   }
 
   init(data) {
     this.scores = data.scores;
-    this.controllerList = data.controllerList;
-    this.playerList = data.players;
     this.numberOfPlayers = data.numberOfPlayers;
   }
 
@@ -27,21 +24,15 @@ class GameoverScene extends Phaser.Scene {
   }
 
   create() {
-
-    console.log(this.scores[0]);
-
-
-
     this.scoreText = this.add.text(this.config.width/2 - 150,this.config.height/2 - 300, 'SCORES', style).setOrigin(0,0);
-    // this.player1ScoreText = this.add.text(this.scoreText.width,200, 'Player 1 Score: ' + this.scores[0], style);
-    this.createScoreText();
 
-    this.time.addEvent({
-      delay: 20000,
-      callback: this.reloadOnStart,
-      callbackScope: this,
-      loop: false
-    })
+    this.createScoreText();
+    this.saveBestScore();
+
+    const bestScore = localStorage.getItem('bestScore');
+    this.add.text(400, 400, `Best score: ${bestScore}`, style);
+
+    this.timedReload();
   }
 
   update() {
@@ -49,12 +40,12 @@ class GameoverScene extends Phaser.Scene {
   }
 
   createScoreText() {
-    // only for the number of players
+
     var height = 0;
-    var max = 0;
+
     for (let i = 0; i < this.numberOfPlayers; i++) {
-      if (max < this.scores[i]) {
-        max = this.scores[i];
+      if (this.max < this.scores[i]) {
+        this.max = this.scores[i];
       }
       if (i == 0) {
         this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
@@ -78,22 +69,25 @@ class GameoverScene extends Phaser.Scene {
       }
       height += 150
     }
-    // this.add.text(this.scoreText.width + 50)
   }
 
-  checkScores() {
-    // check highest score from all scores in this.scores
-    var max = 0;
-    for (let i = 0; i < this.scores.length; i++) {
-      if (max < this.scores[i]) {
-        max = this.scores[i];
-      }
-      console.log
+  saveBestScore() {
+    const bestScoreText = localStorage.getItem('bestScore');
+    const bestScore = bestScoreText && parseInt(bestScoreText, 10);
+    if (!bestScore || this.max > bestScore) {
+      localStorage.setItem('bestScore', this.max);
     }
-    
   }
 
-
+  timedReload() {
+    this.time.addEvent({
+      delay: 20000,
+      callback: this.reloadOnStart,
+      callbackScope: this,
+      loop: false
+    })
+  }
+  
   reloadOnStart() {
     if (window.localStorage) {
       if (!localStorage.getItem('reload')) {
