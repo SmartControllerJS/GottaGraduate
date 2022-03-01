@@ -13,6 +13,7 @@ class PlayScene extends Phaser.Scene {
     super('PlayScene');
     this.config = config;
 
+    this.dead =0;
     // start the game
     this.startLayer = null;
     this.overlapStart = null;
@@ -101,7 +102,7 @@ class PlayScene extends Phaser.Scene {
 
     this.createPlayerScores();
     this.scoresText = [this.playerScoreText, this.player2ScoreText, this.player3ScoreText, this.player4ScoreText];
-
+    this.playerNumbersText = [this.playerNumberText, this.player2NumberText, this.player3NumberText, this.player4NumberText]
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
 
@@ -137,11 +138,12 @@ class PlayScene extends Phaser.Scene {
 
     if (this.gameStarted) {
       this.gameStarted = false;
-      console.log(this.gameStarted);
+      this.checkPlayers = true;
+      // this.checkAllPlayersLost();
       this.timedItem();
       this.timedBeer();
       this.timedGoodItem();
-      
+
       this.maxPlayerText.setVisible(false);
       this.startInstructions.setVisible(false);
       this.playerReadyText.setVisible(false);
@@ -159,6 +161,7 @@ class PlayScene extends Phaser.Scene {
       this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
       this.time.addEvent({ delay: 150000, callback: this.gameover, callbackScope: this, loop: false });
     }
+    this.checkPlayersScore();
     this.playerScoreText.x = this.player.body.position.x - 20;  
     this.playerScoreText.y = this.player.body.position.y - 15;  
     this.player2ScoreText.x = this.player2.body.position.x - 20;  
@@ -178,7 +181,7 @@ class PlayScene extends Phaser.Scene {
     this.player4NumberText.y = this.player4.body.position.y + 40; 
 
 
-    this.checkPlayersScore();
+
 
     var controllerList = this.simplePeer.controllerList;
     var size = Object.keys(controllerList).length;
@@ -211,6 +214,10 @@ class PlayScene extends Phaser.Scene {
         this.playerList[i].anims.play(ANIMATIONS[i][4], true);
       }
     }
+  }
+
+  createPlayerToPlayerCollision() {
+
   }
 
   updateText() {
@@ -305,16 +312,17 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
-
   checkPlayersScore() {
     for (let i = 0; i < this.scores.length; i++) {
-      if ((this.scores[0] <= 0) && (this.scores[1] <= 0) && (this.scores[2] <= 0) && (this.scores[3] <= 0)) {
-        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
-      }
       if (this.scores[i] <= 0) {
         this.playerList[i].disableBody(true, true);
         this.scoresText[i].setVisible(false);
+        this.playerNumbersText[i].setVisible(false);
+        this.dead++;
       }
+    }
+    if (this.dead == this.numberOfScans && this.checkPlayers == true) {
+      this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
     }
   }
 

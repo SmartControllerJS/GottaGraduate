@@ -100,19 +100,19 @@ class GameoverScene extends Phaser.Scene {
         this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you dropped out', style2)
       }
       else if (this.scores[i] > 0 && this.scores[i] <=120) {
-        this.add.text(playerTexts[i].width - 180, 165  + height2, 'Looks like you must be a first year...', style2)
+        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a first year...', style2)
       }
       else if (this.scores[i] > 120 && this.scores[i] <=240) {
-        this.add.text(playerTexts[i].width - 180,  165  + height2, 'Looks like you must be a second year...', style2)
+        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a second year...', style2)
       }
       else if (this.scores[i] > 240 && this.scores[i] <=360) {
-        this.add.text(playerTexts[i].width - 180,  165  + height2, 'Looks like you must be a third year...', style2)
+        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a third year...', style2)
       }
       else if (this.scores[i] > 360 && this.scores[i] <=480) {
-        this.add.text(playerTexts[i].width - 180,  165  + height2, 'Looks like you must be a fourth year...', style2)
+        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a fourth year...', style2)
       }
       else if (this.scores[i] > 480) {
-        this.add.text(playerTexts[i].width - 180,  165  + height2, 'Are you some kind of genius?', style2)
+        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Are you some kind of genius?', style2)
       }
       height2 += 150;
     }
