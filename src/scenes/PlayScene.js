@@ -13,6 +13,7 @@ class PlayScene extends Phaser.Scene {
     super('PlayScene');
     this.config = config;
 
+    this.dead =0;
     // start the game
     this.startLayer = null;
     this.overlapStart = null;
@@ -101,13 +102,12 @@ class PlayScene extends Phaser.Scene {
 
     this.createPlayerScores();
     this.scoresText = [this.playerScoreText, this.player2ScoreText, this.player3ScoreText, this.player4ScoreText];
-
+    this.playerNumbersText = [this.playerNumberText, this.player2NumberText, this.player3NumberText, this.player4NumberText]
     this.scale.displaySize.setAspectRatio( this.width/this.height );
     this.scale.refresh();
 
     this.text = this.add.text(500, 50, 'Graduating in: ' + this.formatTime(this.initialTime) + ' minutes', { fontSize: '40px', fill: '#000' });
     this.text.setVisible(false);
-
 
     this.playerReadyText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
     this.startInstructions = this.add.text(450,130, 'Head to START when ALL students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
@@ -123,6 +123,9 @@ class PlayScene extends Phaser.Scene {
     this.removeBeerSprite();
     this.removeGoodItem();
 
+    if (this.initialTime <= 3) {
+      this.updateCountdown();
+    }
 
     for (let i = 0; i < this.playerReadyStatus.length; i++) {
       if (this.physics.overlap(this.playerList[i], this.overlapStart) && (this.playerReadyStatus[i] == false)) {
@@ -137,11 +140,12 @@ class PlayScene extends Phaser.Scene {
 
     if (this.gameStarted) {
       this.gameStarted = false;
-      console.log(this.gameStarted);
+      this.checkPlayers = true;
+      // this.checkAllPlayersLost();
       this.timedItem();
       this.timedBeer();
       this.timedGoodItem();
-      
+
       this.maxPlayerText.setVisible(false);
       this.startInstructions.setVisible(false);
       this.playerReadyText.setVisible(false);
@@ -159,6 +163,7 @@ class PlayScene extends Phaser.Scene {
       this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
       this.time.addEvent({ delay: 150000, callback: this.gameover, callbackScope: this, loop: false });
     }
+    this.checkPlayersScore();
     this.playerScoreText.x = this.player.body.position.x - 20;  
     this.playerScoreText.y = this.player.body.position.y - 15;  
     this.player2ScoreText.x = this.player2.body.position.x - 20;  
@@ -168,7 +173,17 @@ class PlayScene extends Phaser.Scene {
     this.player4ScoreText.x = this.player4.body.position.x - 20;  
     this.player4ScoreText.y = this.player4.body.position.y - 15;  
 
-    this.checkPlayersScore();
+    this.playerNumberText.x = this.player.body.position.x - 10;  
+    this.playerNumberText.y = this.player.body.position.y + 40; 
+    this.player2NumberText.x = this.player2.body.position.x - 10;  
+    this.player2NumberText.y = this.player2.body.position.y + 40; 
+    this.player3NumberText.x = this.player3.body.position.x - 10;  
+    this.player3NumberText.y = this.player3.body.position.y + 40; 
+    this.player4NumberText.x = this.player4.body.position.x - 10;  
+    this.player4NumberText.y = this.player4.body.position.y + 40; 
+
+
+
 
     var controllerList = this.simplePeer.controllerList;
     var size = Object.keys(controllerList).length;
@@ -205,6 +220,13 @@ class PlayScene extends Phaser.Scene {
 
   updateText() {
     this.playerReadyText.setText('Players ready: ' + this.playersReady + '/' + this.numberOfScans);
+  }
+
+  updateCountdown() {
+    this.text.setColor('#FF0000');
+    this.text.setFontSize('70px')
+    this.text.setPosition(300, 350);
+    this.text.setText('Graduating in ' + this.formatTime(this.initialTime));
   }
 
 
@@ -246,22 +268,22 @@ class PlayScene extends Phaser.Scene {
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i]) && this.numberOfScans >= 1) {
         itemArray[i].destroy();
-        this.scores[0] += 5;
+        this.scores[0] += 10;
         this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans >= 2) {
         itemArray[i].destroy();
-        this.scores[1] += 5;
+        this.scores[1] += 10;
         this.player2ScoreText.setText(`Credits: ${this.scores[1]}`);
       }
       else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans >= 3) {
         itemArray[i].destroy();
-        this.scores[2] += 5;
+        this.scores[2] += 10;
         this.player3ScoreText.setText(`Credits: ${this.scores[2]}`);
       }
       else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans >= 4) {
         itemArray[i].destroy();
-        this.scores[3] += 5;
+        this.scores[3] += 10;
         this.player4ScoreText.setText(`Credits: ${this.scores[3]}`);
       }
       else {
@@ -295,16 +317,17 @@ class PlayScene extends Phaser.Scene {
     }
   }
 
-
   checkPlayersScore() {
     for (let i = 0; i < this.scores.length; i++) {
-      if ((this.scores[0] <= 0) && (this.scores[1] <= 0)) {
-        alert('game over');
-      }
       if (this.scores[i] <= 0) {
         this.playerList[i].disableBody(true, true);
         this.scoresText[i].setVisible(false);
+        this.playerNumbersText[i].setVisible(false);
+        this.dead++;
       }
+    }
+    if (this.dead == this.numberOfScans && this.checkPlayers == true) {
+      this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
     }
   }
 
@@ -320,10 +343,10 @@ class PlayScene extends Phaser.Scene {
   createGoodItem() {
     var randomNumber = Math.random();
     var xPosition = randomNumber < 0.5 ? 0 : 2000;
-    this.goodItem = this.goodItems.create(xPosition, randomNumber * (0 - 700) + 720, 'ipad').setScale(2);
+    this.goodItem = this.goodItems.create(xPosition, randomNumber * (0 - 700) + 720, 'uofg');
     this.goodItem.setBounce(1).setCollideWorldBounds(true);
     this.moveIndividual(this.goodItem);
-    this.goodItem.setSize(20, 20);
+    this.goodItem.setSize(60, 60);
   }
 
   createBeerItem() {
@@ -385,9 +408,17 @@ class PlayScene extends Phaser.Scene {
 
   createPlayerScores() {
     this.playerScoreText = this.add.text(this.player.x, 0, "Credits: " + this.scores[0], {font: 'bold 12px Arial', color: '#000'});
-    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits: " + this.scores[1], {fontSize: 'bold 12px Arial', color: '#000'});
-    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits: " + this.scores[2], {fontSize: 'bold 12px Arial', color: '#000'});
-    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits: " + this.scores[3], {fontSize: 'bold 12px Arial', color: '#000'});
+    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits: " + this.scores[1], {font: 'bold 12px Arial', color: '#000'});
+    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits: " + this.scores[2], {font: 'bold 12px Arial', color: '#000'});
+    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits: " + this.scores[3], {font: 'bold 12px Arial', color: '#000'});
+    this.playerNumberText = this.add.text(this.player.x, 0, "Player 1", {font: 'bold 12px Arial', color: '#FFF'});
+    this.player2NumberText = this.add.text(this.player2.x, 0, "Player 2", {font: 'bold 12px Arial', color: '#FFF'});
+    this.player3NumberText = this.add.text(this.player3.x, 0, "Player 3", {font: 'bold 12px Arial', color: '#FFF'});
+    this.player4NumberText = this.add.text(this.player4.x, 0, "Player 4", {font: 'bold 12px Arial', color: '#FFF'});
+    this.playerNumberText.setVisible(false);
+    this.player2NumberText.setVisible(false);
+    this.player3NumberText.setVisible(false);
+    this.player4NumberText.setVisible(false);
     this.playerScoreText.setVisible(false);
     this.player2ScoreText.setVisible(false);
     this.player3ScoreText.setVisible(false);
@@ -395,9 +426,6 @@ class PlayScene extends Phaser.Scene {
   }
 
   createCode() {
-    // this.scene.pause();
-    // this.physics.pause();
-    // this.isPaused = true;
     this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
     this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 170, 170); // joystick.html
     var selfP = this;
@@ -406,30 +434,38 @@ class PlayScene extends Phaser.Scene {
       selfP.scanned = true;
       selfP.player.setVisible(true);
       selfP.playerScoreText.setVisible(true);
+      selfP.playerNumberText.setVisible(true);
       if (selfP.numberOfScans == 2 ) {
+        selfP.physics.add.collider(selfP.player, selfP.player2);
         selfP.player2.setVisible(true);
         selfP.player2ScoreText.setVisible(true);
+        selfP.player2NumberText.setVisible(true);
         selfP.badItemDelay = 3000;
         selfP.goodItemDelay = 10000;
         selfP.beerItemDelay = 13000;
       }
       else if (selfP.numberOfScans == 3 ) {
+        selfP.physics.add.collider(selfP.player, selfP.player3);
+        selfP.physics.add.collider(selfP.player2, selfP.player3);
         selfP.player3.setVisible(true);
         selfP.player3ScoreText.setVisible(true);
+        selfP.player3NumberText.setVisible(true);
         selfP.badItemDelay = 2500;
         selfP.goodItemDelay = 8000;
         selfP.beerItemDelay = 10000;
       }
       else if (selfP.numberOfScans == 4 ) {
+        selfP.physics.add.collider(selfP.player, selfP.player4);
+        selfP.physics.add.collider(selfP.player2, selfP.player4);
+        selfP.physics.add.collider(selfP.player3, selfP.player4);
         selfP.player4.setVisible(true);
         selfP.player4ScoreText.setVisible(true);
+        selfP.player4NumberText.setVisible(true);
         document.getElementById('qrcode').style.display = "none";
         selfP.badItemDelay = 2000;
         selfP.goodItemDelay = 8000;
         selfP.beerItemDelay = 8500;
       }
-      // selfP.scene.resume();
-      // selfP.physics.resume();
     })
   }
 
@@ -450,7 +486,7 @@ class PlayScene extends Phaser.Scene {
   }
 
   gameover() {
-    this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans, controllerList: this.simplePeer.controllerList, players: this.playerList});
+    this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
   }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
@@ -520,7 +556,7 @@ class PlayScene extends Phaser.Scene {
     this.load.image('instagram', 'assets/instagram.png')
     this.load.image('netflix', 'assets/netflix.png')
     this.load.image('youtube', 'assets/youtube.png')
-    this.load.image('ipad', 'assets/ipad.png');
+    this.load.image('uofg', 'assets/uofg.png');
   }
 }
 
