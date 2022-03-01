@@ -145,7 +145,7 @@ class PlayScene extends Phaser.Scene {
       this.maxPlayerText.setVisible(false);
       this.startInstructions.setVisible(false);
       this.playerReadyText.setVisible(false);
-      document.getElementById('qrcode').remove();
+      document.getElementById('qrcode').style.display = "none";
 
       this.start = this.add.text(400,300, 'START', { font: 'bold 100px Arial', fill: '#FFFF00' });
 
@@ -423,7 +423,7 @@ class PlayScene extends Phaser.Scene {
       else if (selfP.numberOfScans == 4 ) {
         selfP.player4.setVisible(true);
         selfP.player4ScoreText.setVisible(true);
-        document.getElementById('qrcode').remove();
+        document.getElementById('qrcode').style.display = "none";
         selfP.badItemDelay = 2000;
         selfP.goodItemDelay = 8000;
         selfP.beerItemDelay = 8500;

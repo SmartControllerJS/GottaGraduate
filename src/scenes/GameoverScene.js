@@ -21,6 +21,9 @@ class GameoverScene extends Phaser.Scene {
 
   preload() {
     this.load.image('player1', 'assets/player1.PNG');
+    this.load.image('player2', 'assets/player2.PNG');
+    this.load.image('player3', 'assets/player3.PNG');
+    this.load.image('player4', 'assets/player4.PNG');
   }
 
   create() {
@@ -53,18 +56,29 @@ class GameoverScene extends Phaser.Scene {
       if (max < this.scores[i]) {
         max = this.scores[i];
       }
-
-      this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[0], style);
-      height += 100
       if (i == 0) {
-        this.add.text(this.scoreText.width + 115, 65 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
-        this.add.image(this.scoreText.width + 150, 130 + height, 'player1');
+        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.add.image(this.scoreText.width + 150, 230 + height, 'player1');
       }
       else if (i == 1) {
-
+        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.add.image(this.scoreText.width + 150, 230 + height, 'player2');
       }
+      else if (i == 2) {
+        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.add.image(this.scoreText.width + 150, 230 + height, 'player3');
+      }
+      else if (i == 3) {
+        this.add.text(this.scoreText.width + 200,200 + height, 'Score: ' + this.scores[i], style);
+        this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
+        this.add.image(this.scoreText.width + 150, 230 + height, 'player4');
+      }
+      height += 150
     }
-    this.add.text(this.scoreText.width + 50)
+    // this.add.text(this.scoreText.width + 50)
   }
 
   checkScores() {
