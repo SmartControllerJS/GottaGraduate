@@ -239,22 +239,22 @@ class PlayScene extends Phaser.Scene {
     for (let i = 0; i < this.itemArray.length; i++) {
       if (this.physics.overlap(this.player, itemArray[i])  && this.numberOfScans >= 1) {
         itemArray[i].destroy();
-        this.scores[0] -= 100;
+        this.scores[0] -= 20;
         this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
       }
       else if (this.physics.overlap(this.player2, itemArray[i]) && this.numberOfScans >= 2) {
         itemArray[i].destroy();
-        this.scores[1] -= 100;
+        this.scores[1] -= 20;
         this.player2ScoreText.setText(`Credits: ${this.scores[1]}`);
       }
       else if (this.physics.overlap(this.player3, itemArray[i]) && this.numberOfScans >= 3) {
         itemArray[i].destroy();
-        this.scores[2] -= 100;
+        this.scores[2] -= 20;
         this.player3ScoreText.setText(`Credits: ${this.scores[2]}`);
       }
       else if (this.physics.overlap(this.player4, itemArray[i]) && this.numberOfScans >= 4) {
         itemArray[i].destroy();
-        this.scores[3] -= 100;
+        this.scores[3] -= 20;
         this.player4ScoreText.setText(`Credits: ${this.scores[3]}`);
       }
       else {
