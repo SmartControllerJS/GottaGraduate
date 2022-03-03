@@ -96,7 +96,7 @@ class GameoverScene extends Phaser.Scene {
     var playerTexts = [this.player1ScoreText, this.player2ScoreText, this.player3ScoreText, this.player4ScoreText]
     var height2 = 60;
     for (let i =0; i < this.numberOfPlayers; i++) {
-      if (this.scores[i] < 0) {
+      if (this.scores[i] <= 0) {
         this.add.text(playerTexts[i].width * 2 - 180, 165 + height2, 'Looks like you dropped out', style2)
       }
       else if (this.scores[i] > 0 && this.scores[i] <=120) {
