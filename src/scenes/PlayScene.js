@@ -305,11 +305,11 @@ class PlayScene extends Phaser.Scene {
       }
       else if (this.physics.overlap(this.player3, beerArray[j]) && this.numberOfScans >= 3) {
         beerArray[j].destroy();
-        this.playerVelocities[3] /= 2;
+        this.playerVelocities[2] /= 2;
       }
       else if (this.physics.overlap(this.player4, beerArray[j]) && this.numberOfScans >= 4) {
         beerArray[j].destroy();
-        this.playerVelocities[4] /= 2;
+        this.playerVelocities[3] /= 2;
       }
       else {
         continue;
@@ -323,11 +323,27 @@ class PlayScene extends Phaser.Scene {
         this.playerList[i].disableBody(true, true);
         this.scoresText[i].setVisible(false);
         this.playerNumbersText[i].setVisible(false);
-        this.dead++;
       }
     }
-    if (this.dead == this.numberOfScans && this.checkPlayers == true) {
-      this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+    if (this.numberOfScans == 1) {
+      if(this.scores[0] <=  0) {
+        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+      }
+    }
+    else if (this.numberOfScans == 2) {
+      if ((this.scores[0] <= 0) && (this.scores[1]) <= 0) {
+        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+      }
+    }
+    else if (this.numberOfScans == 3) {
+      if ((this.scores[0] <= 0) && (this.scores[1] <= 0) && (this.scores[2] <=  0)) {
+        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+      }
+    }
+    else if (this.numberOfScans == 4) {
+      if ((this.scores[0] <= 0) && (this.scores[1] <= 0) && (this.scores[2] <= 0) && (this.scores[3] <= 0)) {
+        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+      }
     }
   }
 

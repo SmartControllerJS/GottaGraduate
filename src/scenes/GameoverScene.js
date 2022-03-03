@@ -70,24 +70,24 @@ class GameoverScene extends Phaser.Scene {
         this.add.text(this.scoreText.width + 115, 165 + height, 'Player ' + (i + 1), {font: "20px Arial", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle"});
         this.add.image(this.scoreText.width + 150, 230 + height, 'player4');
       }
-      height += 150
+      height += 120
     }
     for (let i=0; i < this.numberOfPlayers; i++) {
       if (this.max == this.scores[i]) {
         if (i == 0) {
-          this.player1ScoreText.setText('Credits: ' + this.scores[i] + ' - WINNER')
+          this.player1ScoreText.setText('Credits: ' + this.scores[i] + ' - BIG BRAIN')
           this.player1ScoreText.setColor('green');
         }
         else if (i == 1) {
-          this.player2ScoreText.setText('Credits: ' + this.scores[i] + ' - WINNER')
+          this.player2ScoreText.setText('Credits: ' + this.scores[i] + ' - BIG BRAIN')
           this.player2ScoreText.setColor('green');
         }
         else if (i == 2) {
-          this.player3ScoreText.setText('Credits: ' + this.scores[i] + ' - WINNER')
+          this.player3ScoreText.setText('Credits: ' + this.scores[i] + ' - BIG BRAIN')
           this.player3ScoreText.setColor('green');
         }
         else if (i ==3) {
-          this.player4ScoreText.setText('Credits: ' + this.scores[i] + ' - WINNER')
+          this.player4ScoreText.setText('Credits: ' + this.scores[i] + ' - BIG BRAIN')
           this.player4ScoreText.setColor('green');
         }
       }
@@ -97,24 +97,24 @@ class GameoverScene extends Phaser.Scene {
     var height2 = 60;
     for (let i =0; i < this.numberOfPlayers; i++) {
       if (this.scores[i] < 0) {
-        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you dropped out', style2)
+        this.add.text(playerTexts[i].width * 2 - 180, 165 + height2, 'Looks like you dropped out', style2)
       }
       else if (this.scores[i] > 0 && this.scores[i] <=120) {
-        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a first year...', style2)
+        this.add.text(playerTexts[i].width * 2 - 180, 165 + height2, 'Looks like you must be a first year...', style2)
       }
       else if (this.scores[i] > 120 && this.scores[i] <=240) {
-        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a second year...', style2)
+        this.add.text(playerTexts[i].width * 2 - 180, 165 + height2, 'Looks like you must be a second year...', style2)
       }
       else if (this.scores[i] > 240 && this.scores[i] <=360) {
-        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a third year...', style2)
+        this.add.text(playerTexts[i].width * 2 - 180, 165 + height2, 'Looks like you must be a third year...', style2)
       }
       else if (this.scores[i] > 360 && this.scores[i] <=480) {
-        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Looks like you must be a fourth year...', style2)
+        this.add.text(playerTexts[i].width * 2 - 180, 165 + height2, 'Looks like you must be a fourth year...', style2)
       }
       else if (this.scores[i] > 480) {
-        this.add.text(playerTexts[i].width - 180, 165 + height2, 'Are you some kind of genius?', style2)
+        this.add.text(playerTexts[i].width * 2 - 180, 165 + height2, 'Are you some kind of genius?', style2)
       }
-      height2 += 150;
+      height2 += 120;
     }
   }
 
