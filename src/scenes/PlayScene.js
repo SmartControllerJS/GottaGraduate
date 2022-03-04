@@ -446,7 +446,7 @@ class PlayScene extends Phaser.Scene {
 
   createCode() {
     this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
-    this.simplePeer.createQrCode('https://emmapoliakova.github.io/webpack-test/joystick.html', 'qrcode', 170, 170); // joystick.html
+    this.simplePeer.createQrCode('https://smartcontrollerjs.github.io/Controllers/joystick.html', 'qrcode', 170, 170); // joystick.html
     var selfP = this;
     this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
       selfP.numberOfScans++;
