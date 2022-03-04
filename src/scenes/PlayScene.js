@@ -86,11 +86,14 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
+
     this.createCode();
     this.createCollidableMap();
     this.createCharacters()
     this.createNonCollidablemMap();
-
+    this.add.image(this.config.width/2 - 7.5, 25, 'uofg_wall_logo').setScale(0.5);
+    this.add.image(312.5, 25, 'uofg_wall_logo').setScale(0.5);
+    this.add.image(952, 25, 'uofg_wall_logo').setScale(0.5);
     this.badItems = this.physics.add.group();
     this.beerGroup = this.physics.add.group();
     this.goodItems = this.physics.add.group();
@@ -529,7 +532,7 @@ class PlayScene extends Phaser.Scene {
     map.createLayer('Top of floor', tileset)
     this.startLayer = map.createLayer('Start layer', tileset);
     map.createLayer('Fauna and flora', tileset)
-
+    map.createLayer('Wall Decoration', tileset)
     this.collision_layer = map.createLayer('Outside', tileset).setCollisionByExclusion([-1]);
     this.object_collision_layer = map.createLayer('Furniture and trees', tileset).setCollisionByExclusion([-1]);
     this.church_collision_layer = map.createLayer('Church', tileset).setCollisionByExclusion([-1]);
@@ -549,7 +552,7 @@ class PlayScene extends Phaser.Scene {
     const tileset = map.addTilesetImage('background', 'base_tiles')
     const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
     const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
-    map.createLayer('Wall Decoration', tileset)
+
     map.createLayer('Church roof no collision', church_roof_tileset);
     map.createLayer('Church window', church_window_tileset)
   }
@@ -573,6 +576,7 @@ class PlayScene extends Phaser.Scene {
     this.load.image('netflix', 'assets/netflix.png')
     this.load.image('youtube', 'assets/youtube.png')
     this.load.image('uofg', 'assets/uofg.png');
+    this.load.image('uofg_wall_logo', 'assets/uofg_wall_logo.png')
   }
 }
 
