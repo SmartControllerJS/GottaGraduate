@@ -140,7 +140,6 @@ class GameoverScene extends Phaser.Scene {
       if (!localStorage.getItem('reload')) {
         localStorage['reload'] = true;
         window.location.reload();
-      } else {
         localStorage.removeItem('reload');
       }
     }
