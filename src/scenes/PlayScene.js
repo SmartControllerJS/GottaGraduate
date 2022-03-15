@@ -532,7 +532,7 @@ class PlayScene extends Phaser.Scene {
     map.createLayer('Top of floor', tileset)
     this.startLayer = map.createLayer('Start layer', tileset);
     map.createLayer('Fauna and flora', tileset)
-    map.createLayer('Wall Decoration', tileset)
+
     this.collision_layer = map.createLayer('Outside', tileset).setCollisionByExclusion([-1]);
     this.object_collision_layer = map.createLayer('Furniture and trees', tileset).setCollisionByExclusion([-1]);
     this.church_collision_layer = map.createLayer('Church', tileset).setCollisionByExclusion([-1]);
@@ -550,6 +550,7 @@ class PlayScene extends Phaser.Scene {
   createNonCollidablemMap() {
     const map = this.make.tilemap({ key: 'tilemap' })
     const tileset = map.addTilesetImage('background', 'base_tiles')
+    map.createLayer('Wall Decoration', tileset)
     const church_window_tileset = map.addTilesetImage('church staoined glass', 'stained_glass_tiles')
     const church_roof_tileset = map.addTilesetImage('hyptosis_tile-art-batch-1', 'church_tiles')
 
