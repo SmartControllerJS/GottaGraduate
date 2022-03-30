@@ -2,8 +2,8 @@ name: develop build and deploy
 
 on:
   push:
-    branches: [ develop ]
-    
+    branches: [develop]
+
 jobs:
   build:
     name: Build Project
@@ -12,21 +12,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      
+
       - name: Install
         run: npm install
-        
+
       - name: Install smartcontroller
-        run: npm install smartcontroller@3.2.4
-        
+        run: npm install smartcontroller@3.2.5
+
       - name: Build
         run: npm run build
-        
+
       - name: Upload build folder
         uses: actions/upload-artifact@v2
         with:
@@ -37,17 +37,17 @@ jobs:
     name: Deploy Project
     runs-on: ubuntu-latest
     needs: build
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
+
       - name: Download build folder
         uses: actions/download-artifact@v2
         with:
           name: build
           path: build/
-          
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
