@@ -119,7 +119,7 @@ Initially, the project was focused on building a generic game, but as developmen
 2. Install dependencies
     * `npm install`
 3. Run the code locally
-    * `npm run start`
+    * `npm run dev`
 4. Create a build if required, this step is optional
     * `npm run build`
 
