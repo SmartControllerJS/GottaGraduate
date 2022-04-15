@@ -3,17 +3,17 @@ import "smartcontroller";
 import { Player } from "../helpers/player.js";
 import { Beer } from "../helpers/beer.js";
 
-const ANIMATIONS = [['right','up','left','down','turn'],
-                    ['right1','up1','left1','down1','turn1'],
-                    ['right2','up2','left2','down2','turn2'],
-                    ['right3','up3','left3','down3','turn3']]
+const ANIMATIONS = [['right', 'up', 'left', 'down', 'turn'],
+['right1', 'up1', 'left1', 'down1', 'turn1'],
+['right2', 'up2', 'left2', 'down2', 'turn2'],
+['right3', 'up3', 'left3', 'down3', 'turn3']]
 class PlayScene extends Phaser.Scene {
 
   constructor(config) {
     super('PlayScene');
     this.config = config;
 
-    this.dead =0;
+    this.dead = 0;
     // start the game
     this.startLayer = null;
     this.overlapStart = null;
@@ -64,7 +64,7 @@ class PlayScene extends Phaser.Scene {
     this.beer5 = null;
 
     this.playerVelocities = [200, 200, 200, 200]
- 
+
     this.item = null;
 
     this.goodItem = null;
@@ -91,7 +91,7 @@ class PlayScene extends Phaser.Scene {
     this.createCollidableMap();
     this.createCharacters()
     this.createNonCollidablemMap();
-    this.add.image(this.config.width/2 - 7.5, 25, 'uofg_wall_logo').setScale(0.5);
+    this.add.image(this.config.width / 2 - 7.5, 25, 'uofg_wall_logo').setScale(0.5);
     this.add.image(312.5, 25, 'uofg_wall_logo').setScale(0.5);
     this.add.image(952, 25, 'uofg_wall_logo').setScale(0.5);
     this.badItems = this.physics.add.group();
@@ -106,15 +106,15 @@ class PlayScene extends Phaser.Scene {
     this.createPlayerScores();
     this.scoresText = [this.playerScoreText, this.player2ScoreText, this.player3ScoreText, this.player4ScoreText];
     this.playerNumbersText = [this.playerNumberText, this.player2NumberText, this.player3NumberText, this.player4NumberText]
-    this.scale.displaySize.setAspectRatio( this.width/this.height );
+    this.scale.displaySize.setAspectRatio(this.width / this.height);
     this.scale.refresh();
 
     this.text = this.add.text(500, 50, 'Graduating in: ' + this.formatTime(this.initialTime) + ' minutes', { fontSize: '40px', fill: '#000' });
     this.text.setVisible(false);
 
-    this.playerReadyText = this.add.text(400,50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
-    this.startInstructions = this.add.text(450,130, 'Head to START when ALL students have enrolled!', {font: 'bold 15px Arial', fill: '#000' });
-    this.maxPlayerText = this.add.text(10,160, 'Max Players: 4', { font: 'bold 20px Arial', fill: '#000' });
+    this.playerReadyText = this.add.text(400, 50, 'Players ready: ' + this.playersReady + '/' + this.numberOfScans, { fontSize: '40px', fill: '#000' });
+    this.startInstructions = this.add.text(450, 130, 'Head to START when ALL students have enrolled!', { font: 'bold 15px Arial', fill: '#000' });
+    this.maxPlayerText = this.add.text(10, 160, 'Max Players: 4', { font: 'bold 20px Arial', fill: '#000' });
   }
 
 
@@ -154,12 +154,12 @@ class PlayScene extends Phaser.Scene {
       this.playerReadyText.setVisible(false);
       document.getElementById('qrcode').style.display = "none";
 
-      this.start = this.add.text(400,300, 'START', { font: 'bold 100px Arial', fill: '#FFFF00' });
+      this.start = this.add.text(400, 300, 'START', { font: 'bold 100px Arial', fill: '#FFFF00' });
 
       this.time.addEvent({
-        delay: 3000, 
-        callback: this.updateStartText, 
-        callbackScope: this, 
+        delay: 3000,
+        callback: this.updateStartText,
+        callbackScope: this,
         loop: false
       });
       this.text.setVisible(true);
@@ -167,23 +167,23 @@ class PlayScene extends Phaser.Scene {
       this.time.addEvent({ delay: 150000, callback: this.gameover, callbackScope: this, loop: false });
     }
     this.checkPlayersScore();
-    this.playerScoreText.x = this.player.body.position.x - 20;  
-    this.playerScoreText.y = this.player.body.position.y - 15;  
-    this.player2ScoreText.x = this.player2.body.position.x - 20;  
-    this.player2ScoreText.y = this.player2.body.position.y - 15;  
-    this.player3ScoreText.x = this.player3.body.position.x - 20;  
-    this.player3ScoreText.y = this.player3.body.position.y - 15;  
-    this.player4ScoreText.x = this.player4.body.position.x - 20;  
-    this.player4ScoreText.y = this.player4.body.position.y - 15;  
+    this.playerScoreText.x = this.player.body.position.x - 20;
+    this.playerScoreText.y = this.player.body.position.y - 15;
+    this.player2ScoreText.x = this.player2.body.position.x - 20;
+    this.player2ScoreText.y = this.player2.body.position.y - 15;
+    this.player3ScoreText.x = this.player3.body.position.x - 20;
+    this.player3ScoreText.y = this.player3.body.position.y - 15;
+    this.player4ScoreText.x = this.player4.body.position.x - 20;
+    this.player4ScoreText.y = this.player4.body.position.y - 15;
 
-    this.playerNumberText.x = this.player.body.position.x - 10;  
-    this.playerNumberText.y = this.player.body.position.y + 40; 
-    this.player2NumberText.x = this.player2.body.position.x - 10;  
-    this.player2NumberText.y = this.player2.body.position.y + 40; 
-    this.player3NumberText.x = this.player3.body.position.x - 10;  
-    this.player3NumberText.y = this.player3.body.position.y + 40; 
-    this.player4NumberText.x = this.player4.body.position.x - 10;  
-    this.player4NumberText.y = this.player4.body.position.y + 40; 
+    this.playerNumberText.x = this.player.body.position.x - 10;
+    this.playerNumberText.y = this.player.body.position.y + 40;
+    this.player2NumberText.x = this.player2.body.position.x - 10;
+    this.player2NumberText.y = this.player2.body.position.y + 40;
+    this.player3NumberText.x = this.player3.body.position.x - 10;
+    this.player3NumberText.y = this.player3.body.position.y + 40;
+    this.player4NumberText.x = this.player4.body.position.x - 10;
+    this.player4NumberText.y = this.player4.body.position.y + 40;
 
 
 
@@ -197,17 +197,17 @@ class PlayScene extends Phaser.Scene {
           this.playerList[i].body.velocity.y = 0;
           this.playerList[i].anims.play(ANIMATIONS[i][0], true);
         }
-        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 45 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 115) {
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 45 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 115) {
           this.playerList[i].body.velocity.y = -this.playerVelocities[i];
           this.playerList[i].body.velocity.x = 0;
           this.playerList[i].anims.play(ANIMATIONS[i][1], true);
         }
-        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 115 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 225) {
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 115 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 225) {
           this.playerList[i].body.velocity.x = -this.playerVelocities[i];
           this.playerList[i].body.velocity.y = 0;
           this.playerList[i].anims.play(ANIMATIONS[i][2], true);
         }
-        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree  > 225 && controllerList[Object.keys(controllerList)[i]].state.angle.degree  <= 295) {
+        else if (controllerList[Object.keys(controllerList)[i]].state.angle.degree > 225 && controllerList[Object.keys(controllerList)[i]].state.angle.degree <= 295) {
           this.playerList[i].body.velocity.y = this.playerVelocities[i];
           this.playerList[i].body.velocity.x = 0;
           this.playerList[i].anims.play(ANIMATIONS[i][3], true);
@@ -240,7 +240,7 @@ class PlayScene extends Phaser.Scene {
   removeItem() {
     var itemArray = this.badItems.children.getArray();
     for (let i = 0; i < this.itemArray.length; i++) {
-      if (this.physics.overlap(this.player, itemArray[i])  && this.numberOfScans >= 1) {
+      if (this.physics.overlap(this.player, itemArray[i]) && this.numberOfScans >= 1) {
         itemArray[i].destroy();
         this.scores[0] -= 20;
         this.playerScoreText.setText(`Credits: ${this.scores[0]}`);
@@ -329,30 +329,30 @@ class PlayScene extends Phaser.Scene {
       }
     }
     if (this.numberOfScans == 1) {
-      if(this.scores[0] <=  0) {
-        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+      if (this.scores[0] <= 0) {
+        this.scene.start('GameoverScene', { scores: this.scores, numberOfPlayers: this.numberOfScans });
       }
     }
     else if (this.numberOfScans == 2) {
       if ((this.scores[0] <= 0) && (this.scores[1]) <= 0) {
-        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+        this.scene.start('GameoverScene', { scores: this.scores, numberOfPlayers: this.numberOfScans });
       }
     }
     else if (this.numberOfScans == 3) {
-      if ((this.scores[0] <= 0) && (this.scores[1] <= 0) && (this.scores[2] <=  0)) {
-        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+      if ((this.scores[0] <= 0) && (this.scores[1] <= 0) && (this.scores[2] <= 0)) {
+        this.scene.start('GameoverScene', { scores: this.scores, numberOfPlayers: this.numberOfScans });
       }
     }
     else if (this.numberOfScans == 4) {
       if ((this.scores[0] <= 0) && (this.scores[1] <= 0) && (this.scores[2] <= 0) && (this.scores[3] <= 0)) {
-        this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+        this.scene.start('GameoverScene', { scores: this.scores, numberOfPlayers: this.numberOfScans });
       }
     }
   }
 
   createBadItem() {
     var socialMediaImages = ["netflix", "instagram", "youtube", "facebook", "tiktok"];
-    var randomNumber = Math.floor(Math.random()*socialMediaImages.length);
+    var randomNumber = Math.floor(Math.random() * socialMediaImages.length);
     var xPosition = randomNumber < 0.5 ? 0 : 2000;
     this.item = this.badItems.create(xPosition, Math.random() * (0 - 700) + 720, socialMediaImages[randomNumber]);
     this.item.setBounce(1).setCollideWorldBounds(true);
@@ -426,14 +426,14 @@ class PlayScene extends Phaser.Scene {
   }
 
   createPlayerScores() {
-    this.playerScoreText = this.add.text(this.player.x, 0, "Credits: " + this.scores[0], {font: 'bold 12px Arial', color: '#000'});
-    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits: " + this.scores[1], {font: 'bold 12px Arial', color: '#000'});
-    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits: " + this.scores[2], {font: 'bold 12px Arial', color: '#000'});
-    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits: " + this.scores[3], {font: 'bold 12px Arial', color: '#000'});
-    this.playerNumberText = this.add.text(this.player.x, 0, "Player 1", {font: 'bold 12px Arial', color: '#FFF'});
-    this.player2NumberText = this.add.text(this.player2.x, 0, "Player 2", {font: 'bold 12px Arial', color: '#FFF'});
-    this.player3NumberText = this.add.text(this.player3.x, 0, "Player 3", {font: 'bold 12px Arial', color: '#FFF'});
-    this.player4NumberText = this.add.text(this.player4.x, 0, "Player 4", {font: 'bold 12px Arial', color: '#FFF'});
+    this.playerScoreText = this.add.text(this.player.x, 0, "Credits: " + this.scores[0], { font: 'bold 12px Arial', color: '#000' });
+    this.player2ScoreText = this.add.text(this.player2.x, 0, "Credits: " + this.scores[1], { font: 'bold 12px Arial', color: '#000' });
+    this.player3ScoreText = this.add.text(this.player3.x, 0, "Credits: " + this.scores[2], { font: 'bold 12px Arial', color: '#000' });
+    this.player4ScoreText = this.add.text(this.player4.x, 0, "Credits: " + this.scores[3], { font: 'bold 12px Arial', color: '#000' });
+    this.playerNumberText = this.add.text(this.player.x, 0, "Player 1", { font: 'bold 12px Arial', color: '#FFF' });
+    this.player2NumberText = this.add.text(this.player2.x, 0, "Player 2", { font: 'bold 12px Arial', color: '#FFF' });
+    this.player3NumberText = this.add.text(this.player3.x, 0, "Player 3", { font: 'bold 12px Arial', color: '#FFF' });
+    this.player4NumberText = this.add.text(this.player4.x, 0, "Player 4", { font: 'bold 12px Arial', color: '#FFF' });
     this.playerNumberText.setVisible(false);
     this.player2NumberText.setVisible(false);
     this.player3NumberText.setVisible(false);
@@ -448,13 +448,13 @@ class PlayScene extends Phaser.Scene {
     this.simplePeer = new smartcontroller.JoystickSmartController(); // the number 123456 is the controller id, if you leave it blank it's random so mutliple can use the website.
     this.simplePeer.createQrCode('https://smartcontrollerjs.github.io/Controllers/joystick.html', 'qrcode', 170, 170); // joystick.html
     var selfP = this;
-    this.simplePeer.on("connection", function(){ // this can also be outside the update loop that is a listener on it's own
+    this.simplePeer.on("connection", function () { // this can also be outside the update loop that is a listener on it's own
       selfP.numberOfScans++;
       selfP.scanned = true;
       selfP.player.setVisible(true);
       selfP.playerScoreText.setVisible(true);
       selfP.playerNumberText.setVisible(true);
-      if (selfP.numberOfScans == 2 ) {
+      if (selfP.numberOfScans == 2) {
         selfP.physics.add.collider(selfP.player, selfP.player2);
         selfP.player2.setVisible(true);
         selfP.player2ScoreText.setVisible(true);
@@ -463,7 +463,7 @@ class PlayScene extends Phaser.Scene {
         selfP.goodItemDelay = 10000;
         selfP.beerItemDelay = 13000;
       }
-      else if (selfP.numberOfScans == 3 ) {
+      else if (selfP.numberOfScans == 3) {
         selfP.physics.add.collider(selfP.player, selfP.player3);
         selfP.physics.add.collider(selfP.player2, selfP.player3);
         selfP.player3.setVisible(true);
@@ -473,7 +473,7 @@ class PlayScene extends Phaser.Scene {
         selfP.goodItemDelay = 8000;
         selfP.beerItemDelay = 10000;
       }
-      else if (selfP.numberOfScans == 4 ) {
+      else if (selfP.numberOfScans == 4) {
         selfP.physics.add.collider(selfP.player, selfP.player4);
         selfP.physics.add.collider(selfP.player2, selfP.player4);
         selfP.physics.add.collider(selfP.player3, selfP.player4);
@@ -489,38 +489,38 @@ class PlayScene extends Phaser.Scene {
   }
 
   // round timer functions
-  formatTime(seconds){
-      var minutes = Math.floor(seconds/60);
-      // Seconds
-      var partInSeconds = seconds%60;
-      // Adds left zeros to seconds
-      partInSeconds = partInSeconds.toString().padStart(2,'0');
-      // Returns formated time
+  formatTime(seconds) {
+    var minutes = Math.floor(seconds / 60);
+    // Seconds
+    var partInSeconds = seconds % 60;
+    // Adds left zeros to seconds
+    partInSeconds = partInSeconds.toString().padStart(2, '0');
+    // Returns formated time
     return `${minutes}:${partInSeconds}`;
-    }
+  }
 
-  onEvent () {
+  onEvent() {
     this.initialTime -= 1; // One second
     this.text.setText('Graduating in: ' + this.formatTime(this.initialTime) + ' minutes');
   }
 
   gameover() {
-    this.scene.start('GameoverScene', {scores: this.scores, numberOfPlayers: this.numberOfScans});
+    this.scene.start('GameoverScene', { scores: this.scores, numberOfPlayers: this.numberOfScans });
   }
 
   createPlayerAnimation(directions, start, end, idleFrame) {
     for (let i = 0; i < start.length; i++) {
       this.anims.create({
         key: directions[i],
-        frames: this.anims.generateFrameNames('dude', { start: start[i], end: end[i]}),
+        frames: this.anims.generateFrameNames('dude', { start: start[i], end: end[i] }),
         frameRate: 10,
         repeat: -1,
       });
     }
     this.anims.create({
-        key: idleFrame[0],
-        frames: [ { key: 'dude', frame: idleFrame[1] } ],
-        frameRate: 10
+      key: idleFrame[0],
+      frames: [{ key: 'dude', frame: idleFrame[1] }],
+      frameRate: 10
     });
   }
 
@@ -563,11 +563,11 @@ class PlayScene extends Phaser.Scene {
     this.load.image('church_tiles', 'assets/church_tiles.png')
     this.load.image('stained_glass_tiles', 'assets/stained_glass_tiles.png')
     this.load.tilemapTiledJSON('tilemap', 'assets/base_tiles.json')
-    this.load.spritesheet('dude', 
+    this.load.spritesheet('dude',
       'assets/dude.png',
       { frameWidth: 48, frameHeight: 48 }
     );
-    this.load.spritesheet('beer', 
+    this.load.spritesheet('beer',
       'assets/beer.png',
       { frameWidth: 48, frameHeight: 48 }
     );
