@@ -11,6 +11,7 @@ class GameoverScene extends Phaser.Scene {
     this.scoreText = null;
     this.max = 0;
     this.playerImages = ['player1', 'player2', 'player3', 'player4']
+    this.reload = false;
   }
 
   init(data) {
@@ -128,7 +129,7 @@ class GameoverScene extends Phaser.Scene {
 
   timedReload() {
     this.time.addEvent({
-      delay: 20000,
+      delay: 2000,
       callback: this.reloadOnStart,
       callbackScope: this,
       loop: false
@@ -137,10 +138,10 @@ class GameoverScene extends Phaser.Scene {
 
   reloadOnStart() {
     if (window.localStorage) {
-      if (!localStorage.getItem('reload')) {
-        localStorage['reload'] = true;
+      if (this.reload == false) {
+        console.log('hello');
+        this.reload = true;
         window.location.reload();
-        localStorage.removeItem('reload');
       }
     }
   }

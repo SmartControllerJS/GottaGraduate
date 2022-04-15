@@ -75,7 +75,7 @@ class PlayScene extends Phaser.Scene {
 
     // timer
     this.text = null;
-    this.initialTime = 150;
+    this.initialTime = 1;
 
     this.startOnce = true;
     this.reloaded = false;
@@ -164,7 +164,7 @@ class PlayScene extends Phaser.Scene {
       });
       this.text.setVisible(true);
       this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-      this.time.addEvent({ delay: 150000, callback: this.gameover, callbackScope: this, loop: false });
+      this.time.addEvent({ delay: 1000, callback: this.gameover, callbackScope: this, loop: false });
     }
     this.checkPlayersScore();
     this.playerScoreText.x = this.player.body.position.x - 20;
