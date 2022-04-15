@@ -129,7 +129,7 @@ class GameoverScene extends Phaser.Scene {
 
   timedReload() {
     this.time.addEvent({
-      delay: 2000,
+      delay: 20000,
       callback: this.reloadOnStart,
       callbackScope: this,
       loop: false
