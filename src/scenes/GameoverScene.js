@@ -139,7 +139,6 @@ class GameoverScene extends Phaser.Scene {
   reloadOnStart() {
     if (window.localStorage) {
       if (this.reload == false) {
-        console.log('hello');
         this.reload = true;
         window.location.reload();
       }
