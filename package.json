@@ -13,7 +13,7 @@
   "dependencies": {
     "http-server": "^14.1.0",
     "phaser": "^3.55.2",
-    "smartcontroller": "^3.2.5",
+    "smartcontroller": "^3.2.8",
     "webpack-merge": "^5.8.0"
   },
   "devDependencies": {
