@@ -56,4 +56,4 @@ jobs:
           folder: build
           target-folder: l4-project-interactive-game-develop
           clean: true
-          token: ${{ secrets.deploy }}
+          token: ${{ secrets.gottagraduate }}
