@@ -57,3 +57,4 @@ jobs:
           target-folder: l4-project-interactive-game
           clean: true
           token: ${{ secrets.deploy }}
+
